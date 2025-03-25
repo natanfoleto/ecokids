@@ -21,7 +21,7 @@
     updated_at
   )
 - Points (id, student_id, amount, created_at)
-- Awards (id, name, description, value, created_at, updated_at)
+- Awards (id, name, description, value, school_id, created_at, updated_at)
 
 ### Techs
 

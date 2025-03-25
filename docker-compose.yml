@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  pg:
+    container_name: ecokids
+    image: bitnami/postgresql:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=ecokids
+      - POSTGRES_PASSWORD=ecokids
+      - POSTGRES_DB=ecokids

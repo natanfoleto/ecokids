@@ -1,0 +1,13 @@
+{
+  "name": "@ecokids/prettier",
+  "version": "0.0.0",
+  "main": "index.mjs",
+  "scripts": {
+    "build": "echo 'No build is required for this package'"
+  },
+  "private": true,
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.13"
+  }
+}

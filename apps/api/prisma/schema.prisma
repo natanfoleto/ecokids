@@ -1,0 +1,115 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  cpf          String
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tokens Token[]
+
+  @@map("users")
+}
+
+enum TokenType {
+  PASSWORD_RECOVER
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
+model School {
+  id        String   @id @default(uuid())
+  name      String
+  city      String
+  state     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  classes  Class[]
+  students Student[]
+  awards   Award[]
+
+  @@map("schools")
+}
+
+model Class {
+  id        String   @id @default(uuid())
+  name      String
+  year      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  students Student[]
+
+  @@map("classes")
+}
+
+model Student {
+  id           String   @id @default(uuid())
+  code         Int      @unique @default(autoincrement())
+  name         String
+  cpf          String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+  classId String @map("class_id")
+
+  points Point[]
+
+  @@map("students")
+}
+
+model Point {
+  id        String   @id @default(uuid())
+  amount    Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String  @map("student_id")
+
+  @@map("points")
+}
+
+model Award {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  value       Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  @@map("awards")
+}

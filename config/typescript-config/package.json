@@ -1,0 +1,14 @@
+{
+  "name": "@ecokids/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'No build is required for this package'"
+  },
+  "files": [
+    "library.json",
+    "node.json",
+    "nextjs.json"
+  ]
+}

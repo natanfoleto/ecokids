@@ -1,0 +1,7 @@
+{
+  "extends": "@ecokids/tsconfig/library.json",
+  "include": [
+    "env.server.ts",
+    "env.client.ts"
+  ]
+}

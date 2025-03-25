@@ -1,0 +1,51 @@
+{
+  "name": "@ecokids/api",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsup",
+    "start": "node --no-deprecation dist/http/server.js",
+    "dev": "pnpm env:load tsx watch --ignore ../../node_modules src/http/server.ts",
+    "clinic": "npm run build && npx clinic doctor -- node dist/http/server.js",
+    "db:migrate": "pnpm env:load prisma migrate dev",
+    "db:deploy": "pnpm env:load prisma migrate deploy",
+    "db:studio": "pnpm env:load prisma studio",
+    "env:load": "dotenv -e ../../.env --",
+    "eslint:fix": "eslint --fix src --ext .ts,.tsx"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "@fastify/jwt": "^8.0.1",
+    "@fastify/multipart": "^8.3.0",
+    "@fastify/swagger": "^8.14.0",
+    "@fastify/swagger-ui": "^3.0.0",
+    "@ecokids/auth": "workspace:*",
+    "@ecokids/env": "workspace:*",
+    "@prisma/client": "5.14.0",
+    "bcryptjs": "^2.4.3",
+    "fastify": "^4.27.0",
+    "fastify-plugin": "^4.5.1",
+    "fastify-type-provider-zod": "^1.2.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@ecokids/eslint-config": "workspace:*",
+    "@ecokids/prettier": "workspace:*",
+    "@ecokids/tsconfig": "workspace:*",
+    "@ecokids/types": "workspace:*",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.12.12",
+    "dotenv-cli": "^7.4.2",
+    "prisma": "^5.14.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.10.2"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "prettier": "@ecokids/prettier",
+  "eslintConfig": {
+    "extends": [
+      "@ecokids/eslint-config/node"
+    ]
+  }
+}
