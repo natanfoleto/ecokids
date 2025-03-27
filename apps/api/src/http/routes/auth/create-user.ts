@@ -17,7 +17,7 @@ export async function createUser(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const { name, email, password } = request.body
+      const { name, email, cpf, password } = request.body
 
       const userWithSameEmail = await prisma.user.findUnique({
         where: { email },
@@ -27,14 +27,30 @@ export async function createUser(app: FastifyInstance) {
         throw new BadRequestError('Um usuário com esse e-mail já existe.')
       }
 
+      const [, domain] = email.split('@')
+
+      const autoJoinSchool = await prisma.school.findFirst({
+        where: {
+          domain,
+          shouldAttachUsersByDomain: true,
+        },
+      })
+
       const passwordHash = await hash(password, 6)
 
       await prisma.user.create({
         data: {
           name,
           email,
-          cpf: '',
+          cpf,
           passwordHash,
+          member_on: autoJoinSchool
+            ? {
+              create: {
+                schoolId: autoJoinSchool.id,
+              },
+            }
+            : undefined,
         },
       })
 

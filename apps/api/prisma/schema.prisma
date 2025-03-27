@@ -77,12 +77,15 @@ model Member {
 }
 
 model School {
-  id        String   @id @default(uuid())
-  name      String
-  city      String
-  state     String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                        String   @id @default(uuid())
+  name                      String
+  slug                      String   @unique
+  domain                    String?  @unique
+  city                      String
+  state                     String
+  shouldAttachUsersByDomain Boolean  @default(false) @map("should_attach_users_by_domain")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
 
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId String @map("owner_id")

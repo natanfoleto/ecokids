@@ -6,7 +6,7 @@ export const createUserBodySchema = z
       message: 'Por favor, digite seu nome completo.',
     }),
     email: z.string().email({ message: 'Insira um e-mail válido.' }),
-    phone: z.string({ message: 'Insira um telefone válido.' }),
+    cpf: z.string({ message: 'Insira um CPF válido.' }),
     password: z
       .string()
       .min(6, { message: 'A senha precisa ter pelo menos 6 caracteres.' }),
