@@ -1,4 +1,6 @@
 {
-  "extends": "@anotai/tsconfig/library.json",
-  "include": ["src/**/*"]
+  "extends": "@ecokids/tsconfig/library.json",
+  "include": [
+    "src/**/*"
+  ]
 }

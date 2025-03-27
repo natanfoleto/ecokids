@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-import { companySchema } from '../models/company'
+import { schoolSchema } from '../models/school'
 
-export const companySubject = z.tuple([
+export const schoolSubject = z.tuple([
   z.union([
     z.literal('manage'),
     z.literal('get'),
@@ -11,7 +11,7 @@ export const companySubject = z.tuple([
     z.literal('delete'),
     z.literal('transfer_ownership'),
   ]),
-  z.union([z.literal('Company'), companySchema]),
+  z.union([z.literal('School'), schoolSchema]),
 ])
 
-export type CompanySubject = z.infer<typeof companySubject>
+export type SchoolSubject = z.infer<typeof schoolSubject>
