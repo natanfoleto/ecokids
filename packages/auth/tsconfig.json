@@ -1,0 +1,4 @@
+{
+  "extends": "@anotai/tsconfig/library.json",
+  "include": ["src/**/*"]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@ecokids/auth",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo 'No build is required for this package'"
+  },
+  "devDependencies": {
+    "@ecokids/eslint-config": "workspace:*",
+    "@ecokids/prettier": "workspace:*",
+    "@ecokids/tsconfig": "workspace:*"
+  },
+  "prettier": "@ecokids/prettier",
+  "eslintConfig": {
+    "extends": [
+      "@ecokids/eslint-config/library.js"
+    ]
+  },
+  "dependencies": {
+    "@casl/ability": "^6.7.1",
+    "zod": "^3.23.8"
+  }
+}

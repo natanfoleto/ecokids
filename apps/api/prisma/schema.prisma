@@ -17,7 +17,10 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  tokens Token[]
+  tokens       Token[]
+  invites      Invite[]
+  member_on    Member[]
+  owns_schools School[]
 
   @@map("users")
 }
@@ -37,6 +40,42 @@ model Token {
   @@map("tokens")
 }
 
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model Invite {
+  id        String   @id @default(uuid())
+  email     String
+  role      Role
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId String? @map("author_id")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  @@unique([email, schoolId])
+  @@index([email])
+  @@map("invites")
+}
+
+model Member {
+  id   String @id @default(uuid())
+  role Role   @default(MEMBER)
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@unique([schoolId, userId])
+  @@map("members")
+}
+
 model School {
   id        String   @id @default(uuid())
   name      String
@@ -45,9 +84,14 @@ model School {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String @map("owner_id")
+
   classes  Class[]
   students Student[]
   awards   Award[]
+  invites  Invite[]
+  members  Member[]
 
   @@map("schools")
 }
