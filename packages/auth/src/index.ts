@@ -8,18 +8,21 @@ import { z } from 'zod'
 
 import { Member } from './models/member'
 import { permissions } from './permissions'
+import { classSubject } from './subjects/class'
 import { inviteSubject } from './subjects/invite'
 import { memberSubject } from './subjects/member'
 import { schoolSubject } from './subjects/school'
 
 export * from './models/school'
 export * from './models/member'
+export * from './models/class'
 export * from './roles'
 
 const appAbilitiesSchema = z.union([
-  schoolSubject,
   memberSubject,
   inviteSubject,
+  schoolSubject,
+  classSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

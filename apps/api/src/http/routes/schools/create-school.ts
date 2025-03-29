@@ -76,7 +76,7 @@ export async function createSchool(app: FastifyInstance) {
           select: { id: true },
         })
 
-        return reply.status(201).send({ companyId: id })
+        return reply.status(201).send({ schoolId: id })
       },
     )
 }

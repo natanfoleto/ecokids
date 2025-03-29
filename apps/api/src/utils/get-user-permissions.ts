@@ -1,12 +1,12 @@
 import { defineAbilityFor, memberSchema, type Role } from '@ecokids/auth'
 
-export function getUserPermissions(usuarioId: string, role: Role) {
-  const authUsuario = memberSchema.parse({
-    id: usuarioId,
+export function getUserPermissions(userId: string, role: Role) {
+  const authUser = memberSchema.parse({
+    id: userId,
     role,
   })
 
-  const ability = defineAbilityFor(authUsuario)
+  const ability = defineAbilityFor(authUser)
 
   return ability
 }

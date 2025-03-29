@@ -1,6 +1,6 @@
 import {
-  getInvitesParamsSchema,
-  getInvitesResponseSchema,
+  deleteClassParamsSchema,
+  deleteClassResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -10,25 +10,25 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getInvites(app: FastifyInstance) {
+export async function deleteClass(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .get(
-      '/schools/:schoolSlug/invites',
+    .delete(
+      '/schools/:schoolSlug/classes/:classId',
       {
         schema: {
-          tags: ['Convites'],
-          summary: 'Listar convites',
+          tags: ['Classes'],
+          summary: 'Deletar uma classe',
           security: [{ bearerAuth: [] }],
-          params: getInvitesParamsSchema,
+          params: deleteClassParamsSchema,
           response: {
-            200: getInvitesResponseSchema,
+            204: deleteClassResponseSchema,
           },
         },
       },
-      async (request) => {
-        const { schoolSlug } = request.params
+      async (request, reply) => {
+        const { schoolSlug, classId } = request.params
 
         const userId = await request.getCurrentUserId()
 
@@ -37,34 +37,20 @@ export async function getInvites(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Invite')) {
+        if (cannot('delete', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para listar convites.',
+            'Você não tem permissão para deletar uma classe.',
           )
         }
 
-        const invites = await prisma.invite.findMany({
+        await prisma.class.delete({
           where: {
+            id: classId,
             schoolId: school.id,
-          },
-          select: {
-            id: true,
-            email: true,
-            role: true,
-            createdAt: true,
-            author: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
           },
         })
 
-        return { invites }
+        return reply.status(204).send()
       },
     )
 }

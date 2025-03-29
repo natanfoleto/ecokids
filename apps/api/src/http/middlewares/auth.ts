@@ -16,14 +16,14 @@ export const auth = fastifyPlugin(async (app: FastifyInstance) => {
       }
     }
 
-    request.getUserMembership = async (slug: string) => {
+    request.getUserMembership = async (schoolSlug: string) => {
       const userId = await request.getCurrentUserId()
 
       const member = await prisma.member.findFirst({
         where: {
           userId,
           school: {
-            slug,
+            slug: schoolSlug,
           },
         },
         include: {

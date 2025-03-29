@@ -1,6 +1,6 @@
 import {
-  getInvitesParamsSchema,
-  getInvitesResponseSchema,
+  getClassesParamsSchema,
+  getClassesResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -10,24 +10,24 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getInvites(app: FastifyInstance) {
+export async function getClasses(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/schools/:schoolSlug/invites',
+      '/schools/:schoolSlug/classes',
       {
         schema: {
-          tags: ['Convites'],
-          summary: 'Listar convites',
+          tags: ['Classes'],
+          summary: 'Buscar todas classes de uma escola',
           security: [{ bearerAuth: [] }],
-          params: getInvitesParamsSchema,
+          params: getClassesParamsSchema,
           response: {
-            200: getInvitesResponseSchema,
+            200: getClassesResponseSchema,
           },
         },
       },
-      async (request) => {
+      async (request, reply) => {
         const { schoolSlug } = request.params
 
         const userId = await request.getCurrentUserId()
@@ -37,34 +37,26 @@ export async function getInvites(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Invite')) {
+        if (cannot('get', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para listar convites.',
+            'Você não tem permissão para buscar classes dessa escola.',
           )
         }
 
-        const invites = await prisma.invite.findMany({
+        const classes = await prisma.class.findMany({
           where: {
             schoolId: school.id,
           },
           select: {
             id: true,
-            email: true,
-            role: true,
+            name: true,
+            year: true,
             createdAt: true,
-            author: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
+            updatedAt: true,
           },
         })
 
-        return { invites }
+        return reply.send({ classes })
       },
     )
 }

@@ -29,7 +29,7 @@ export const createSchoolBodySchema = z.object({
 export type CreateSchoolBody = z.infer<typeof createSchoolBodySchema>
 
 export const createSchoolResponseSchema = z.object({
-  companyId: z.string().uuid(),
+  schoolId: z.string().uuid(),
 })
 
 export type CreateSchoolResponse = z.infer<typeof createSchoolResponseSchema>

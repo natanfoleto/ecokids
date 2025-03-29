@@ -1,6 +1,7 @@
 import {
-  getInvitesParamsSchema,
-  getInvitesResponseSchema,
+  updateClassBodySchema,
+  updateClassParamsSchema,
+  updateClassResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -10,25 +11,27 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getInvites(app: FastifyInstance) {
+export async function updateClass(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .get(
-      '/schools/:schoolSlug/invites',
+    .put(
+      '/schools/:schoolSlug/classes/:classId',
       {
         schema: {
-          tags: ['Convites'],
-          summary: 'Listar convites',
+          tags: ['Classes'],
+          summary: 'Atualizar uma classe',
           security: [{ bearerAuth: [] }],
-          params: getInvitesParamsSchema,
+          params: updateClassParamsSchema,
+          body: updateClassBodySchema,
           response: {
-            200: getInvitesResponseSchema,
+            204: updateClassResponseSchema,
           },
         },
       },
-      async (request) => {
-        const { schoolSlug } = request.params
+      async (request, reply) => {
+        const { schoolSlug, classId } = request.params
+        const { name, year } = request.body
 
         const userId = await request.getCurrentUserId()
 
@@ -37,34 +40,24 @@ export async function getInvites(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Invite')) {
+        if (cannot('update', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para listar convites.',
+            'Você não tem permissão para atualizar uma classe.',
           )
         }
 
-        const invites = await prisma.invite.findMany({
+        await prisma.class.update({
           where: {
+            id: classId,
             schoolId: school.id,
           },
-          select: {
-            id: true,
-            email: true,
-            role: true,
-            createdAt: true,
-            author: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
+          data: {
+            name,
+            year,
           },
         })
 
-        return { invites }
+        return reply.status(204).send()
       },
     )
 }
