@@ -1,7 +1,6 @@
 import {
-  createClassBodySchema,
-  createClassParamsSchema,
-  createClassResponseSchema,
+  getStudentsParamsSchema,
+  getStudentsResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -11,51 +10,57 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function createClass(app: FastifyInstance) {
+export async function getStudents(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .post(
-      '/schools/:schoolSlug/classes',
+    .get(
+      '/schools/:schoolSlug/students',
       {
         schema: {
-          tags: ['Classes'],
-          summary: 'Criar uma classe',
+          tags: ['Estudantes'],
+          summary: 'Buscar todos os estudantes de uma escola',
           security: [{ bearerAuth: [] }],
-          params: createClassParamsSchema,
-          body: createClassBodySchema,
+          params: getStudentsParamsSchema,
           response: {
-            201: createClassResponseSchema,
+            200: getStudentsResponseSchema,
           },
         },
       },
-      async (request, reply) => {
+      async (request, response) => {
         const { schoolSlug } = request.params
-        const { name, year } = request.body
 
         const userId = await request.getCurrentUserId()
 
-        const { school, membership } =
+        const { membership, school } =
           await request.getUserMembership(schoolSlug)
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('create', 'Class')) {
+        if (cannot('get', 'Student')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para criar novas classes.',
+            'Você não tem permissão para buscar os estudantes de uma escola.',
           )
         }
 
-        const { id } = await prisma.class.create({
-          data: {
-            name,
-            year,
+        const students = await prisma.student.findMany({
+          where: {
             schoolId: school.id,
           },
-          select: { id: true },
+          select: {
+            id: true,
+            code: true,
+            name: true,
+            cpf: true,
+            email: true,
+            createdAt: true,
+            updatedAt: true,
+          },
         })
 
-        return reply.status(201).send({ classId: id })
+        return response.send({
+          students,
+        })
       },
     )
 }

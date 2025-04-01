@@ -5,6 +5,7 @@ import { registerClassRoutes } from './classes'
 import { registerInvitesRoutes } from './invites'
 import { registerMemberRoutes } from './members'
 import { registerSchoolRoutes } from './schools'
+import { registerStudentRoutes } from './students'
 
 export default async function (app: FastifyInstance) {
   await registerAuthRoutes(app)
@@ -12,4 +13,5 @@ export default async function (app: FastifyInstance) {
   await registerInvitesRoutes(app)
   await registerMemberRoutes(app)
   await registerClassRoutes(app)
+  await registerStudentRoutes(app)
 }

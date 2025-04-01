@@ -96,8 +96,19 @@ model School {
   awards   Award[]
   invites  Invite[]
   members  Member[]
+  settings SchoolSettings[]
 
   @@map("schools")
+}
+
+model SchoolSettings {
+  id              String @id @default(uuid())
+  lastStudentCode Int    @default(0) @map("last_student_code")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @unique @map("school_id")
+
+  @@map("school_settings")
 }
 
 model Class {
@@ -117,10 +128,10 @@ model Class {
 
 model Student {
   id           String   @id @default(uuid())
-  code         Int      @unique @default(autoincrement())
+  code         Int
   name         String
-  cpf          String
-  email        String   @unique
+  cpf          String?  @unique
+  email        String?  @unique
   passwordHash String   @map("password_hash")
   active       Boolean  @default(true)
   createdAt    DateTime @default(now()) @map("created_at")
@@ -134,6 +145,7 @@ model Student {
 
   points Point[]
 
+  @@unique([code, schoolId])
   @@map("students")
 }
 

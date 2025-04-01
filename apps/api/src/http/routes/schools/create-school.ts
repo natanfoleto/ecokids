@@ -59,24 +59,38 @@ export async function createSchool(app: FastifyInstance) {
           }
         }
 
-        const { id } = await prisma.school.create({
-          data: {
-            name,
-            slug: schoolSlug,
-            domain,
-            ownerId: userId,
-            shouldAttachUsersByDomain,
-            members: {
-              create: {
-                userId,
-                role: 'ADMIN',
+        const schoolId = await prisma.$transaction(async (prisma) => {
+          const { id } = await prisma.school.create({
+            data: {
+              name,
+              slug: schoolSlug,
+              domain,
+              ownerId: userId,
+              shouldAttachUsersByDomain,
+              members: {
+                create: {
+                  userId,
+                  role: 'ADMIN',
+                },
               },
             },
-          },
-          select: { id: true },
+            select: { id: true },
+          })
+
+          await prisma.schoolSettings.create({
+            data: {
+              school: {
+                connect: {
+                  id,
+                },
+              },
+            },
+          })
+
+          return id
         })
 
-        return reply.status(201).send({ schoolId: id })
+        return reply.status(201).send({ schoolId })
       },
     )
 }
