@@ -1,6 +1,6 @@
 import {
-  authenticateWithPasswordBodySchema,
-  authenticateWithPasswordResponseSchema,
+  authenticateUserWithPasswordBodySchema,
+  authenticateUserWithPasswordResponseSchema,
 } from '@ecokids/types'
 import { compare } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
@@ -9,16 +9,16 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { prisma } from '@/lib/prisma'
 
-export async function authenticateWithPassword(app: FastifyInstance) {
+export async function authenticateUserWithPassword(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/authenticate/password',
+    '/authenticate/users/password',
     {
       schema: {
         tags: ['Autenticação'],
         summary: 'Autenticar com e-mail e senha',
-        body: authenticateWithPasswordBodySchema,
+        body: authenticateUserWithPasswordBodySchema,
         response: {
-          201: authenticateWithPasswordResponseSchema,
+          201: authenticateUserWithPasswordResponseSchema,
         },
       },
     },

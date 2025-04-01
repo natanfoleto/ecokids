@@ -1,22 +1,22 @@
 import {
-  requestPasswordRecoverBodySchema,
-  requestPasswordRecoverResponseSchema,
+  requestUserPasswordRecoverBodySchema,
+  requestUserPasswordRecoverResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { prisma } from '@/lib/prisma'
 
-export async function requestPasswordRecover(app: FastifyInstance) {
+export async function requestUserPasswordRecover(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/password/recover',
+    '/password/users/recover',
     {
       schema: {
         tags: ['Autenticação'],
         summary: 'Solicitar alteração de senha',
-        body: requestPasswordRecoverBodySchema,
+        body: requestUserPasswordRecoverBodySchema,
         response: {
-          201: requestPasswordRecoverResponseSchema,
+          201: requestUserPasswordRecoverResponseSchema,
         },
       },
     },
@@ -32,7 +32,7 @@ export async function requestPasswordRecover(app: FastifyInstance) {
         return reply.status(201).send()
       }
 
-      const { id: code } = await prisma.token.create({
+      const { id: code } = await prisma.userToken.create({
         data: {
           type: 'PASSWORD_RECOVER',
           userId: userFromEmail.id,

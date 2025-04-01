@@ -1,4 +1,4 @@
-import { getProfileResponseSchema } from '@ecokids/types'
+import { getStudentProfileResponseSchema } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -6,19 +6,19 @@ import { auth } from '@/http/middlewares/auth'
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { prisma } from '@/lib/prisma'
 
-export async function getProfile(app: FastifyInstance) {
+export async function getStudentProfile(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/profile',
+      '/profile/students',
       {
         schema: {
-          tags: ['Autenticação'],
-          summary: 'Buscar perfil do usuário autenticado',
+          tags: ['Estudantes'],
+          summary: 'Buscar perfil do estudante autenticado',
           security: [{ bearerAuth: [] }],
           response: {
-            200: getProfileResponseSchema,
+            200: getStudentProfileResponseSchema,
           },
         },
       },
@@ -37,7 +37,7 @@ export async function getProfile(app: FastifyInstance) {
         })
 
         if (!user) {
-          throw new BadRequestError('Usuário não encontrado.')
+          throw new BadRequestError('Estudante não encontrado.')
         }
 
         return reply.send({ user })

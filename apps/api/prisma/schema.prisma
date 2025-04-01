@@ -17,7 +17,7 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  tokens       Token[]
+  tokens       UserToken[]
   invites      Invite[]
   member_on    Member[]
   owns_schools School[]
@@ -29,7 +29,7 @@ enum TokenType {
   PASSWORD_RECOVER
 }
 
-model Token {
+model UserToken {
   id        String    @id @default(uuid())
   type      TokenType
   createdAt DateTime  @default(now()) @map("created_at")
@@ -37,7 +37,18 @@ model Token {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
-  @@map("tokens")
+  @@map("user_tokens")
+}
+
+model StudentToken {
+  id        String    @id @default(uuid())
+  type      TokenType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String  @map("student_id")
+
+  @@map("student_tokens")
 }
 
 enum Role {
@@ -144,6 +155,7 @@ model Student {
   classId String @map("class_id")
 
   points Point[]
+  tokens StudentToken[]
 
   @@unique([code, schoolId])
   @@map("students")

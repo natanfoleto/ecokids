@@ -1,6 +1,6 @@
 import {
-  resetPasswordBodySchema,
-  resetPasswordResponseSchema,
+  resetStudentPasswordBodySchema,
+  resetStudentPasswordResponseSchema,
 } from '@ecokids/types'
 import { hash } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
@@ -9,23 +9,23 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 
-export async function resetPassword(app: FastifyInstance) {
+export async function resetStudentPassword(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/password/reset',
+    '/password/students/reset',
     {
       schema: {
         tags: ['Autenticação'],
         summary: 'Trocar de senha',
-        body: resetPasswordBodySchema,
+        body: resetStudentPasswordBodySchema,
         response: {
-          204: resetPasswordResponseSchema,
+          204: resetStudentPasswordResponseSchema,
         },
       },
     },
     async (request, reply) => {
       const { code, password } = request.body
 
-      const tokenFromCode = await prisma.token.findUnique({
+      const tokenFromCode = await prisma.userToken.findUnique({
         where: { id: code },
       })
 
@@ -43,7 +43,7 @@ export async function resetPassword(app: FastifyInstance) {
           },
         }),
 
-        prisma.token.delete({
+        prisma.userToken.delete({
           where: { id: code },
         }),
       ])

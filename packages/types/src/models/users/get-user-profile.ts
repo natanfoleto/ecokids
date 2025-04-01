@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const getProfileResponseSchema = z.object({
+export const getUserProfileResponseSchema = z.object({
   user: z.object({
     id: z.string().uuid(),
     name: z.string().nullable(),
@@ -8,4 +8,6 @@ export const getProfileResponseSchema = z.object({
   }),
 })
 
-export type GetProfileResponse = z.infer<typeof getProfileResponseSchema>
+export type GetUserProfileResponse = z.infer<
+  typeof getUserProfileResponseSchema
+>
