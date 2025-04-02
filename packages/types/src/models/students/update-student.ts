@@ -29,3 +29,7 @@ export const updateStudentRequestSchema = z.object({
 })
 
 export type UpdateStudentRequest = z.infer<typeof updateStudentRequestSchema>
+
+export const updateStudentResponseSchema = z.null()
+
+export type UpdateStudentResponse = z.infer<typeof updateStudentResponseSchema>

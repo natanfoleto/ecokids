@@ -1,6 +1,7 @@
 import {
   createStudentBodySchema,
   createStudentParamsSchema,
+  createStudentResponseSchema,
 } from '@ecokids/types'
 import { hash } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
@@ -20,6 +21,9 @@ export async function createStudent(app: FastifyInstance) {
         summary: 'Criar um estudante',
         params: createStudentParamsSchema,
         body: createStudentBodySchema,
+        response: {
+          201: createStudentResponseSchema,
+        },
       },
     },
     async (request, reply) => {
@@ -85,7 +89,7 @@ export async function createStudent(app: FastifyInstance) {
 
       const passwordHash = await hash(password, 6)
 
-      await prisma.student.create({
+      const { id } = await prisma.student.create({
         data: {
           code: newCode,
           name,
@@ -97,7 +101,7 @@ export async function createStudent(app: FastifyInstance) {
         },
       })
 
-      return reply.status(201).send()
+      return reply.status(201).send({ studentId: id })
     },
   )
 }

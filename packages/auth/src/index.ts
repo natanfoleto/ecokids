@@ -11,6 +11,7 @@ import { permissions } from './permissions'
 import { classSubject } from './subjects/class'
 import { inviteSubject } from './subjects/invite'
 import { memberSubject } from './subjects/member'
+import { pointSubject } from './subjects/point'
 import { schoolSubject } from './subjects/school'
 import { studentSubject } from './subjects/student'
 
@@ -18,6 +19,7 @@ export * from './models/school'
 export * from './models/member'
 export * from './models/class'
 export * from './models/student'
+export * from './models/point'
 export * from './roles'
 
 const appAbilitiesSchema = z.union([
@@ -26,6 +28,7 @@ const appAbilitiesSchema = z.union([
   schoolSubject,
   classSubject,
   studentSubject,
+  pointSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

@@ -1,6 +1,7 @@
 import {
   updateStudentBodySchema,
   updateStudentParamsSchema,
+  updateStudentResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -23,6 +24,9 @@ export async function updateStudent(app: FastifyInstance) {
           summary: 'Atualiza um estudante',
           params: updateStudentParamsSchema,
           body: updateStudentBodySchema,
+          response: {
+            204: updateStudentResponseSchema,
+          },
         },
       },
       async (request, reply) => {

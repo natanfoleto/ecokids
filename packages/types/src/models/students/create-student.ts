@@ -39,3 +39,9 @@ export const createStudentRequestSchema = z.object({
 })
 
 export type CreateStudentRequest = z.infer<typeof createStudentRequestSchema>
+
+export const createStudentResponseSchema = z.object({
+  studentId: z.string().uuid(),
+})
+
+export type CreateStudentResponse = z.infer<typeof createStudentResponseSchema>

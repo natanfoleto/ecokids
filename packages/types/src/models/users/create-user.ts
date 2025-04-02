@@ -27,3 +27,9 @@ export const createUserRequestSchema = z.object({
 })
 
 export type CreateUserRequest = z.infer<typeof createUserRequestSchema>
+
+export const createStudentResponseSchema = z.object({
+  userId: z.string().uuid(),
+})
+
+export type CreateStudentResponse = z.infer<typeof createStudentResponseSchema>

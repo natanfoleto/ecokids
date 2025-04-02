@@ -1,4 +1,7 @@
-import { createUserBodySchema } from '@ecokids/types'
+import {
+  createStudentResponseSchema,
+  createUserBodySchema,
+} from '@ecokids/types'
 import { hash } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -14,6 +17,9 @@ export async function createUser(app: FastifyInstance) {
         tags: ['Usuários'],
         summary: 'Criar uma usuário',
         body: createUserBodySchema,
+        response: {
+          201: createStudentResponseSchema,
+        },
       },
     },
     async (request, reply) => {
@@ -38,7 +44,7 @@ export async function createUser(app: FastifyInstance) {
 
       const passwordHash = await hash(password, 6)
 
-      await prisma.user.create({
+      const { id } = await prisma.user.create({
         data: {
           name,
           email,
@@ -54,7 +60,7 @@ export async function createUser(app: FastifyInstance) {
         },
       })
 
-      return reply.status(201).send()
+      return reply.status(201).send({ studentId: id })
     },
   )
 }
