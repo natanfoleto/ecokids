@@ -8,7 +8,7 @@ import { getPendingInvites } from './get-pending-invites'
 import { rejectInvite } from './reject-invite'
 import { revokeInvite } from './revoke-invite'
 
-export async function registerInvitesRoutes(app: FastifyInstance) {
+export async function registerInviteRoutes(app: FastifyInstance) {
   app.register(createInvite)
   app.register(acceptInvite)
   app.register(revokeInvite)

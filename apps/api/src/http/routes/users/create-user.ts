@@ -1,7 +1,4 @@
-import {
-  createStudentResponseSchema,
-  createUserBodySchema,
-} from '@ecokids/types'
+import { createUserBodySchema, createUserResponseSchema } from '@ecokids/types'
 import { hash } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -18,7 +15,7 @@ export async function createUser(app: FastifyInstance) {
         summary: 'Criar uma usuário',
         body: createUserBodySchema,
         response: {
-          201: createStudentResponseSchema,
+          201: createUserResponseSchema,
         },
       },
     },
@@ -60,7 +57,7 @@ export async function createUser(app: FastifyInstance) {
         },
       })
 
-      return reply.status(201).send({ studentId: id })
+      return reply.status(201).send({ userId: id })
     },
   )
 }

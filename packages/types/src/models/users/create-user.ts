@@ -28,8 +28,8 @@ export const createUserRequestSchema = z.object({
 
 export type CreateUserRequest = z.infer<typeof createUserRequestSchema>
 
-export const createStudentResponseSchema = z.object({
+export const createUserResponseSchema = z.object({
   userId: z.string().uuid(),
 })
 
-export type CreateStudentResponse = z.infer<typeof createStudentResponseSchema>
+export type CreateUserResponse = z.infer<typeof createUserResponseSchema>
