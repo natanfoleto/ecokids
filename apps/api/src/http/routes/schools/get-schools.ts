@@ -24,7 +24,7 @@ export async function getSchools(app: FastifyInstance) {
       async (request, reply) => {
         const userId = await request.getCurrentUserId()
 
-        const imobiliariasSemCargoUsuario = await prisma.school.findMany({
+        const schoolWithUserRole = await prisma.school.findMany({
           where: { members: { some: { userId } } },
           select: {
             id: true,
@@ -44,7 +44,7 @@ export async function getSchools(app: FastifyInstance) {
           },
         })
 
-        const schoolsWithUserRole = imobiliariasSemCargoUsuario.map(
+        const schoolsWithUserRole = schoolWithUserRole.map(
           ({ members, ...school }) => {
             return { ...school, role: members[0].role }
           },

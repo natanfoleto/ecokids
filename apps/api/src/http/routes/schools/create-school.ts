@@ -54,7 +54,7 @@ export async function createSchool(app: FastifyInstance) {
 
           if (schoolByDomain) {
             throw new BadRequestError(
-              'Outra empresa com esse dominio já existe.',
+              'Outra escola com esse dominio já existe.',
             )
           }
         }

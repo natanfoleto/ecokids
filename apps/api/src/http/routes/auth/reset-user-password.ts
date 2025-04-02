@@ -15,7 +15,7 @@ export async function resetUserPassword(app: FastifyInstance) {
     {
       schema: {
         tags: ['Autenticação'],
-        summary: 'Trocar de senha',
+        summary: 'Trocar de senha do usuário',
         body: resetUserPasswordBodySchema,
         response: {
           204: resetUserPasswordResponseSchema,

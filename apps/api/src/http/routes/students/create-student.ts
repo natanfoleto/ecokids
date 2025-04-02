@@ -38,7 +38,7 @@ export async function createStudent(app: FastifyInstance) {
 
       if (cannot('create', 'Student')) {
         throw new UnauthorizedError(
-          'Você não tem permissão para criar novos estudantes.',
+          'Você não tem permissão para criar um estudantes.',
         )
       }
 

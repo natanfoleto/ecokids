@@ -42,7 +42,7 @@ export async function shutdownSchool(app: FastifyInstance) {
 
         if (cannot('delete', authSchool)) {
           throw new UnauthorizedError(
-            'Você não tem permissão para apagar esta escola.',
+            'Você não tem permissão para encerrar esta escola.',
           )
         }
 
