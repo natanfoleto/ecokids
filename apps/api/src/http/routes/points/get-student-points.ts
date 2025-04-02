@@ -27,7 +27,7 @@ export async function getStudentPoints(app: FastifyInstance) {
           },
         },
       },
-      async (request, response) => {
+      async (request, reply) => {
         const { schoolSlug, studentId } = request.params
 
         const userId = await request.getCurrentUserId()
@@ -53,7 +53,7 @@ export async function getStudentPoints(app: FastifyInstance) {
           },
         })
 
-        return response.send({
+        return reply.send({
           points,
         })
       },

@@ -28,7 +28,7 @@ export async function getStudent(app: FastifyInstance) {
           },
         },
       },
-      async (request, response) => {
+      async (request, reply) => {
         const { schoolSlug, studentId } = request.params
 
         const userId = await request.getCurrentUserId()
@@ -60,7 +60,7 @@ export async function getStudent(app: FastifyInstance) {
 
         if (!student) throw new BadRequestError('Nenhum estudante encontrado.')
 
-        return response.send({
+        return reply.send({
           student,
         })
       },

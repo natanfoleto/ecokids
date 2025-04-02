@@ -21,13 +21,13 @@ export async function getSchool(app: FastifyInstance) {
           },
         },
       },
-      async (request, response) => {
+      async (request, reply) => {
         const { schoolSlug } = request.params
 
         const { school, membership } =
           await request.getUserMembership(schoolSlug)
 
-        return response.send({
+        return reply.send({
           school: { ...school, role: membership.role },
         })
       },

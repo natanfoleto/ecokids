@@ -25,7 +25,7 @@ export async function getClass(app: FastifyInstance) {
           },
         },
       },
-      async (request, response) => {
+      async (request, reply) => {
         const { schoolSlug, classId } = request.params
 
         const userId = await request.getCurrentUserId()
@@ -57,7 +57,7 @@ export async function getClass(app: FastifyInstance) {
 
         if (!classById) throw new BadRequestError('Nenhuma classe encontrada.')
 
-        return response.send({
+        return reply.send({
           class: classById,
         })
       },

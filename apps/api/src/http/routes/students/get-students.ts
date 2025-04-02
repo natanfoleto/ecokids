@@ -27,7 +27,7 @@ export async function getStudents(app: FastifyInstance) {
           },
         },
       },
-      async (request, response) => {
+      async (request, reply) => {
         const { schoolSlug } = request.params
 
         const userId = await request.getCurrentUserId()
@@ -58,7 +58,7 @@ export async function getStudents(app: FastifyInstance) {
           },
         })
 
-        return response.send({
+        return reply.send({
           students,
         })
       },
