@@ -1,0 +1,36 @@
+{
+  "name": "@ecokids/manager",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@ecokids/auth": "workspace:*",
+    "@ecokids/env": "workspace:*"
+  },
+  "devDependencies": {
+    "@ecokids/eslint-config": "workspace:*",
+    "@ecokids/prettier": "workspace:*",
+    "@ecokids/tsconfig": "workspace:*",
+    "@ecokids/types": "workspace:*",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "globals": "^15.15.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
+  },
+  "prettier": "@ecokids/prettier",
+  "eslintConfig": {
+    "extends": [
+      "@ecokids/eslint-config/react"
+    ]
+  }
+}

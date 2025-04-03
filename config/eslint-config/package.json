@@ -7,7 +7,7 @@
   },
   "files": [
     "library.js",
-    "next.js",
+    "react.js",
     "node.js"
   ],
   "devDependencies": {
