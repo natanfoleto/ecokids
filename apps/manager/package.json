@@ -10,10 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ecokids/auth": "workspace:*",
+    "@ecokids/env": "workspace:*",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@tailwindcss/vite": "^4.1.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.487.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@ecokids/auth": "workspace:*",
-    "@ecokids/env": "workspace:*"
+    "tailwind-merge": "^3.1.0",
+    "tailwindcss": "^4.1.1",
+    "tw-animate-css": "^1.2.5"
   },
   "devDependencies": {
     "@ecokids/eslint-config": "workspace:*",
