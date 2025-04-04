@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const authenticateUserWithPasswordBodySchema = z.object({
   email: z.string().email(),
+  cpf: z.string(),
   password: z.string(),
 })
 

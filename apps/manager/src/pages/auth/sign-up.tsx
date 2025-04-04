@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,8 +7,6 @@ import { Label } from '@/components/ui/label'
 import logo from './logo.png'
 
 export function SignUp() {
-  const navigate = useNavigate()
-
   return (
     <form className="flex w-2/5 flex-col items-center gap-6 rounded-xl border p-12">
       <img src={logo} alt="Ecokids" className="size-32" />
@@ -47,12 +45,8 @@ export function SignUp() {
       <div className="flex w-full flex-col items-center gap-2">
         <Button className="w-full cursor-pointer">Cadastrar</Button>
 
-        <Button
-          variant="link"
-          className="cursor-pointer"
-          onClick={() => navigate('/sign-in')}
-        >
-          Ja tenho conta - Entrar
+        <Button variant="link" className="cursor-pointer" asChild>
+          <Link to="/sign-in">Ja tenho conta - Entrar</Link>
         </Button>
       </div>
     </form>
