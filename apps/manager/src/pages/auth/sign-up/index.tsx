@@ -1,12 +1,13 @@
 import { type CreateUserBody, createUserBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { Loader2, UserRoundX } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import logo from '@/assets/logo.svg'
 import { FormInput } from '@/components/form/form-input'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
@@ -34,7 +35,7 @@ export function SignUp() {
     ),
   })
 
-  const [{ message }, handleAction, isPending] = useAction()
+  const [{ success, message }, handleAction, isPending] = useAction()
 
   async function onSubmit(data: CreateUserBody) {
     await handleAction(
@@ -51,14 +52,22 @@ export function SignUp() {
   }
 
   return (
-    <div className="animate-in slide-in-from-left flex w-2/5 flex-col items-center space-y-8 duration-500">
+    <div className="animate-in slide-in-from-right flex w-2/5 flex-col items-center space-y-8 duration-500">
       <img src={logo} alt="Ecokids" className="w-64" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col items-center gap-6 rounded-md border p-12"
+        className="flex w-full flex-col items-center gap-8 rounded-md border p-12"
       >
-        <div className="mt-8 w-full space-y-4">
+        {!success && (
+          <Alert variant="destructive">
+            <UserRoundX className="size-4" />
+            <AlertTitle>Oooops!!</AlertTitle>
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="w-full space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs">Nome completo</Label>
             <FormInput

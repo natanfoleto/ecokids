@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
 export const authenticateUserWithPasswordBodySchema = z.object({
-  email: z.string().email(),
-  cpf: z.string(),
+  email: z.string().email({ message: 'Insira um e-mail válido. ' }),
   password: z.string(),
 })
 
