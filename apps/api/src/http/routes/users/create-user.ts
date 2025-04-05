@@ -12,7 +12,7 @@ export async function createUser(app: FastifyInstance) {
     {
       schema: {
         tags: ['Usuários'],
-        summary: 'Criar uma usuário',
+        summary: 'Criar um usuário',
         body: createUserBodySchema,
         response: {
           201: createUserResponseSchema,
