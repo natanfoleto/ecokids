@@ -59,7 +59,7 @@ export function SignUp() {
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full flex-col items-center gap-8 rounded-md border p-12"
       >
-        {!success && (
+        {!success && message && (
           <Alert variant="destructive">
             <UserRoundX className="size-4" />
             <AlertTitle>Oooops!!</AlertTitle>

@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie'
 import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifySwagger from '@fastify/swagger'
@@ -48,7 +49,15 @@ app.register(fastifyJwt, {
   secret: 'ecokids',
 })
 
-app.register(fastifyCors)
+app.register(fastifyCookie, {
+  secret: 'ecokids',
+})
+
+app.register(fastifyCors, {
+  origin: 'http://localhost:5173',
+  credentials: true,
+})
+
 app.register(routes)
 
 app
