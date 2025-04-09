@@ -1,6 +1,15 @@
-import { Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
+
+import { isAuthenticated } from '@/auth'
 
 export function AppLayout() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!isAuthenticated()) navigate('/sign-in')
+  }, [navigate])
+
   return (
     <div className="min-h-screen bg-[#FBF4F4]">
       {/* <Header /> */}
