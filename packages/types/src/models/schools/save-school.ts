@@ -34,8 +34,8 @@ export const saveSchoolBodySchema = z
 export type SaveSchoolBody = z.infer<typeof saveSchoolBodySchema>
 
 export const saveSchoolSchema = z.object({
-  body: saveSchoolBodySchema,
   params: saveSchoolParamsSchema,
+  body: saveSchoolBodySchema,
 })
 
 export type SaveSchool = z.infer<typeof saveSchoolSchema>
