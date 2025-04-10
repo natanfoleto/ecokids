@@ -114,7 +114,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
       <Button
         type="submit"
         className="cursor-pointer self-end bg-emerald-500 hover:bg-emerald-600"
-        disabled={isPending || !isDirty}
+        disabled={isPending || !isDirty || (success && !!message)}
       >
         {isPending ? (
           <Loader2 className="text-muted-foreground size-4 animate-spin" />

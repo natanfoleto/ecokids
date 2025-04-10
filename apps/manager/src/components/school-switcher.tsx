@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { ChevronsUpDown, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
-import { getCurrentSchool } from '@/auth'
 import { getSchools } from '@/http/schools/get-schools'
-import { CreateSchoolSheet } from '@/pages/app/school/create-school-sheet'
+import { CreateSchool } from '@/pages/app/school/create-school'
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import {
@@ -19,12 +18,12 @@ import {
 } from './ui/dropdown-menu'
 
 export function SchoolSwitcher() {
-  const schoolSlug = getCurrentSchool()
+  const { slug } = useParams()
 
-  const [createSchoolSheet, setCreateSchoolSheet] = useState(false)
+  const [createSchool, setCreateSchool] = useState(false)
 
-  function toggleCreateSchoolSheet() {
-    setCreateSchoolSheet(!createSchoolSheet)
+  function toggleCreateSchool() {
+    setCreateSchool(!createSchool)
   }
 
   const { data } = useQuery({
@@ -32,9 +31,7 @@ export function SchoolSwitcher() {
     queryFn: () => getSchools(),
   })
 
-  const currentSchool = data?.schools.find(
-    (imobiliaria) => imobiliaria.slug === schoolSlug,
-  )
+  const currentSchool = data?.schools.find((school) => school.slug === slug)
 
   return (
     <div>
@@ -86,7 +83,7 @@ export function SchoolSwitcher() {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <div onClick={toggleCreateSchoolSheet}>
+            <div onClick={toggleCreateSchool}>
               <PlusCircle className="mr-2 size-4" />
               Criar escola
             </div>
@@ -94,10 +91,7 @@ export function SchoolSwitcher() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <CreateSchoolSheet
-        open={createSchoolSheet}
-        onClose={toggleCreateSchoolSheet}
-      />
+      <CreateSchool open={createSchool} onClose={toggleCreateSchool} />
     </div>
   )
 }

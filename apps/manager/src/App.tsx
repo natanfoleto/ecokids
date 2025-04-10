@@ -9,7 +9,7 @@ import { router } from './routes'
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}></RouterProvider>
+      <RouterProvider router={router} />
       <Toaster />
     </QueryClientProvider>
   )

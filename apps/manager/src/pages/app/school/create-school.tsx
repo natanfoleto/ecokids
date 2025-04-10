@@ -8,12 +8,12 @@ import {
 
 import { SchoolForm } from './school-form'
 
-interface CreateSchoolSheetProps {
+interface CreateSchoolProps {
   open: boolean
   onClose: () => void
 }
 
-export function CreateSchoolSheet({ open, onClose }: CreateSchoolSheetProps) {
+export function CreateSchool({ open, onClose }: CreateSchoolProps) {
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent>
