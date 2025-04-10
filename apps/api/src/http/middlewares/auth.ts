@@ -32,7 +32,7 @@ export const auth = fastifyPlugin(async (app: FastifyInstance) => {
       })
 
       if (!member) {
-        throw new UnauthorizedError(`Você não é um membro dessa empresa.`)
+        throw new UnauthorizedError(`Você não é um membro dessa escola.`)
       }
 
       const { school, ...membership } = member

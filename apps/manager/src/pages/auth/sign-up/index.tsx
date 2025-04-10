@@ -69,8 +69,9 @@ export function SignUp() {
 
         <div className="w-full space-y-4">
           <div className="space-y-1.5">
-            <Label className="text-xs">Nome completo</Label>
+            <Label htmlFor="name">Nome completo</Label>
             <FormInput
+              id="name"
               {...register('name')}
               placeholder="Seu nome completo"
               error={errors.name?.message}
@@ -79,8 +80,9 @@ export function SignUp() {
 
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-1.5">
-              <Label className="text-xs">E-mail</Label>
+              <Label htmlFor="email">E-mail</Label>
               <FormInput
+                id="email"
                 {...register('email')}
                 placeholder="Seu e-mail"
                 error={errors.email?.message}
@@ -88,8 +90,9 @@ export function SignUp() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs">CPF</Label>
+              <Label htmlFor="cpf">CPF</Label>
               <FormInput
+                id="cpf"
                 {...register('cpf')}
                 placeholder="Seu CPF"
                 maxLength={14}
@@ -101,8 +104,9 @@ export function SignUp() {
 
           <div className="grid grid-cols-2 gap-2">
             <div className="space-y-1.5">
-              <Label className="text-xs">Senha</Label>
+              <Label htmlFor="password">Senha</Label>
               <FormInput
+                id="password"
                 type="password"
                 {...register('password')}
                 placeholder="Sua senha secreta"
@@ -111,8 +115,9 @@ export function SignUp() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs">Confirmar senha</Label>
+              <Label htmlFor="confirm_password">Confirmar senha</Label>
               <FormInput
+                id="confirm_password"
                 type="password"
                 {...register('confirm_password')}
                 placeholder="Confirme sua senha secreta"

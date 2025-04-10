@@ -58,8 +58,9 @@ export function SignIn() {
 
         <div className="w-full space-y-4">
           <div className="space-y-1.5">
-            <Label className="text-xs">E-mail</Label>
+            <Label id="email">E-mail</Label>
             <FormInput
+              id="email"
               {...register('email')}
               placeholder="Seu e-mail"
               error={errors.email?.message}
@@ -67,8 +68,9 @@ export function SignIn() {
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs">Senha</Label>
+            <Label htmlFor="password">Senha</Label>
             <FormInput
+              id="password"
               type="password"
               {...register('password')}
               placeholder="Sua senha secreta"
