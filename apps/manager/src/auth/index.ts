@@ -36,7 +36,9 @@ export async function ability() {
   })
 }
 
-export async function auth(navigate: ReturnType<typeof useNavigate>) {
+export async function getCurrentAuthentication(
+  navigate: ReturnType<typeof useNavigate>,
+) {
   const token = Cookies.get('token')
 
   if (!token) {
