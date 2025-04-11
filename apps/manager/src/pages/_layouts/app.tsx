@@ -15,7 +15,7 @@ export function AppLayout() {
     <div className="min-h-screen bg-[#FBF4F4]">
       <Header />
 
-      <main className="mx-[168px] mt-5 flex items-center">
+      <main className="flex items-center px-8 py-4">
         <Outlet />
       </main>
     </div>

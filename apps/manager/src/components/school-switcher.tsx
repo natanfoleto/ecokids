@@ -36,7 +36,7 @@ export function SchoolSwitcher() {
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger className="focus-visible:ring-primary flex max-w-[226px] items-center gap-2 rounded p-1 text-sm font-medium outline-none focus-visible:ring-1">
+        <DropdownMenuTrigger className="focus-visible:ring-primary flex max-w-[226px] cursor-pointer items-center gap-2 rounded p-1 text-sm font-medium outline-none focus-visible:ring-1">
           {currentSchool ? (
             <>
               <Avatar className="size-5">
@@ -66,7 +66,11 @@ export function SchoolSwitcher() {
 
             {data?.schools.map((school) => {
               return (
-                <DropdownMenuItem key={school.id} asChild>
+                <DropdownMenuItem
+                  key={school.id}
+                  asChild
+                  className="cursor-pointer"
+                >
                   <Link to={`/school/${school.slug}`}>
                     <Avatar className="mr-2 size-5">
                       {school.logoUrl && <AvatarImage src={school.logoUrl} />}
@@ -83,7 +87,7 @@ export function SchoolSwitcher() {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <div onClick={toggleCreateSchool}>
+            <div onClick={toggleCreateSchool} className="cursor-pointer">
               <PlusCircle className="mr-2 size-4" />
               Criar escola
             </div>

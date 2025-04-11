@@ -1,11 +1,13 @@
+import { useQuery } from '@tanstack/react-query'
 import { ChevronDown, LogOut } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { getCurrentAuthentication, signOut } from '@/auth'
+import { signOut } from '@/auth'
+import { getUserProfile } from '@/http/users/get-user-profile'
 import { getInitialsName } from '@/utils/get-initials-name'
 
 import { Avatar, AvatarFallback } from './ui/avatar'
+import { Button } from './ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,39 +18,27 @@ import {
 export function ProfileButton() {
   const navigate = useNavigate()
 
-  const [user, setUser] = useState<{
-    id: string
-    name: string | null
-    email: string
-    logoUrl?: string | null
-  } | null>(null)
+  const { data } = useQuery({
+    queryKey: ['profile', 'users'],
+    queryFn: () => getUserProfile(),
+  })
 
-  useEffect(() => {
-    async function loadUser() {
-      const auth = await getCurrentAuthentication(navigate)
-
-      if (auth) {
-        setUser(auth.user)
-      }
-    }
-
-    loadUser()
-  }, [navigate])
-
-  if (!user) return null
+  if (!data) return null
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-3 outline-none">
+      <DropdownMenuTrigger className="flex cursor-pointer items-center gap-3 outline-none">
         <div className="flex flex-col items-end">
-          <span className="text-sm font-medium">{user.name}</span>
-          <span className="text-muted-foreground text-xs">{user.email}</span>
+          <span className="text-sm font-medium">{data.user.name}</span>
+          <span className="text-muted-foreground text-xs">
+            {data.user.email}
+          </span>
         </div>
 
         <Avatar>
-          {/* {user.logoUrl && <AvatarImage src={user.logoUrl} />} */}
-          {user.name && (
-            <AvatarFallback>{getInitialsName(user.name)}</AvatarFallback>
+          {/* {data.user.logoUrl && <AvatarImage src={data.user.logoUrl} />} */}
+          {data.user.name && (
+            <AvatarFallback>{getInitialsName(data.user.name)}</AvatarFallback>
           )}
         </Avatar>
 
@@ -57,10 +47,15 @@ export function ProfileButton() {
 
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <div onClick={() => signOut(navigate)}>
-            <LogOut className="mr-2 size-4" />
+          <Button
+            onClick={() => signOut(navigate)}
+            variant="ghost"
+            size="sm"
+            className="w-full cursor-pointer justify-start"
+          >
+            <LogOut className="mr-1 size-4" />
             Sair
-          </div>
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

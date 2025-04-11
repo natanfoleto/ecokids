@@ -29,7 +29,7 @@ export async function revokeInvite(app: FastifyInstance) {
         },
       },
       async (request, reply) => {
-        const { schoolSlug, conviteId } = request.params
+        const { schoolSlug, inviteId } = request.params
 
         const userId = await request.getCurrentUserId()
 
@@ -46,7 +46,7 @@ export async function revokeInvite(app: FastifyInstance) {
 
         const invite = await prisma.invite.findUnique({
           where: {
-            id: conviteId,
+            id: inviteId,
             schoolId: school.id,
           },
         })
@@ -56,7 +56,7 @@ export async function revokeInvite(app: FastifyInstance) {
         }
 
         await prisma.invite.delete({
-          where: { id: conviteId },
+          where: { id: inviteId },
         })
 
         return reply.status(204).send()

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const revokeInviteParamsSchema = z.object({
   schoolSlug: z.string(),
-  conviteId: z.string().uuid(),
+  inviteId: z.string().uuid(),
 })
 
 export type RevokeInviteParams = z.infer<typeof revokeInviteParamsSchema>
