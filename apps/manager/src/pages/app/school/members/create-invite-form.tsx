@@ -30,7 +30,10 @@ export function CreateInviteForm() {
   const [{ message, success }, handleAction, isPending] = useAction()
 
   async function onSubmit(data: CreateInviteBody) {
-    await handleAction(() => createInviteAction({ body: data }))
+    await handleAction(
+      () => createInviteAction({ body: data }),
+      () => setValue('email', ''),
+    )
   }
 
   function updateRole(role: Role) {

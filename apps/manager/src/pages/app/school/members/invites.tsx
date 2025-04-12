@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { SelectItem } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useCurrentSchool } from '@/hooks/use-current-school'
@@ -20,7 +21,7 @@ export function Invites() {
 
   const { permissions } = usePermissions()
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['schools', currentSchool, 'invites'],
     queryFn: () => getInvites({ params: { schoolSlug: currentSchool! } }),
   })
@@ -100,41 +101,48 @@ export function Invites() {
           <div className="rounded border">
             <Table>
               <TableBody>
-                {invites?.map((invite) => (
-                  <TableRow key={invite.id}>
-                    <TableCell className="py-2.5">
-                      <span className="text-muted-foreground">
-                        {invite.email}
-                      </span>
-                    </TableCell>
+                {isLoading ? (
+                  <div>
+                    <InviteSkeleton />
+                    <InviteSkeleton />
+                  </div>
+                ) : (
+                  invites?.map((invite) => (
+                    <TableRow key={invite.id}>
+                      <TableCell className="py-2.5">
+                        <span className="text-muted-foreground">
+                          {invite.email}
+                        </span>
+                      </TableCell>
 
-                    <TableCell className="py-2.5 font-medium">
-                      {invite.role}
-                    </TableCell>
+                      <TableCell className="py-2.5 font-medium">
+                        {invite.role}
+                      </TableCell>
 
-                    <TableCell className="py-2.5">
-                      <div className="flex justify-end">
-                        {canDeleteInvite && (
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            className="cursor-pointer"
-                            onClick={() =>
-                              revokeInviteAction({
-                                params: {
-                                  schoolSlug: currentSchool!,
-                                  inviteId: invite.id,
-                                },
-                              })
-                            }
-                          >
-                            Revogar convite
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell className="py-2.5">
+                        <div className="flex justify-end">
+                          {canDeleteInvite && (
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              className="cursor-pointer"
+                              onClick={() =>
+                                revokeInviteAction({
+                                  params: {
+                                    schoolSlug: currentSchool!,
+                                    inviteId: invite.id,
+                                  },
+                                })
+                              }
+                            >
+                              Revogar convite
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
 
                 {invites?.length === 0 && (
                   <TableRow>
@@ -148,6 +156,15 @@ export function Invites() {
           </div>
         </TabsContent>
       </Tabs>
+    </div>
+  )
+}
+
+function InviteSkeleton() {
+  return (
+    <div className="flex items-center gap-2 p-2">
+      <Skeleton className="h-4 w-full rounded-lg" />
+      <Skeleton className="h-4 w-40 rounded-lg" />
     </div>
   )
 }

@@ -21,6 +21,7 @@ export const getMembersResponseSchema = z.object({
       role: roleSchema,
       name: z.string().nullable(),
       email: z.string().email(),
+      avatarUrl: z.string().url().nullable(),
     }),
   ),
 })

@@ -45,6 +45,7 @@ export async function getPendingInvites(app: FastifyInstance) {
               select: {
                 id: true,
                 name: true,
+                avatarUrl: true,
               },
             },
             school: {

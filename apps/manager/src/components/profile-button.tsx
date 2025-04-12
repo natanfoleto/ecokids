@@ -5,7 +5,7 @@ import { signOut } from '@/auth'
 import { useUserProfile } from '@/hooks/use-user-profile'
 import { getInitialsName } from '@/utils/get-initials-name'
 
-import { Avatar, AvatarFallback } from './ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import {
   DropdownMenu,
@@ -13,13 +13,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { Skeleton } from './ui/skeleton'
 
 export function ProfileButton() {
   const navigate = useNavigate()
 
-  const { user } = useUserProfile()
+  const { user, isLoading } = useUserProfile()
 
-  if (!user) return null
+  if (isLoading || !user) {
+    return (
+      <div className="flex items-center space-x-4">
+        <div className="flex flex-col items-end space-y-2">
+          <Skeleton className="h-2 w-32" />
+          <Skeleton className="h-2 w-48" />
+        </div>
+
+        <Skeleton className="size-8 rounded-full" />
+      </div>
+    )
+  }
 
   return (
     <DropdownMenu>
@@ -30,7 +42,7 @@ export function ProfileButton() {
         </div>
 
         <Avatar>
-          {/* {user.logoUrl && <AvatarImage src={user.logoUrl} />} */}
+          {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
           {user.name && (
             <AvatarFallback>{getInitialsName(user.name)}</AvatarFallback>
           )}

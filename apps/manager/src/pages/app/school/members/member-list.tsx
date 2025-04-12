@@ -1,8 +1,9 @@
 import { useQueries } from '@tanstack/react-query'
 import { Crown } from 'lucide-react'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
@@ -41,7 +42,12 @@ export function MemberList() {
     ],
   })
 
-  const [{ data: dataMembers }, { data: dataSchool }] = results
+  const [
+    { data: dataMembers, isLoading: isLoadingMembers },
+    { data: dataSchool, isLoading: isLoadingSchool },
+  ] = results
+
+  const isLoading = isLoadingMembers || isLoadingSchool
 
   const members = dataMembers?.members
   const school = dataSchool?.school
@@ -53,73 +59,101 @@ export function MemberList() {
     <div className="rounded border">
       <Table>
         <TableBody>
-          {members?.map((member) => (
-            <TableRow key={member.id}>
-              <TableCell className="py-2.5" style={{ width: 48 }}>
-                <Avatar>
-                  <AvatarFallback>
-                    {member.name && getInitialsName(member.name)}
-                  </AvatarFallback>
-                </Avatar>
-              </TableCell>
+          {isLoading ? (
+            <div>
+              <MemberSkeleton />
+              <MemberSkeleton />
+            </div>
+          ) : (
+            members?.map((member) => (
+              <TableRow key={member.id}>
+                <TableCell className="py-2.5" style={{ width: 48 }}>
+                  <Avatar>
+                    {member.avatarUrl && <AvatarImage src={member.avatarUrl} />}
+                    <AvatarFallback>
+                      {member.name && getInitialsName(member.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </TableCell>
 
-              <TableCell className="py-2.5">
-                <div className="flex flex-col">
-                  <span className="inline-flex items-center gap-2 font-medium">
-                    {member.name}
-                    {member.userId === membership?.userId && ' (me)'}
-                    {member.userId === school?.ownerId && (
-                      <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
-                        <Crown className="size-3" /> Dono
-                      </span>
-                    )}
-                  </span>
-                  <span className="text-sx text-muted-foreground">
-                    {member.email}
-                  </span>
-                </div>
-              </TableCell>
+                <TableCell className="py-2.5">
+                  <div className="flex flex-col">
+                    <span className="inline-flex items-center gap-2 font-medium">
+                      {member.name}
+                      {member.userId === membership?.userId && ' (me)'}
+                      {member.userId === school?.ownerId && (
+                        <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
+                          <Crown className="size-3" /> Dono
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-sx text-muted-foreground">
+                      {member.email}
+                    </span>
+                  </div>
+                </TableCell>
 
-              <TableCell className="py-2.5">
-                <div className="flex items-center justify-end gap-2">
-                  <UpdateRoleMember
-                    memberId={member.id}
-                    value={member.role}
-                    disabled={
-                      !canUpdateMember ||
-                      member.id === membership?.userId ||
-                      member.userId === school?.ownerId
-                    }
-                  />
-
-                  {canDeleteMember && (
-                    <Button
+                <TableCell className="py-2.5">
+                  <div className="flex items-center justify-end gap-2">
+                    <UpdateRoleMember
+                      memberId={member.id}
+                      value={member.role}
                       disabled={
+                        !canUpdateMember ||
                         member.id === membership?.userId ||
                         member.userId === school?.ownerId
                       }
-                      type="submit"
-                      size="sm"
-                      variant="destructive"
-                      className="cursor-pointer"
-                      onClick={() =>
-                        removeMemberAction({
-                          params: {
-                            schoolSlug: currentSchool!,
-                            memberId: member.id,
-                          },
-                        })
-                      }
-                    >
-                      Remover
-                    </Button>
-                  )}
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                    />
+
+                    {canDeleteMember && (
+                      <Button
+                        disabled={
+                          member.id === membership?.userId ||
+                          member.userId === school?.ownerId
+                        }
+                        type="submit"
+                        size="sm"
+                        variant="destructive"
+                        className="cursor-pointer"
+                        onClick={() =>
+                          removeMemberAction({
+                            params: {
+                              schoolSlug: currentSchool!,
+                              memberId: member.id,
+                            },
+                          })
+                        }
+                      >
+                        Remover
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
+    </div>
+  )
+}
+
+function MemberSkeleton() {
+  return (
+    <div className="flex items-center justify-between p-2">
+      <div className="flex w-full items-center gap-2">
+        <Skeleton className="size-10 rounded-full" />
+
+        <div className="w-full space-y-1">
+          <Skeleton className="h-3 w-48" />
+          <Skeleton className="h-3 w-80" />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-8 w-24" />
+        <Skeleton className="h-8 w-24" />
+      </div>
     </div>
   )
 }

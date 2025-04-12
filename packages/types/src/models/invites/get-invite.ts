@@ -26,6 +26,7 @@ export const getInviteResponseSchema = z.object({
       .object({
         id: z.string().uuid(),
         name: z.string().nullable(),
+        avatarUrl: z.string().url().nullable(),
       })
       .nullable(),
   }),

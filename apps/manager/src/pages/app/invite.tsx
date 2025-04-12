@@ -5,7 +5,7 @@ import { CheckCircle, LogIn, LogOut } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { isAuthenticated, signOut } from '@/auth'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useUserProfile } from '@/hooks/use-user-profile'
@@ -25,6 +25,10 @@ export function Invite() {
     enabled: !!id,
   })
 
+  const invite = data?.invite
+
+  if (!invite) return null
+
   const userIsAuthenticated = isAuthenticated()
 
   let currentUserEmail = null
@@ -33,13 +37,12 @@ export function Invite() {
     currentUserEmail = user?.email
   }
 
-  const userIsAuthenticatedWithSameEmail =
-    currentUserEmail === data?.invite?.email
+  const userIsAuthenticatedWithSameEmail = currentUserEmail === invite.email
 
   async function enterByInvitation() {
     Cookies.set(`inviteId`, id!)
 
-    navigate(`/sign-in?email=${data?.invite?.email}`)
+    navigate(`/sign-in?email=${invite?.email}`)
   }
 
   async function acceptInviteAction() {
@@ -57,26 +60,27 @@ export function Invite() {
       <div className="flex w-full max-w-sm flex-col items-center space-y-6">
         <div className="flex flex-col items-center space-y-4">
           <Avatar className="size-16">
-            {data?.invite?.author?.name && (
+            {invite.author?.avatarUrl && (
+              <AvatarImage src={invite.author.avatarUrl} />
+            )}
+
+            {invite.author?.name && (
               <AvatarFallback>
-                {getInitialsName(data.invite.author.name)}
+                {getInitialsName(invite.author.name)}
               </AvatarFallback>
             )}
-            <AvatarFallback />
           </Avatar>
 
           <p className="text-muted-foreground text-balance text-center leading-relaxed">
             <span className="text-foreground font-medium">
-              {data?.invite?.author?.name ?? 'Alguém'}
+              {invite.author?.name ?? 'Alguém'}
             </span>{' '}
             convidou você para participar de{' '}
             <span className="text-foreground font-medium">
-              {data?.invite?.school.name}
+              {invite.school.name}
             </span>
             .{' '}
-            <span className="text-xs">
-              {dayjs(data?.invite?.createdAt).fromNow()}
-            </span>
+            <span className="text-xs">{dayjs(invite.createdAt).fromNow()}</span>
           </p>
         </div>
 
@@ -103,7 +107,7 @@ export function Invite() {
               className="cursor-pointer"
             >
               <CheckCircle className="mr-2 size-4" />
-              Entrar em {data?.invite.school.name}
+              Entrar em {invite.school.name}
             </Button>
           </form>
         )}
@@ -113,7 +117,7 @@ export function Invite() {
             <p className="text-muted-foreground text-balance text-center leading-relaxed">
               Este convite foi enviado para{' '}
               <span className="text-muted-foreground font-medium">
-                {data?.invite?.email}
+                {invite.email}
               </span>
               , porém você está autenticado com{' '}
               <span className="text-muted-foreground font-medium">

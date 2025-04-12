@@ -8,7 +8,7 @@ export const createInviteParamsSchema = z.object({
 export type CreateInviteParams = z.infer<typeof createInviteParamsSchema>
 
 export const createInviteBodySchema = z.object({
-  email: z.string().email(),
+  email: z.string().email({ message: 'Insira um e-mail válido.' }),
   role: roleSchema,
 })
 

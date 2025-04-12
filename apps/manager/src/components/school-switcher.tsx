@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
+import { Skeleton } from './ui/skeleton'
 
 export function SchoolSwitcher() {
   const { slug } = useParams()
@@ -26,12 +27,13 @@ export function SchoolSwitcher() {
     setCreateSchool(!createSchool)
   }
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['schools'],
     queryFn: () => getSchools(),
   })
 
-  const currentSchool = data?.schools.find((school) => school.slug === slug)
+  const schools = data?.schools
+  const currentSchool = schools?.find((school) => school.slug === slug)
 
   return (
     <div>
@@ -64,24 +66,31 @@ export function SchoolSwitcher() {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Escolas</DropdownMenuLabel>
 
-            {data?.schools.map((school) => {
-              return (
-                <DropdownMenuItem
-                  key={school.id}
-                  asChild
-                  className="cursor-pointer"
-                >
-                  <Link to={`/school/${school.slug}`}>
-                    <Avatar className="mr-2 size-5">
-                      {school.logoUrl && <AvatarImage src={school.logoUrl} />}
-                      <AvatarFallback />
-                    </Avatar>
+            {isLoading ? (
+              <div className="space-y-1 px-2">
+                <Skeleton className="h-2 w-full rounded-md" />
+                <Skeleton className="h-2 w-full rounded-md" />
+              </div>
+            ) : (
+              schools?.map((school) => {
+                return (
+                  <DropdownMenuItem
+                    key={school.id}
+                    asChild
+                    className="cursor-pointer"
+                  >
+                    <Link to={`/school/${school.slug}`}>
+                      <Avatar className="mr-2 size-5">
+                        {school.logoUrl && <AvatarImage src={school.logoUrl} />}
+                        <AvatarFallback />
+                      </Avatar>
 
-                    <span className="line-clamp-1">{school.name}</span>
-                  </Link>
-                </DropdownMenuItem>
-              )
-            })}
+                      <span className="line-clamp-1">{school.name}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )
+              })
+            )}
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />

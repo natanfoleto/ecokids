@@ -55,6 +55,7 @@ export async function getMembers(app: FastifyInstance) {
                 id: true,
                 name: true,
                 email: true,
+                avatarUrl: true,
               },
             },
           },

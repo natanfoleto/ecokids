@@ -56,6 +56,7 @@ export async function getInvites(app: FastifyInstance) {
               select: {
                 id: true,
                 name: true,
+                avatarUrl: true,
               },
             },
           },

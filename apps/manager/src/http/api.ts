@@ -1,6 +1,8 @@
 import ky, { type AfterResponseHook, BeforeRequestHook } from 'ky'
 
 const beforeRequest: BeforeRequestHook = async (_request) => {
+  // await new Promise((resolve) => setTimeout(resolve, 2000))
+
   const cookies: Record<string, string> = document.cookie.split(';').reduce(
     (acc, cookie) => {
       const [key, value] = cookie.trim().split('=')
