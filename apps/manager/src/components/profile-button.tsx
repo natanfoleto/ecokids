@@ -1,9 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
 import { ChevronDown, LogOut } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { signOut } from '@/auth'
-import { getUserProfile } from '@/http/users/get-user-profile'
+import { useUserProfile } from '@/hooks/use-user-profile'
 import { getInitialsName } from '@/utils/get-initials-name'
 
 import { Avatar, AvatarFallback } from './ui/avatar'
@@ -18,27 +17,22 @@ import {
 export function ProfileButton() {
   const navigate = useNavigate()
 
-  const { data } = useQuery({
-    queryKey: ['profile', 'users'],
-    queryFn: () => getUserProfile(),
-  })
+  const { user } = useUserProfile()
 
-  if (!data) return null
+  if (!user) return null
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-3 outline-none">
         <div className="flex flex-col items-end">
-          <span className="text-sm font-medium">{data.user.name}</span>
-          <span className="text-muted-foreground text-xs">
-            {data.user.email}
-          </span>
+          <span className="text-sm font-medium">{user.name}</span>
+          <span className="text-muted-foreground text-xs">{user.email}</span>
         </div>
 
         <Avatar>
-          {/* {data.user.logoUrl && <AvatarImage src={data.user.logoUrl} />} */}
-          {data.user.name && (
-            <AvatarFallback>{getInitialsName(data.user.name)}</AvatarFallback>
+          {/* {user.logoUrl && <AvatarImage src={user.logoUrl} />} */}
+          {user.name && (
+            <AvatarFallback>{getInitialsName(user.name)}</AvatarFallback>
           )}
         </Avatar>
 

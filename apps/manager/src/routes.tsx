@@ -4,6 +4,7 @@ import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
 import { Home } from './pages/app/home'
+import { Invite } from './pages/app/invite'
 import { School } from './pages/app/school'
 import { Members } from './pages/app/school/members'
 import { SignIn } from './pages/auth/sign-in'
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
           { path: '/sign-up', element: <SignUp /> },
         ],
       },
+      { path: '/invite/:id', element: <Invite /> },
     ],
   },
   { path: '*', element: <NotFound /> },

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import logoHeader from '@/assets/logo-header.svg'
 
+import { PendingInvites } from './pending-invites'
 import { ProfileButton } from './profile-button'
 import { SchoolSwitcher } from './school-switcher'
 import { Separator } from './ui/separator'
@@ -21,7 +22,7 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        {/* <ConvitesPendentes /> */}
+        <PendingInvites />
         <Separator orientation="vertical" className="h-5" />
         <ProfileButton />
       </div>

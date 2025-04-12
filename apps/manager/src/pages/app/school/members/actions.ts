@@ -107,7 +107,7 @@ export async function removeMemberAction({
     })
 
     queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'invites'],
+      queryKey: ['schools', currentSchool, 'members'],
     })
   } catch (err) {
     if (err instanceof HTTPError) {
@@ -147,7 +147,7 @@ export async function updateMemberAction({
     })
 
     queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'invites'],
+      queryKey: ['schools', currentSchool, 'members'],
     })
   } catch (err) {
     if (err instanceof HTTPError) {

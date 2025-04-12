@@ -27,7 +27,11 @@ export function UpdateRoleMember({
   }
 
   return (
-    <FormSelect onValueChange={handleOnValueChange} {...props}>
+    <FormSelect
+      onValueChange={handleOnValueChange}
+      {...props}
+      className="cursor-pointer"
+    >
       <SelectItem value="ADMIN">Admin</SelectItem>
       <SelectItem value="MEMBER">Membro</SelectItem>
     </FormSelect>

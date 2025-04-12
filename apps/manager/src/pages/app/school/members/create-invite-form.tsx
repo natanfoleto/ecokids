@@ -51,12 +51,16 @@ export function CreateInviteForm() {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1 space-y-2">
-          <Label className="text-muted-foreground text-xs font-normal">
+          <Label
+            htmlFor="email"
+            className="text-muted-foreground text-xs font-normal"
+          >
             Endereço de e-mail
           </Label>
 
           <FormInput
             {...register('email')}
+            id="email"
             placeholder="john@example.com"
             error={errors?.email?.message}
           />

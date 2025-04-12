@@ -10,6 +10,7 @@ import { getMembers } from '@/http/members/get-members'
 import { getSchool } from '@/http/schools/get-school'
 import { getInitialsName } from '@/utils/get-initials-name'
 
+import { removeMemberAction } from './actions'
 import { UpdateRoleMember } from './update-role-select'
 
 export function MemberList() {
@@ -92,19 +93,26 @@ export function MemberList() {
                   />
 
                   {canDeleteMember && (
-                    <form>
-                      <Button
-                        disabled={
-                          member.id === membership?.userId ||
-                          member.userId === school?.ownerId
-                        }
-                        type="submit"
-                        size="sm"
-                        variant="destructive"
-                      >
-                        Remover
-                      </Button>
-                    </form>
+                    <Button
+                      disabled={
+                        member.id === membership?.userId ||
+                        member.userId === school?.ownerId
+                      }
+                      type="submit"
+                      size="sm"
+                      variant="destructive"
+                      className="cursor-pointer"
+                      onClick={() =>
+                        removeMemberAction({
+                          params: {
+                            schoolSlug: currentSchool!,
+                            memberId: member.id,
+                          },
+                        })
+                      }
+                    >
+                      Remover
+                    </Button>
                   )}
                 </div>
               </TableCell>

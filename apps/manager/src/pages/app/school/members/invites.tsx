@@ -54,20 +54,24 @@ export function Invites() {
 
       <Tabs defaultValue="membros">
         <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="membros">Membros</TabsTrigger>
-          <TabsTrigger value="pendetes">Convites pendentes</TabsTrigger>
+          <TabsTrigger value="membros" className="cursor-pointer">
+            Membros
+          </TabsTrigger>
+          <TabsTrigger value="pendetes" className="cursor-pointer">
+            Convites pendentes
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="membros" className="space-y-3">
           <div className="flex gap-2">
             <Input placeholder="Filtrar..." className="flex-1" />
 
-            <FormSelect defaultValue="MEMBER" className="w-36">
+            <FormSelect defaultValue="MEMBER" className="w-36 cursor-pointer">
               <SelectItem value="ADMIN">Admin</SelectItem>
               <SelectItem value="MEMBER">Membro</SelectItem>
             </FormSelect>
 
-            <FormSelect defaultValue="DATA" className="w-36">
+            <FormSelect defaultValue="DATA" className="w-36 cursor-pointer">
               <SelectItem value="DATA">Data</SelectItem>
               <SelectItem value="NOME_AZ">Nome (A-Z)</SelectItem>
               <SelectItem value="NOME_ZA">Nome (Z-A)</SelectItem>
@@ -81,12 +85,12 @@ export function Invites() {
           <div className="flex gap-2">
             <Input placeholder="Filtrar..." className="flex-1" />
 
-            <FormSelect defaultValue="MEMBER" className="w-36">
+            <FormSelect defaultValue="MEMBER" className="w-36 cursor-pointer">
               <SelectItem value="ADMIN">Admin</SelectItem>
               <SelectItem value="MEMBER">Membro</SelectItem>
             </FormSelect>
 
-            <FormSelect defaultValue="DATA" className="w-36">
+            <FormSelect defaultValue="DATA" className="w-36 cursor-pointer">
               <SelectItem value="DATA">Data</SelectItem>
               <SelectItem value="NOME_AZ">Nome (A-Z)</SelectItem>
               <SelectItem value="NOME_ZA">Nome (Z-A)</SelectItem>
