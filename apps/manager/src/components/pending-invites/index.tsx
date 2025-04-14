@@ -19,7 +19,6 @@ export function PendingInvites() {
   const { data } = useQuery({
     queryKey: ['pending-invites'],
     queryFn: getPendingInvites,
-    enabled: isOpen,
   })
 
   async function handleAcceptInvite(inviteId: string) {
@@ -37,10 +36,18 @@ export function PendingInvites() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button size="icon" variant="ghost" className="cursor-pointer">
-          <UserPlus2 className="size-4" />
-          <span className="sr-only">Convites pendentes</span>
-        </Button>
+        <div className="relative cursor-pointer">
+          <Button size="icon" variant="ghost" className="cursor-pointer">
+            <UserPlus2 className="size-4" />
+            <span className="sr-only">Convites pendentes</span>
+          </Button>
+
+          {data?.invites.length ? (
+            <div className="text-background absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-red-500 p-1.5 text-[10px] font-medium">
+              {data.invites.length}
+            </div>
+          ) : null}
+        </div>
       </PopoverTrigger>
 
       <PopoverContent className="w-80 space-y-2">

@@ -4,11 +4,11 @@ import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
 import { Home } from './pages/app/home'
-import { Invite } from './pages/app/invite'
 import { School } from './pages/app/school'
 import { Members } from './pages/app/school/members'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
+import { Invite } from './pages/invite'
 import { NotFound } from './pages/not-found'
 
 export const router = createBrowserRouter([

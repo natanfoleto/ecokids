@@ -4,8 +4,9 @@ import {
 } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, UserRoundX } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 import logo from '@/assets/logo.svg'
@@ -19,14 +20,32 @@ import { authenticateUserWithPasswordAction } from './actions'
 
 export function SignIn() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
 
   const {
     register,
     handleSubmit,
+    setValue,
+    setFocus,
     formState: { errors },
   } = useForm<AuthenticateUserWithPasswordBody>({
     resolver: zodResolver(authenticateUserWithPasswordBodySchema),
   })
+
+  useEffect(() => {
+    const email = searchParams.get('email')
+
+    if (email) {
+      setValue('email', email)
+
+      const params = new URLSearchParams(searchParams)
+      params.delete('email')
+
+      navigate({ search: params.toString() }, { replace: true })
+
+      setFocus('password')
+    }
+  }, [navigate, searchParams, setValue, setFocus])
 
   const [{ success, message }, handleAction, isPending] = useAction()
 
