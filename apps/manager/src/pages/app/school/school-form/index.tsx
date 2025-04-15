@@ -30,6 +30,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors, isDirty },
   } = useForm<SaveSchoolBody>({
     resolver: zodResolver(saveSchoolBodySchema),
@@ -43,7 +44,10 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
   async function onSubmit(data: SaveSchoolBody) {
     handleAction(
       () => formAction({ body: data }),
-      () => queryClient.invalidateQueries({ queryKey: ['schools'] }),
+      () => {
+        reset()
+        queryClient.invalidateQueries({ queryKey: ['schools'] })
+      },
     )
   }
 
@@ -113,7 +117,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
       <Button
         type="submit"
         className="cursor-pointer self-end bg-emerald-500 hover:bg-emerald-600"
-        disabled={isPending || !isDirty || (success && !!message)}
+        disabled={isPending || !isDirty}
       >
         {isPending ? (
           <Loader2 className="text-muted-foreground size-4 animate-spin" />

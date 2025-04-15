@@ -41,7 +41,7 @@ export function SignUp() {
     await handleAction(
       () => createUserAction({ body: data }),
       () => {
-        navigate('/sign-in')
+        navigate(`/sign-in?email=${data.email}`)
         toast(message)
       },
     )

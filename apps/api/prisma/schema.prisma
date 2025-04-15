@@ -135,6 +135,7 @@ model Class {
 
   students Student[]
 
+  @@unique([name, year, schoolId])
   @@map("classes")
 }
 

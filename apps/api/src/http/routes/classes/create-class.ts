@@ -7,6 +7,7 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { auth } from '@/http/middlewares/auth'
+import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
@@ -43,6 +44,22 @@ export async function createClass(app: FastifyInstance) {
         if (cannot('create', 'Class')) {
           throw new UnauthorizedError(
             'Você não tem permissão para criar novas classes.',
+          )
+        }
+
+        const classWithSameNameAndYear = await prisma.class.findUnique({
+          where: {
+            name_year_schoolId: {
+              name,
+              year,
+              schoolId: school.id,
+            },
+          },
+        })
+
+        if (classWithSameNameAndYear) {
+          throw new BadRequestError(
+            'Já existe uma classe com esse nome e ano nesta escola.',
           )
         }
 

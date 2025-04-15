@@ -188,15 +188,6 @@ export function ClassList() {
           </TableBody>
         </Table>
       </div>
-
-      {/* {proprietariosResponse && (
-        <Pagination
-          items={proprietariosResponse.items}
-          page={page}
-          pages={proprietariosResponse.pages}
-          total={proprietariosResponse.data.length}
-        /> 
-      )} */}
     </div>
   )
 }
