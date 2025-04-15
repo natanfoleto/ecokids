@@ -24,6 +24,7 @@ export const createClassResponseSchema = z.object({
 export type CreateClassResponse = z.infer<typeof createClassResponseSchema>
 
 const createClassRequestSchema = z.object({
+  params: createClassParamsSchema,
   body: createClassBodySchema,
 })
 

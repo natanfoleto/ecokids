@@ -11,6 +11,8 @@ const deleteClassRequestSchema = z.object({
   params: deleteClassParamsSchema,
 })
 
+export type DeleteClassRequest = z.infer<typeof deleteClassRequestSchema>
+
 export const deleteClassResponseSchema = z.null()
 
-export type DeleteClassRequest = z.infer<typeof deleteClassRequestSchema>
+export type DeleteClassResponse = z.infer<typeof deleteClassResponseSchema>

@@ -1,4 +1,4 @@
-import { Gauge, Users } from 'lucide-react'
+import { Gauge, NotebookPen, Users } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -25,7 +25,7 @@ export function Tabs() {
               size="sm"
               className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
             >
-              <Gauge className="mr-1 size-4" />
+              <Gauge className="mr-0.5 size-4" />
               Dashboard
             </Button>
           )}
@@ -43,12 +43,29 @@ export function Tabs() {
                 size="sm"
                 className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
               >
-                <Users className="mr-1 size-4" />
+                <Users className="mr-0.5 size-4" />
                 Membros
               </Button>
             )}
           </NavLink>
         )
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        <NavLink to={`/school/${currentSchool}/classes`} end>
+          {({ isActive }) => (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
+            >
+              <NotebookPen className="mr-0.5 size-4" />
+              Classes
+            </Button>
+          )}
+        </NavLink>
       )}
     </nav>
   )

@@ -1,6 +1,6 @@
 import { type SaveSchoolBody, saveSchoolBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, School } from 'lucide-react'
+import { Frown, Loader2, Smile } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { FormError } from '@/components/form/form-error'
@@ -17,7 +17,6 @@ import { createSchoolAction, updateSchoolAction } from './actions'
 interface SchoolFormProps {
   isUpdating?: boolean
   initialData?: SaveSchoolBody
-  onSuccess?: () => void
 }
 
 export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
@@ -56,7 +55,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
     <form className="flex flex-col space-y-8" onSubmit={handleSubmit(onSubmit)}>
       {success && message && (
         <Alert>
-          <School className="size-4" />
+          <Smile className="size-4" />
           <AlertTitle>Uhuul!</AlertTitle>
           <AlertDescription>{message}</AlertDescription>
         </Alert>
@@ -64,7 +63,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
 
       {!success && message && (
         <Alert variant="destructive">
-          <School className="size-4" />
+          <Frown className="size-4" />
           <AlertTitle>Oooops!!</AlertTitle>
           <AlertDescription>{message}</AlertDescription>
         </Alert>

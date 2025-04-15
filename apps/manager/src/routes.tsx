@@ -5,6 +5,7 @@ import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
 import { Home } from './pages/app/home'
 import { School } from './pages/app/school'
+import { Classes } from './pages/app/school/classes'
 import { Members } from './pages/app/school/members'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
           { path: '/', element: <Home /> },
           { path: '/school/:slug', element: <School /> },
           { path: '/school/:slug/members', element: <Members /> },
+          { path: '/school/:slug/classes', element: <Classes /> },
         ],
       },
       {

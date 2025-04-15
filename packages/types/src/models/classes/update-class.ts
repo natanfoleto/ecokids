@@ -19,9 +19,12 @@ export const updateClassBodySchema = z.object({
 export type UpdateClassBody = z.infer<typeof updateClassBodySchema>
 
 const updateClassRequestSchema = z.object({
+  params: updateClassParamsSchema,
   body: updateClassBodySchema,
 })
 
+export type UpdateClassRequest = z.infer<typeof updateClassRequestSchema>
+
 export const updateClassResponseSchema = z.null()
 
-export type UpdateClassRequest = z.infer<typeof updateClassRequestSchema>
+export type UpdateClassResponse = z.infer<typeof updateClassResponseSchema>
