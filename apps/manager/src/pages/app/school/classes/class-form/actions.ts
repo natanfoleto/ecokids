@@ -5,6 +5,7 @@ import type {
   UpdateClassParams,
 } from '@ecokids/types'
 import { HTTPError } from 'ky'
+import { toast } from 'sonner'
 
 import { getCurrentSchool } from '@/auth'
 import { createClass } from '@/http/classes/create-class'
@@ -28,6 +29,8 @@ export async function createClassAction({
       },
     })
 
+    toast.success('Classe criada com sucesso!')
+
     return {
       success: true,
       message: 'Classe criada com sucesso!',
@@ -36,8 +39,12 @@ export async function createClassAction({
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
 
+      toast.error(message)
+
       return { success: false, message }
     }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
@@ -64,6 +71,8 @@ export async function updateClassAction({
       },
     })
 
+    toast.success('Classe atualizada com sucesso!')
+
     return {
       success: true,
       message: 'Classe atualizada com sucesso!',
@@ -72,8 +81,12 @@ export async function updateClassAction({
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
 
+      toast.error(message)
+
       return { success: false, message }
     }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,

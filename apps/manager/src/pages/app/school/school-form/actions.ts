@@ -1,5 +1,6 @@
 import type { CreateSchoolBody, UpdateSchoolBody } from '@ecokids/types'
 import { HTTPError } from 'ky'
+import { toast } from 'sonner'
 
 import { getCurrentSchool } from '@/auth'
 import { createSchool } from '@/http/schools/create-school'
@@ -17,6 +18,8 @@ export async function createSchoolAction({ body }: { body: CreateSchoolBody }) {
       },
     })
 
+    toast.success('Escola criada com sucesso!')
+
     return {
       success: true,
       message: 'Escola criada com sucesso!',
@@ -25,8 +28,12 @@ export async function createSchoolAction({ body }: { body: CreateSchoolBody }) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
 
+      toast.error(message)
+
       return { success: false, message }
     }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
@@ -50,6 +57,8 @@ export async function updateSchoolAction({ body }: { body: UpdateSchoolBody }) {
       },
     })
 
+    toast.success('Escola atualizada com sucesso!')
+
     return {
       success: true,
       message: 'Escola atualizada com sucesso!',
@@ -58,8 +67,12 @@ export async function updateSchoolAction({ body }: { body: UpdateSchoolBody }) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
 
+      toast.error(message)
+
       return { success: false, message }
     }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,

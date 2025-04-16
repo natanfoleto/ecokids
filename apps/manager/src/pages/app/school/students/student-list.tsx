@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -42,7 +43,7 @@ export function StudentList() {
 
   const [updateStudent, setUpdateStudent] = useState<string | null>(null)
 
-  const { data, isError } = useQuery<GetStudentsResponse>({
+  const { data, isLoading, isError } = useQuery<GetStudentsResponse>({
     queryKey: ['schools', currentSchool, 'students'],
     queryFn: async () => {
       const data = await getStudents({
@@ -95,96 +96,107 @@ export function StudentList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Código</TableHead>
+              <TableHead className="w-16 text-center">Código</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>E-mail</TableHead>
               <TableHead>CPF</TableHead>
               <TableHead>Turma</TableHead>
+              <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {data?.students.map((student) => (
-              <TableRow key={student.id}>
-                <TableCell className="text-center">{student.code}</TableCell>
-                <TableCell>{student.name}</TableCell>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{student.cpf}</TableCell>
-                <TableCell>
-                  {student.class.name} - {student.class.year}
-                </TableCell>
+            {isLoading ? (
+              <>
+                <StudentSkeleton />
+                <StudentSkeleton />
+                <StudentSkeleton />
+              </>
+            ) : (
+              data?.students.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell className="text-center">{student.code}</TableCell>
+                  <TableCell>{student.name}</TableCell>
+                  <TableCell>{student.email}</TableCell>
+                  <TableCell>{student.cpf}</TableCell>
+                  <TableCell>
+                    {student.class.name} - {student.class.year}
+                  </TableCell>
 
-                <TableCell className="flex justify-end">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <Ellipsis className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        asChild
-                        onClick={() => setUpdateStudent(student.id)}
-                      >
+                  <TableCell className="flex justify-end">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
                         <Button
+                          size="icon"
                           variant="ghost"
-                          className="w-full cursor-pointer"
+                          className="cursor-pointer"
                         >
-                          Editar
+                          <Ellipsis className="size-4" />
                         </Button>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <AlertDialog>
-                          <AlertDialogTrigger className="w-full" asChild>
-                            <Button
-                              variant="ghost"
-                              className="w-full cursor-pointer"
-                            >
-                              Remover
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Deseja apagar o aluno {student.name}?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Esta ação não pode ser desfeita. Isso excluirá
-                                permanentemente o aluno.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel className="cursor-pointer">
-                                Cancelar
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                className="cursor-pointer"
-                                onClick={() => deleteStudentAction(student.id)}
-                              >
-                                Confirmar
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                      </DropdownMenuTrigger>
 
-                {updateStudent === student.id && (
-                  <UpdateStudent
-                    open={!!updateStudent}
-                    onClose={() => setUpdateStudent(null)}
-                    studentId={student.id}
-                  />
-                )}
-              </TableRow>
-            ))}
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          asChild
+                          onClick={() => setUpdateStudent(student.id)}
+                        >
+                          <Button
+                            variant="ghost"
+                            className="w-full cursor-pointer"
+                          >
+                            Editar
+                          </Button>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <AlertDialog>
+                            <AlertDialogTrigger className="w-full" asChild>
+                              <Button
+                                variant="ghost"
+                                className="w-full cursor-pointer"
+                              >
+                                Remover
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Deseja apagar o aluno {student.name}?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Esta ação não pode ser desfeita. Isso excluirá
+                                  permanentemente o aluno.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="cursor-pointer">
+                                  Cancelar
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    deleteStudentAction(student.id)
+                                  }
+                                >
+                                  Confirmar
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+
+                  {updateStudent === student.id && (
+                    <UpdateStudent
+                      open={!!updateStudent}
+                      onClose={() => setUpdateStudent(null)}
+                      studentId={student.id}
+                    />
+                  )}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
 
@@ -195,5 +207,30 @@ export function StudentList() {
         )}
       </div>
     </div>
+  )
+}
+
+function StudentSkeleton() {
+  return (
+    <TableRow>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+    </TableRow>
   )
 }

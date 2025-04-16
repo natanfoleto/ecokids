@@ -5,12 +5,11 @@ import {
 } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
-import { Frown, Loader2, Smile } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
 
 import { FormInput } from '@/components/form/form-input'
 import { FormSelect } from '@/components/form/form-select'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { SelectItem } from '@/components/ui/select'
@@ -71,41 +70,47 @@ export function StudentForm({
     defaultValues,
   })
 
-  const [{ success, message }, handleAction, isPending] = useAction()
+  const [, handleAction, isPending] = useAction()
 
   function verifyPassword(data: SaveStudentBody) {
-    if (
-      !isUpdating &&
-      (!data.password ||
-        !data.confirm_password ||
-        data.password !== data.confirm_password)
-    ) {
-      if (!data.password) {
-        setError('password', {
-          type: 'required',
-          message: 'A senha é obrigatória',
-        })
+    if (!isUpdating) {
+      if (!data.password || !data.confirm_password) {
+        if (!data.password) {
+          setError('password', {
+            type: 'required',
+            message: 'A senha é obrigatória',
+          })
+        }
+
+        if (!data.confirm_password) {
+          setError('confirm_password', {
+            type: 'required',
+            message: 'A confirmação de senha é obrigatória',
+          })
+        }
+
+        return false
       }
 
-      if (!data.confirm_password) {
-        setError('confirm_password', {
-          type: 'required',
-          message: 'A confirmação de senha é obrigatória',
-        })
-      }
-
-      if (
-        data.password &&
-        data.confirm_password &&
-        data.password !== data.confirm_password
-      ) {
+      if (data.password !== data.confirm_password) {
         setError('confirm_password', {
           type: 'validate',
           message: 'As senhas não coincidem',
         })
-      }
 
-      return false
+        return false
+      }
+    } else {
+      if (data.password || data.confirm_password) {
+        if (data.password !== data.confirm_password) {
+          setError('confirm_password', {
+            type: 'validate',
+            message: 'As senhas não coincidem',
+          })
+
+          return false
+        }
+      }
     }
 
     return true
@@ -147,22 +152,6 @@ export function StudentForm({
 
   return (
     <form className="flex flex-col space-y-8" onSubmit={handleSubmit(onSubmit)}>
-      {success && message && (
-        <Alert>
-          <Smile className="size-4" />
-          <AlertTitle>Uhuul!</AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
-        </Alert>
-      )}
-
-      {!success && message && (
-        <Alert variant="destructive">
-          <Frown className="size-4" />
-          <AlertTitle>Oooops!!</AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-3 space-y-1.5">
           <Label htmlFor="code">Código</Label>
@@ -236,6 +225,7 @@ export function StudentForm({
             {...register('password')}
             id="password"
             type="password"
+            autoComplete="new-password"
             error={errors.password?.message}
           />
         </div>
@@ -246,6 +236,7 @@ export function StudentForm({
             {...register('confirm_password')}
             id="confirm_password"
             type="password"
+            autoComplete="new-password"
             error={errors.confirm_password?.message}
           />
         </div>

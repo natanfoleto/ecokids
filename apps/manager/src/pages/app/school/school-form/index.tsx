@@ -1,11 +1,10 @@
 import { type SaveSchoolBody, saveSchoolBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Frown, Loader2, Smile } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { FormError } from '@/components/form/form-error'
 import { FormInput } from '@/components/form/form-input'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -37,7 +36,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
     defaultValues,
   })
 
-  const [{ success, message }, handleAction, isPending] = useAction()
+  const [, handleAction, isPending] = useAction()
 
   const formAction = isUpdating ? updateSchoolAction : createSchoolAction
 
@@ -57,22 +56,6 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
 
   return (
     <form className="flex flex-col space-y-8" onSubmit={handleSubmit(onSubmit)}>
-      {success && message && (
-        <Alert>
-          <Smile className="size-4" />
-          <AlertTitle>Uhuul!</AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
-        </Alert>
-      )}
-
-      {!success && message && (
-        <Alert variant="destructive">
-          <Frown className="size-4" />
-          <AlertTitle>Oooops!!</AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
-        </Alert>
-      )}
-
       <div className="w-full space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="name">Nome da escola</Label>

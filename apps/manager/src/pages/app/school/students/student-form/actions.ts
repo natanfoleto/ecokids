@@ -5,6 +5,7 @@ import type {
   UpdateStudentParams,
 } from '@ecokids/types'
 import { HTTPError } from 'ky'
+import { toast } from 'sonner'
 
 import { createStudent } from '@/http/students/create-student'
 import { updateStudent } from '@/http/students/update-student'
@@ -32,6 +33,8 @@ export async function createStudentAction({
       },
     })
 
+    toast.success('Aluno criado com sucesso!')
+
     return {
       success: true,
       message: 'Aluno criado com sucesso!',
@@ -40,8 +43,12 @@ export async function createStudentAction({
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
 
+      toast.error(message)
+
       return { success: false, message }
     }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
@@ -71,6 +78,8 @@ export async function updateStudentAction({
       },
     })
 
+    toast.success('Aluno atualizado com sucesso!')
+
     return {
       success: true,
       message: 'Aluno atualizado com sucesso!',
@@ -79,8 +88,12 @@ export async function updateStudentAction({
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
 
+      toast.error(message)
+
       return { success: false, message }
     }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,

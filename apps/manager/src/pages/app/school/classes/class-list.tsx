@@ -14,7 +14,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-// import { Pagination } from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -23,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -43,7 +43,7 @@ export function ClassList() {
 
   const [updateClass, setUpdateClass] = useState<string | null>(null)
 
-  const { data, isError } = useQuery<GetClassesResponse>({
+  const { data, isLoading, isError } = useQuery<GetClassesResponse>({
     queryKey: ['schools', currentSchool, 'classes'],
     queryFn: async () => {
       const data = await getClasses({
@@ -98,85 +98,94 @@ export function ClassList() {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Ano</TableHead>
+              <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {data?.classes.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.year}</TableCell>
-                <TableCell className="flex justify-end">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="cursor-pointer"
-                      >
-                        <Ellipsis className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        asChild
-                        onClick={() => setUpdateClass(item.id)}
-                      >
+            {isLoading ? (
+              <>
+                <ClassSkeleton />
+                <ClassSkeleton />
+                <ClassSkeleton />
+              </>
+            ) : (
+              data?.classes.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.year}</TableCell>
+                  <TableCell className="flex justify-end">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
                         <Button
+                          size="icon"
                           variant="ghost"
-                          className="w-full cursor-pointer"
+                          className="cursor-pointer"
                         >
-                          Editar
+                          <Ellipsis className="size-4" />
                         </Button>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <AlertDialog>
-                          <AlertDialogTrigger className="w-full" asChild>
-                            <Button
-                              variant="ghost"
-                              className="w-full cursor-pointer"
-                            >
-                              Remover
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Deseja apagar a classe {item.name}?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Esta ação não pode ser desfeita. Isso excluirá
-                                permanentemente a classe.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel className="cursor-pointer">
-                                Cancelar
-                              </AlertDialogCancel>
-                              <AlertDialogAction
-                                className="cursor-pointer"
-                                onClick={() => deleteClassAction(item.id)}
-                              >
-                                Confirmar
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
+                      </DropdownMenuTrigger>
 
-                {updateClass === item.id && (
-                  <UpdateClass
-                    open={!!updateClass}
-                    onClose={() => setUpdateClass(null)}
-                    classId={item.id}
-                  />
-                )}
-              </TableRow>
-            ))}
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          asChild
+                          onClick={() => setUpdateClass(item.id)}
+                        >
+                          <Button
+                            variant="ghost"
+                            className="w-full cursor-pointer"
+                          >
+                            Editar
+                          </Button>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <AlertDialog>
+                            <AlertDialogTrigger className="w-full" asChild>
+                              <Button
+                                variant="ghost"
+                                className="w-full cursor-pointer"
+                              >
+                                Remover
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Deseja apagar a classe {item.name}?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Esta ação não pode ser desfeita. Isso excluirá
+                                  permanentemente a classe.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="cursor-pointer">
+                                  Cancelar
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  className="cursor-pointer"
+                                  onClick={() => deleteClassAction(item.id)}
+                                >
+                                  Confirmar
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+
+                  {updateClass === item.id && (
+                    <UpdateClass
+                      open={!!updateClass}
+                      onClose={() => setUpdateClass(null)}
+                      classId={item.id}
+                    />
+                  )}
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
 
@@ -187,5 +196,21 @@ export function ClassList() {
         )}
       </div>
     </div>
+  )
+}
+
+function ClassSkeleton() {
+  return (
+    <TableRow>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
+    </TableRow>
   )
 }

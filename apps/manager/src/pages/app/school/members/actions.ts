@@ -6,6 +6,7 @@ import type {
   UpdateMemberParams,
 } from '@ecokids/types'
 import { HTTPError } from 'ky'
+import { toast } from 'sonner'
 
 import { getCurrentSchool } from '@/auth'
 import { createInvite } from '@/http/invites/create-invite'
@@ -30,29 +31,26 @@ export async function createInviteAction({ body }: { body: CreateInviteBody }) {
       },
     })
 
+    toast.success('Convite criado com sucesso!')
+
     queryClient.invalidateQueries({
       queryKey: ['schools', currentSchool, 'invites'],
     })
-  } catch (err) {
-    if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
 
-      return { success: false, message, errors: null }
+      toast.error(message)
+
+      return { success: false, message }
     }
 
-    console.error(err)
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
       message: 'Erro inesperado, tente novamente em alguns minutos.',
-      errors: null,
     }
-  }
-
-  return {
-    success: true,
-    message: 'Convite criado com sucesso.',
-    errors: null,
   }
 }
 
@@ -71,22 +69,25 @@ export async function revokeInviteAction({
       },
     })
 
+    toast.success('Convite revogado com sucesso!')
+
     queryClient.invalidateQueries({
       queryKey: ['schools', currentSchool, 'invites'],
     })
-  } catch (err) {
-    if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
 
-      return { success: false, message, errors: null }
+      toast.error(message)
+
+      return { success: false, message }
     }
 
-    console.error(err)
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
       message: 'Erro inesperado, tente novamente em alguns minutos.',
-      errors: null,
     }
   }
 }
@@ -106,22 +107,25 @@ export async function removeMemberAction({
       },
     })
 
+    toast.success('Membro removido com sucesso!')
+
     queryClient.invalidateQueries({
       queryKey: ['schools', currentSchool, 'members'],
     })
-  } catch (err) {
-    if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
 
-      return { success: false, message, errors: null }
+      toast.error(message)
+
+      return { success: false, message }
     }
 
-    console.error(err)
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
       message: 'Erro inesperado, tente novamente em alguns minutos.',
-      errors: null,
     }
   }
 }
@@ -146,22 +150,25 @@ export async function updateMemberAction({
       },
     })
 
+    toast.success('Membro atualizado com sucesso!')
+
     queryClient.invalidateQueries({
       queryKey: ['schools', currentSchool, 'members'],
     })
-  } catch (err) {
-    if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
 
-      return { success: false, message, errors: null }
+      toast.error(message)
+
+      return { success: false, message }
     }
 
-    console.error(err)
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
 
     return {
       success: false,
       message: 'Erro inesperado, tente novamente em alguns minutos.',
-      errors: null,
     }
   }
 }
