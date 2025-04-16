@@ -1,4 +1,4 @@
-import type { GetStudentsResponse } from '@ecokids/types'
+import type { DeleteStudentResponse, GetStudentsResponse } from '@ecokids/types'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Ellipsis, Filter, Search } from 'lucide-react'
 import { useState } from 'react'
@@ -31,11 +31,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
-import { deleteStudent } from '@/http/students/delete-student'
 import { getStudents } from '@/http/students/get-students'
 import { queryClient } from '@/lib/react-query'
 import { UpdateStudent } from '@/pages/app/@dialog/students/update-student'
+
+import { deleteStudentAction } from './actions'
 
 export function StudentList() {
   const currentSchool = useCurrentSchool()
@@ -56,25 +58,32 @@ export function StudentList() {
     placeholderData: keepPreviousData,
   })
 
+  const [, handleAction] = useAction<DeleteStudentResponse>()
+
+  async function handleDeleteStudent(studentId: string) {
+    handleAction(
+      () =>
+        deleteStudentAction({
+          params: {
+            schoolSlug: currentSchool!,
+            studentId,
+          },
+        }),
+      (data) => {
+        if (data.success)
+          queryClient.invalidateQueries({
+            queryKey: ['schools', currentSchool, 'students'],
+          })
+      },
+    )
+  }
+
   if (isError) {
     return (
       <p className="text-red-500">
         Erro ao carregar alunos. Tente novamente mais tarde.
       </p>
     )
-  }
-
-  async function deleteStudentAction(id: string) {
-    await deleteStudent({
-      params: {
-        schoolSlug: currentSchool!,
-        studentId: id,
-      },
-    })
-
-    queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'students'],
-    })
   }
 
   return (
@@ -173,7 +182,7 @@ export function StudentList() {
                                 <AlertDialogAction
                                   className="cursor-pointer"
                                   onClick={() =>
-                                    deleteStudentAction(student.id)
+                                    handleDeleteStudent(student.id)
                                   }
                                 >
                                   Confirmar

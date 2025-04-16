@@ -1,5 +1,6 @@
 import type {
   CreateInviteBody,
+  CreateInviteParams,
   RemoveMemberParams,
   RevokeInviteParams,
   UpdateMemberBody,
@@ -8,22 +9,22 @@ import type {
 import { HTTPError } from 'ky'
 import { toast } from 'sonner'
 
-import { getCurrentSchool } from '@/auth'
 import { createInvite } from '@/http/invites/create-invite'
 import { revokeInvite } from '@/http/invites/revoke-invite'
 import { removeMember } from '@/http/members/remove-member'
 import { updateMember } from '@/http/members/update-member'
-import { queryClient } from '@/lib/react-query'
 
-export async function createInviteAction({ body }: { body: CreateInviteBody }) {
-  const currentSchool = getCurrentSchool()
-
-  const { email, role } = body
-
+export async function createInviteAction({
+  params: { schoolSlug },
+  body: { email, role },
+}: {
+  params: CreateInviteParams
+  body: CreateInviteBody
+}) {
   try {
     await createInvite({
       params: {
-        schoolSlug: currentSchool!,
+        schoolSlug,
       },
       body: {
         email,
@@ -33,9 +34,10 @@ export async function createInviteAction({ body }: { body: CreateInviteBody }) {
 
     toast.success('Convite criado com sucesso!')
 
-    queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'invites'],
-    })
+    return {
+      success: true,
+      message: 'Convite criado com sucesso!',
+    }
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
@@ -55,25 +57,24 @@ export async function createInviteAction({ body }: { body: CreateInviteBody }) {
 }
 
 export async function revokeInviteAction({
-  params: { inviteId },
+  params: { schoolSlug, inviteId },
 }: {
   params: RevokeInviteParams
 }) {
-  const currentSchool = getCurrentSchool()
-
   try {
     await revokeInvite({
       params: {
-        schoolSlug: currentSchool!,
+        schoolSlug,
         inviteId,
       },
     })
 
     toast.success('Convite revogado com sucesso!')
 
-    queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'invites'],
-    })
+    return {
+      success: true,
+      message: 'Convite revogado com sucesso!',
+    }
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
@@ -93,25 +94,24 @@ export async function revokeInviteAction({
 }
 
 export async function removeMemberAction({
-  params: { memberId },
+  params: { schoolSlug, memberId },
 }: {
   params: RemoveMemberParams
 }) {
-  const currentSchool = getCurrentSchool()
-
   try {
     await removeMember({
       params: {
-        schoolSlug: currentSchool!,
+        schoolSlug,
         memberId,
       },
     })
 
     toast.success('Membro removido com sucesso!')
 
-    queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'members'],
-    })
+    return {
+      success: true,
+      message: 'Membro removido com sucesso!',
+    }
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
@@ -131,19 +131,17 @@ export async function removeMemberAction({
 }
 
 export async function updateMemberAction({
-  params: { memberId },
+  params: { schoolSlug, memberId },
   body: { role },
 }: {
   params: UpdateMemberParams
   body: UpdateMemberBody
 }) {
-  const currentSchool = getCurrentSchool()
-
   try {
     await updateMember({
       params: {
         memberId,
-        schoolSlug: currentSchool!,
+        schoolSlug,
       },
       body: {
         role,
@@ -152,9 +150,10 @@ export async function updateMemberAction({
 
     toast.success('Membro atualizado com sucesso!')
 
-    queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'members'],
-    })
+    return {
+      success: true,
+      message: 'Membro atualizado com sucesso!',
+    }
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()

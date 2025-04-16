@@ -18,8 +18,8 @@ export async function deleteClass(app: FastifyInstance) {
       '/schools/:schoolSlug/classes/:classId',
       {
         schema: {
-          tags: ['Classes'],
-          summary: 'Deletar uma classe',
+          tags: ['Turmas'],
+          summary: 'Deletar uma turma',
           security: [{ bearerAuth: [] }],
           params: deleteClassParamsSchema,
           response: {
@@ -39,7 +39,7 @@ export async function deleteClass(app: FastifyInstance) {
 
         if (cannot('delete', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para deletar uma classe.',
+            'Você não tem permissão para deletar uma turma.',
           )
         }
 

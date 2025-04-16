@@ -25,12 +25,12 @@ export function Classes() {
       <Tabs />
 
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-medium">Classes</h1>
+        <h1 className="text-xl font-medium">Turmas</h1>
 
         {canCreateClass && (
           <Button className="cursor-pointer" onClick={toggleCreateClass}>
             <Plus className="size-4" />
-            Criar classe
+            Criar turma
           </Button>
         )}
       </div>
@@ -39,7 +39,7 @@ export function Classes() {
         <ClassList />
       ) : (
         <p className="text-muted-foreground text-sm">
-          Você não tem permissão para visualizar as classes.
+          Você não tem permissão para visualizar as turmas.
         </p>
       )}
 

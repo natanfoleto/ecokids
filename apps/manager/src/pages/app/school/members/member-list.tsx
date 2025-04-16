@@ -1,3 +1,4 @@
+import type { RemoveMemberResponse } from '@ecokids/types'
 import { useQueries } from '@tanstack/react-query'
 import { Crown } from 'lucide-react'
 
@@ -5,10 +6,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
+import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
 import { getMembers } from '@/http/members/get-members'
 import { getSchool } from '@/http/schools/get-school'
+import { queryClient } from '@/lib/react-query'
 import { getInitialsName } from '@/utils/get-initials-name'
 
 import { removeMemberAction } from './actions'
@@ -46,6 +49,23 @@ export function MemberList() {
     { data: dataMembers, isLoading: isLoadingMembers },
     { data: dataSchool, isLoading: isLoadingSchool },
   ] = results
+
+  const [, handleAction] = useAction<RemoveMemberResponse>()
+
+  async function handleRemoveMember(memberId: string) {
+    handleAction(
+      () =>
+        removeMemberAction({
+          params: { schoolSlug: currentSchool!, memberId },
+        }),
+      (data) => {
+        if (data.success)
+          queryClient.invalidateQueries({
+            queryKey: ['schools', currentSchool, 'members'],
+          })
+      },
+    )
+  }
 
   const isLoading = isLoadingMembers || isLoadingSchool
 
@@ -116,14 +136,7 @@ export function MemberList() {
                         size="sm"
                         variant="destructive"
                         className="cursor-pointer"
-                        onClick={() =>
-                          removeMemberAction({
-                            params: {
-                              schoolSlug: currentSchool!,
-                              memberId: member.id,
-                            },
-                          })
-                        }
+                        onClick={() => handleRemoveMember(member.id)}
                       >
                         Remover
                       </Button>

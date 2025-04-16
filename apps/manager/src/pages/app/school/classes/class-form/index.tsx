@@ -11,7 +11,7 @@ import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { queryClient } from '@/lib/react-query'
 
-import { createClassAction, updateClassAction } from './actions'
+import { createClassAction, updateClassAction } from '../actions'
 
 interface ClassFormProps {
   isUpdating?: boolean
@@ -89,7 +89,7 @@ export function ClassForm({
 
       <div className="w-full space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="name">Nome da classe</Label>
+          <Label htmlFor="name">Nome da turma</Label>
           <FormInput
             id="name"
             {...register('name')}

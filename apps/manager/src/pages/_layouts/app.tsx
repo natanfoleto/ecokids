@@ -12,7 +12,7 @@ export function AppLayout() {
   }, [navigate])
 
   return (
-    <div className="min-h-screen bg-[#FBF4F4]">
+    <div className="min-h-screen">
       <Header />
 
       <main className="flex items-center px-8 py-4">

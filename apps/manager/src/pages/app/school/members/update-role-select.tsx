@@ -1,9 +1,12 @@
 import type { Role } from '@ecokids/auth'
+import type { UpdateMemberResponse } from '@ecokids/types'
 import type { ComponentProps } from 'react'
 
 import { FormSelect } from '@/components/form/form-select'
 import { Select, SelectItem } from '@/components/ui/select'
+import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
+import { queryClient } from '@/lib/react-query'
 
 import { updateMemberAction } from './actions'
 
@@ -17,13 +20,24 @@ export function UpdateRoleMember({
 }: UpdateRoleMemberProps) {
   const currentSchool = useCurrentSchool()
 
+  const [, handleAction] = useAction<UpdateMemberResponse>()
+
   async function handleOnValueChange(role: Role) {
-    updateMemberAction({
-      params: { schoolSlug: currentSchool!, memberId },
-      body: {
-        role,
+    handleAction(
+      () =>
+        updateMemberAction({
+          params: { schoolSlug: currentSchool!, memberId },
+          body: {
+            role,
+          },
+        }),
+      (data) => {
+        if (data.success)
+          queryClient.invalidateQueries({
+            queryKey: ['schools', currentSchool, 'members'],
+          })
       },
-    })
+    )
   }
 
   return (

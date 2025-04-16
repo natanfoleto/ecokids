@@ -20,8 +20,8 @@ export async function createClass(app: FastifyInstance) {
       '/schools/:schoolSlug/classes',
       {
         schema: {
-          tags: ['Classes'],
-          summary: 'Criar uma classe',
+          tags: ['Turmas'],
+          summary: 'Criar uma turma',
           security: [{ bearerAuth: [] }],
           params: createClassParamsSchema,
           body: createClassBodySchema,
@@ -43,7 +43,7 @@ export async function createClass(app: FastifyInstance) {
 
         if (cannot('create', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para criar novas classes.',
+            'Você não tem permissão para criar novas turmas.',
           )
         }
 
@@ -59,7 +59,7 @@ export async function createClass(app: FastifyInstance) {
 
         if (classWithSameNameAndYear) {
           throw new BadRequestError(
-            'Já existe uma classe com esse nome e ano nesta escola.',
+            'Já existe uma turma com esse nome e ano nesta escola.',
           )
         }
 

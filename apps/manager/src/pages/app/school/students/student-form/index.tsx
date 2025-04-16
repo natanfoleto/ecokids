@@ -19,7 +19,7 @@ import { getClasses } from '@/http/classes/get-classes'
 import { queryClient } from '@/lib/react-query'
 import { formatCPF } from '@/utils/format-cpf'
 
-import { createStudentAction, updateStudentAction } from './actions'
+import { createStudentAction, updateStudentAction } from '../actions'
 
 interface StudentFormProps {
   isUpdating?: boolean

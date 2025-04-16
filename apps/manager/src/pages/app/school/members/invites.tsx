@@ -1,3 +1,4 @@
+import type { RevokeInviteResponse } from '@ecokids/types'
 import { useQuery } from '@tanstack/react-query'
 
 import { FormSelect } from '@/components/form/form-select'
@@ -8,9 +9,11 @@ import { SelectItem } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
 import { getInvites } from '@/http/invites/get-invites'
+import { queryClient } from '@/lib/react-query'
 
 import { revokeInviteAction } from './actions'
 import { CreateInviteForm } from './create-invite-form'
@@ -25,6 +28,26 @@ export function Invites() {
     queryKey: ['schools', currentSchool, 'invites'],
     queryFn: () => getInvites({ params: { schoolSlug: currentSchool! } }),
   })
+
+  const [, handleAction] = useAction<RevokeInviteResponse>()
+
+  async function handleRevokeInvite(inviteId: string) {
+    handleAction(
+      () =>
+        revokeInviteAction({
+          params: {
+            schoolSlug: currentSchool!,
+            inviteId,
+          },
+        }),
+      (data) => {
+        if (data.success)
+          queryClient.invalidateQueries({
+            queryKey: ['schools', currentSchool, 'invites'],
+          })
+      },
+    )
+  }
 
   const invites = data?.invites
 
@@ -126,14 +149,7 @@ export function Invites() {
                               size="sm"
                               variant="destructive"
                               className="cursor-pointer"
-                              onClick={() =>
-                                revokeInviteAction({
-                                  params: {
-                                    schoolSlug: currentSchool!,
-                                    inviteId: invite.id,
-                                  },
-                                })
-                              }
+                              onClick={() => handleRevokeInvite(invite.id)}
                             >
                               Revogar convite
                             </Button>

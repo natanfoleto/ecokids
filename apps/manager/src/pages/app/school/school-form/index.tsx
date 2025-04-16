@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
+import { getCurrentSchool } from '@/auth'
 import { FormError } from '@/components/form/form-error'
 import { FormInput } from '@/components/form/form-input'
 import { Button } from '@/components/ui/button'
@@ -11,7 +12,7 @@ import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
 import { queryClient } from '@/lib/react-query'
 
-import { createSchoolAction, updateSchoolAction } from './actions'
+import { createSchoolAction, updateSchoolAction } from '../actions'
 
 interface SchoolFormProps {
   isUpdating?: boolean
@@ -19,6 +20,8 @@ interface SchoolFormProps {
 }
 
 export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
+  const currentSchool = getCurrentSchool()
+
   const defaultValues: SaveSchoolBody = initialData || {
     name: '',
     domain: null,
@@ -42,7 +45,13 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
 
   async function onSubmit(data: SaveSchoolBody) {
     handleAction(
-      () => formAction({ body: data }),
+      () =>
+        formAction({
+          params: {
+            schoolSlug: currentSchool!,
+          },
+          body: data,
+        }),
       () => {
         reset()
         queryClient.invalidateQueries({ queryKey: ['schools'] })
@@ -55,7 +64,10 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
   }
 
   return (
-    <form className="flex flex-col space-y-8" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="flex w-full flex-col space-y-8"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="w-full space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="name">Nome da escola</Label>

@@ -1,4 +1,4 @@
-import type { GetClassesResponse } from '@ecokids/types'
+import type { DeleteClassResponse, GetClassesResponse } from '@ecokids/types'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Ellipsis, Filter, Search } from 'lucide-react'
 import { useState } from 'react'
@@ -31,11 +31,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
-import { deleteClass } from '@/http/classes/delete-class'
 import { getClasses } from '@/http/classes/get-classes'
 import { queryClient } from '@/lib/react-query'
 import { UpdateClass } from '@/pages/app/@sheet/classes/update-class'
+
+import { deleteClassAction } from './actions'
 
 export function ClassList() {
   const currentSchool = useCurrentSchool()
@@ -56,25 +58,32 @@ export function ClassList() {
     placeholderData: keepPreviousData,
   })
 
-  if (isError) {
-    return (
-      <p className="text-red-500">
-        Erro ao carregar classes. Tente novamente mais tarde.
-      </p>
+  const [, handleAction] = useAction<DeleteClassResponse>()
+
+  async function handleDeleteClass(id: string) {
+    handleAction(
+      () =>
+        deleteClassAction({
+          params: {
+            schoolSlug: currentSchool!,
+            classId: id,
+          },
+        }),
+      (data) => {
+        if (data.success)
+          queryClient.invalidateQueries({
+            queryKey: ['schools', currentSchool, 'classes'],
+          })
+      },
     )
   }
 
-  async function deleteClassAction(id: string) {
-    await deleteClass({
-      params: {
-        schoolSlug: currentSchool!,
-        classId: id,
-      },
-    })
-
-    queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'classes'],
-    })
+  if (isError) {
+    return (
+      <p className="text-red-500">
+        Erro ao carregar turmas. Tente novamente mais tarde.
+      </p>
+    )
   }
 
   return (
@@ -150,11 +159,11 @@ export function ClassList() {
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>
-                                  Deseja apagar a classe {item.name}?
+                                  Deseja apagar a turma {item.name}?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
                                   Esta ação não pode ser desfeita. Isso excluirá
-                                  permanentemente a classe.
+                                  permanentemente a turma.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -163,7 +172,7 @@ export function ClassList() {
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   className="cursor-pointer"
-                                  onClick={() => deleteClassAction(item.id)}
+                                  onClick={() => handleDeleteClass(item.id)}
                                 >
                                   Confirmar
                                 </AlertDialogAction>
@@ -190,7 +199,7 @@ export function ClassList() {
 
         {data?.classes.length === 0 && (
           <p className="text-muted-foreground p-4 text-center text-sm">
-            Nenhuma classe encontrada.
+            Nenhuma turma encontrada.
           </p>
         )}
       </div>

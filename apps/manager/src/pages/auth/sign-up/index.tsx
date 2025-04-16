@@ -71,8 +71,8 @@ export function SignUp() {
           <div className="space-y-1.5">
             <Label htmlFor="name">Nome completo</Label>
             <FormInput
-              id="name"
               {...register('name')}
+              id="name"
               placeholder="Seu nome completo"
               error={errors.name?.message}
             />
@@ -82,8 +82,8 @@ export function SignUp() {
             <div className="space-y-1.5">
               <Label htmlFor="email">E-mail</Label>
               <FormInput
-                id="email"
                 {...register('email')}
+                id="email"
                 placeholder="Seu e-mail"
                 error={errors.email?.message}
               />
@@ -92,8 +92,8 @@ export function SignUp() {
             <div className="space-y-1.5">
               <Label htmlFor="cpf">CPF</Label>
               <FormInput
-                id="cpf"
                 {...register('cpf')}
+                id="cpf"
                 placeholder="Seu CPF"
                 maxLength={14}
                 onChange={handleCpfChange}
@@ -106,9 +106,10 @@ export function SignUp() {
             <div className="space-y-1.5">
               <Label htmlFor="password">Senha</Label>
               <FormInput
+                {...register('password')}
                 id="password"
                 type="password"
-                {...register('password')}
+                autoComplete="new-password"
                 placeholder="Sua senha secreta"
                 error={errors.password?.message}
               />
@@ -117,9 +118,10 @@ export function SignUp() {
             <div className="space-y-1.5">
               <Label htmlFor="confirm_password">Confirmar senha</Label>
               <FormInput
+                {...register('confirm_password')}
                 id="confirm_password"
                 type="password"
-                {...register('confirm_password')}
+                autoComplete="new-password"
                 placeholder="Confirme sua senha secreta"
                 error={errors.confirm_password?.message}
               />

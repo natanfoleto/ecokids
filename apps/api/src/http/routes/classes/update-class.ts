@@ -19,8 +19,8 @@ export async function updateClass(app: FastifyInstance) {
       '/schools/:schoolSlug/classes/:classId',
       {
         schema: {
-          tags: ['Classes'],
-          summary: 'Atualizar uma classe',
+          tags: ['Turmas'],
+          summary: 'Atualizar uma turma',
           security: [{ bearerAuth: [] }],
           params: updateClassParamsSchema,
           body: updateClassBodySchema,
@@ -42,7 +42,7 @@ export async function updateClass(app: FastifyInstance) {
 
         if (cannot('update', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para atualizar uma classe.',
+            'Você não tem permissão para atualizar uma turma.',
           )
         }
 

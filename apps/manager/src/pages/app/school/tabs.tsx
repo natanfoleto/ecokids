@@ -1,4 +1,11 @@
-import { Gauge, GraduationCap, Settings, SquarePen, Users } from 'lucide-react'
+import {
+  Gauge,
+  GraduationCap,
+  Medal,
+  Settings,
+  SquarePen,
+  Users,
+} from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -80,6 +87,23 @@ export function Tabs() {
             >
               <GraduationCap className="mr-0.5 size-4" />
               Alunos
+            </Button>
+          )}
+        </NavLink>
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        <NavLink to={`/school/${currentSchool}/awards`} end>
+          {({ isActive }) => (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
+            >
+              <Medal className="mr-0.5 size-4" />
+              Prêmios
             </Button>
           )}
         </NavLink>

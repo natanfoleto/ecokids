@@ -18,8 +18,8 @@ export async function getClasses(app: FastifyInstance) {
       '/schools/:schoolSlug/classes',
       {
         schema: {
-          tags: ['Classes'],
-          summary: 'Buscar todas classes de uma escola',
+          tags: ['Turmas'],
+          summary: 'Buscar todas as turmas de uma escola',
           security: [{ bearerAuth: [] }],
           params: getClassesParamsSchema,
           response: {
@@ -39,7 +39,7 @@ export async function getClasses(app: FastifyInstance) {
 
         if (cannot('get', 'Class')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para buscar classes dessa escola.',
+            'Você não tem permissão para buscar turmas dessa escola.',
           )
         }
 

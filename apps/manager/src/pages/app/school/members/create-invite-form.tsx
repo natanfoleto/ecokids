@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AlertTriangle, Loader2, UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
+import { getCurrentSchool } from '@/auth'
 import { FormInput } from '@/components/form/form-input'
 import { FormSelect } from '@/components/form/form-select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -11,10 +12,13 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { SelectItem } from '@/components/ui/select'
 import { useAction } from '@/hooks/use-actions'
+import { queryClient } from '@/lib/react-query'
 
 import { createInviteAction } from './actions'
 
 export function CreateInviteForm() {
+  const currentSchool = getCurrentSchool()
+
   const {
     register,
     handleSubmit,
@@ -31,8 +35,22 @@ export function CreateInviteForm() {
 
   async function onSubmit(data: CreateInviteBody) {
     await handleAction(
-      () => createInviteAction({ body: data }),
-      () => setValue('email', ''),
+      () =>
+        createInviteAction({
+          params: {
+            schoolSlug: currentSchool!,
+          },
+          body: data,
+        }),
+      (data) => {
+        if (data.success) {
+          queryClient.invalidateQueries({
+            queryKey: ['schools', currentSchool, 'invites'],
+          })
+
+          setValue('email', '')
+        }
+      },
     )
   }
 

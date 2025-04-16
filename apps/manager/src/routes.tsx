@@ -5,6 +5,7 @@ import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
 import { Home } from './pages/app/home'
 import { School } from './pages/app/school'
+import { Awards } from './pages/app/school/awards'
 import { Classes } from './pages/app/school/classes'
 import { Members } from './pages/app/school/members'
 import { Settings } from './pages/app/school/settings'
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
           { path: '/school/:slug/members', element: <Members /> },
           { path: '/school/:slug/classes', element: <Classes /> },
           { path: '/school/:slug/students', element: <Students /> },
+          { path: '/school/:slug/awards', element: <Awards /> },
           { path: '/school/:slug/settings', element: <Settings /> },
         ],
       },
