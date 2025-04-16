@@ -33,6 +33,7 @@ export async function getSchools(app: FastifyInstance) {
             city: true,
             state: true,
             logoUrl: true,
+            createdAt: true,
             members: {
               select: {
                 role: true,

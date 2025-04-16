@@ -11,6 +11,7 @@ export const getSchoolsResponseSchema = z.object({
       state: z.string().nullable(),
       logoUrl: z.string().url().nullable(),
       role: roleSchema,
+      createdAt: z.date(),
     }),
   ),
 })
