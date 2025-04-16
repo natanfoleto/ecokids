@@ -6,7 +6,7 @@ export function School() {
       <Tabs />
 
       <div className="space-y-10">
-        <h1 className="text-2xl font-medium">Dashboard</h1>
+        <h1 className="text-xl font-medium">Dashboard</h1>
       </div>
     </div>
   )

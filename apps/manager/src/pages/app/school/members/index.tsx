@@ -13,7 +13,7 @@ export function Members() {
       <Tabs />
 
       <div className="space-y-4">
-        <h1 className="text-2xl font-medium">Membros</h1>
+        <h1 className="text-xl font-medium">Membros</h1>
 
         <div>{canGetInvites && <Invites />}</div>
       </div>
