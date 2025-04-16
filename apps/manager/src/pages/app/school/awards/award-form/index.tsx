@@ -1,4 +1,4 @@
-import { type SaveClassBody, saveClassBodySchema } from '@ecokids/types'
+import { type SaveAwardBody, saveAwardBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -10,24 +10,25 @@ import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { queryClient } from '@/lib/react-query'
 
-import { createClassAction, updateClassAction } from '../actions'
+import { createAwardAction, updateAwardAction } from '../actions'
 
-interface ClassFormProps {
+interface AwardFormProps {
   isUpdating?: boolean
-  initialData?: SaveClassBody
-  classId?: string
+  initialData?: SaveAwardBody
+  awardId?: string
 }
 
-export function ClassForm({
+export function AwardForm({
   isUpdating,
   initialData,
-  classId,
-}: ClassFormProps) {
+  awardId,
+}: AwardFormProps) {
   const currentSchool = useCurrentSchool()
 
-  const defaultValues: SaveClassBody = initialData || {
+  const defaultValues: SaveAwardBody = initialData || {
     name: '',
-    year: '',
+    description: null,
+    value: 0,
   }
 
   const {
@@ -35,59 +36,69 @@ export function ClassForm({
     handleSubmit,
     reset,
     formState: { errors, isDirty },
-  } = useForm<SaveClassBody>({
-    resolver: zodResolver(saveClassBodySchema),
+  } = useForm<SaveAwardBody>({
+    resolver: zodResolver(saveAwardBodySchema),
     defaultValues,
   })
 
-  const [{ success, message }, handleAction, isPending] = useAction()
+  const [, handleAction, isPending] = useAction()
 
-  async function onSubmit(data: SaveClassBody) {
+  async function onSubmit(data: SaveAwardBody) {
     const formAction =
-      isUpdating && classId
+      isUpdating && awardId
         ? () =>
-          updateClassAction({
+          updateAwardAction({
             params: {
               schoolSlug: currentSchool!,
-              classId,
+              awardId,
             },
             body: data,
           })
         : () =>
-          createClassAction({
+          createAwardAction({
             params: { schoolSlug: currentSchool! },
             body: data,
           })
 
     handleAction(formAction, () => {
-      if (!isUpdating || !classId) reset()
+      if (!isUpdating || !awardId) reset()
 
       queryClient.invalidateQueries({
-        queryKey: ['schools', currentSchool, 'classes'],
+        queryKey: ['schools', currentSchool, 'awards'],
       })
     })
   }
 
   return (
     <form className="flex flex-col space-y-8" onSubmit={handleSubmit(onSubmit)}>
-      <div className="w-full space-y-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="name">Nome da turma</Label>
+      <div className="grid w-full grid-cols-12 gap-4">
+        <div className="col-span-6 space-y-1.5">
+          <Label htmlFor="name">Nome do prêmio</Label>
           <FormInput
-            id="name"
             {...register('name')}
-            placeholder="1A"
+            id="name"
+            placeholder="Camiseta"
             error={errors.name?.message}
           />
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="year">Ano</Label>
+        <div className="col-span-6 space-y-1.5">
+          <Label htmlFor="description">Descrição</Label>
           <FormInput
-            id="year"
-            {...register('year')}
-            placeholder="2025"
-            error={errors.year?.message}
+            {...register('description')}
+            id="description"
+            placeholder="Camiseta manga curta"
+            error={errors.description?.message}
+          />
+        </div>
+
+        <div className="col-span-12 space-y-1.5">
+          <Label htmlFor="value">Preço</Label>
+          <FormInput
+            {...register('value', { valueAsNumber: true })}
+            id="value"
+            placeholder="200"
+            error={errors.value?.message}
           />
         </div>
       </div>

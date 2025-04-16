@@ -1,13 +1,12 @@
 import type { Role } from '@ecokids/auth'
 import { type CreateInviteBody, createInviteBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AlertTriangle, Loader2, UserPlus } from 'lucide-react'
+import { Loader2, UserPlus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { getCurrentSchool } from '@/auth'
 import { FormInput } from '@/components/form/form-input'
 import { FormSelect } from '@/components/form/form-select'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { SelectItem } from '@/components/ui/select'
@@ -31,7 +30,7 @@ export function CreateInviteForm() {
       role: 'MEMBER',
     },
   })
-  const [{ message, success }, handleAction, isPending] = useAction()
+  const [, handleAction, isPending] = useAction()
 
   async function onSubmit(data: CreateInviteBody) {
     await handleAction(
@@ -60,16 +59,6 @@ export function CreateInviteForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {!success && message && (
-        <Alert variant="destructive">
-          <AlertTriangle className="size-4" />
-          <AlertTitle>Falha ao convidar!</AlertTitle>
-          <AlertDescription>
-            <p>{message}</p>
-          </AlertDescription>
-        </Alert>
-      )}
-
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1 space-y-2">
           <Label

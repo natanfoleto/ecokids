@@ -11,7 +11,7 @@ export const updateAwardBodySchema = z.object({
   name: z
     .string()
     .min(1, { message: 'O nome precisa ter no mínimo um caracter.' }),
-  description: z.string().optional(),
+  description: z.string().nullable(),
   value: z.number().positive({ message: 'O valor precisa ser positivo.' }),
 })
 

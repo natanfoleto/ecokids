@@ -1,4 +1,4 @@
-import type { DeleteClassResponse, GetClassesResponse } from '@ecokids/types'
+import type { DeleteAwardResponse, GetAwardsResponse } from '@ecokids/types'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Ellipsis, Filter, Search } from 'lucide-react'
 import { useState } from 'react'
@@ -33,21 +33,21 @@ import {
 } from '@/components/ui/table'
 import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
-import { getClasses } from '@/http/classes/get-classes'
+import { getAwards } from '@/http/awards/get-awards'
 import { queryClient } from '@/lib/react-query'
-import { UpdateClass } from '@/pages/app/@sheet/classes/update-class'
+import { UpdateAward } from '@/pages/app/@dialog/awards/update-award'
 
-import { deleteClassAction } from './actions'
+import { deleteAwardAction } from './actions'
 
-export function ClassList() {
+export function AwardList() {
   const currentSchool = useCurrentSchool()
 
-  const [updateClass, setUpdateClass] = useState<string | null>(null)
+  const [updateAward, setUpdateAward] = useState<string | null>(null)
 
-  const { data, isLoading, isError } = useQuery<GetClassesResponse>({
-    queryKey: ['schools', currentSchool, 'classes'],
+  const { data, isLoading, isError } = useQuery<GetAwardsResponse>({
+    queryKey: ['schools', currentSchool, 'awards'],
     queryFn: async () => {
-      const data = await getClasses({
+      const data = await getAwards({
         params: {
           schoolSlug: currentSchool!,
         },
@@ -58,21 +58,21 @@ export function ClassList() {
     placeholderData: keepPreviousData,
   })
 
-  const [, handleAction] = useAction<DeleteClassResponse>()
+  const [, handleAction] = useAction<DeleteAwardResponse>()
 
-  async function handleDeleteClass(classId: string) {
+  async function handleDeleteAward(awardId: string) {
     handleAction(
       () =>
-        deleteClassAction({
+        deleteAwardAction({
           params: {
             schoolSlug: currentSchool!,
-            classId,
+            awardId,
           },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'classes'],
+            queryKey: ['schools', currentSchool, 'awards'],
           })
       },
     )
@@ -81,7 +81,7 @@ export function ClassList() {
   if (isError) {
     return (
       <p className="text-red-500">
-        Erro ao carregar turmas. Tente novamente mais tarde.
+        Erro ao carregar prêmios. Tente novamente mais tarde.
       </p>
     )
   }
@@ -91,7 +91,7 @@ export function ClassList() {
       <form className="flex gap-3">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 size-3 -translate-y-1/2" />
-          <Input className="pl-8" placeholder="Buscar classes" />
+          <Input className="pl-8" placeholder="Buscar prêmios" />
         </div>
 
         <Button type="submit" variant="outline">
@@ -104,8 +104,10 @@ export function ClassList() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead></TableHead>
               <TableHead>Nome</TableHead>
-              <TableHead>Ano</TableHead>
+              <TableHead>Descrição</TableHead>
+              <TableHead>Preço</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
           </TableHeader>
@@ -113,15 +115,17 @@ export function ClassList() {
           <TableBody>
             {isLoading ? (
               <>
-                <ClassSkeleton />
-                <ClassSkeleton />
-                <ClassSkeleton />
+                <AwardSkeleton />
+                <AwardSkeleton />
+                <AwardSkeleton />
               </>
             ) : (
-              data?.classes.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.year}</TableCell>
+              data?.awards.map((award) => (
+                <TableRow key={award.id}>
+                  <TableCell></TableCell>
+                  <TableCell>{award.name}</TableCell>
+                  <TableCell>{award.description}</TableCell>
+                  <TableCell>{award.value}</TableCell>
                   <TableCell className="flex justify-end">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -137,7 +141,7 @@ export function ClassList() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           asChild
-                          onClick={() => setUpdateClass(item.id)}
+                          onClick={() => setUpdateAward(award.id)}
                         >
                           <Button
                             variant="ghost"
@@ -159,11 +163,11 @@ export function ClassList() {
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>
-                                  Deseja apagar a turma {item.name}?
+                                  Deseja apagar o prêmio {award.name}?
                                 </AlertDialogTitle>
                                 <AlertDialogDescription>
                                   Esta ação não pode ser desfeita. Isso excluirá
-                                  permanentemente a turma.
+                                  permanentemente o prêmio.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -172,7 +176,7 @@ export function ClassList() {
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   className="cursor-pointer"
-                                  onClick={() => handleDeleteClass(item.id)}
+                                  onClick={() => handleDeleteAward(award.id)}
                                 >
                                   Confirmar
                                 </AlertDialogAction>
@@ -184,11 +188,11 @@ export function ClassList() {
                     </DropdownMenu>
                   </TableCell>
 
-                  {updateClass === item.id && (
-                    <UpdateClass
-                      open={!!updateClass}
-                      onClose={() => setUpdateClass(null)}
-                      classId={item.id}
+                  {updateAward === award.id && (
+                    <UpdateAward
+                      open={!!updateAward}
+                      onClose={() => setUpdateAward(null)}
+                      awardId={award.id}
                     />
                   )}
                 </TableRow>
@@ -197,9 +201,9 @@ export function ClassList() {
           </TableBody>
         </Table>
 
-        {data?.classes.length === 0 && (
+        {data?.awards.length === 0 && (
           <p className="text-muted-foreground p-4 text-center text-sm">
-            Nenhuma turma encontrada.
+            Nenhum prêmio encontrado.
           </p>
         )}
       </div>
@@ -207,9 +211,12 @@ export function ClassList() {
   )
 }
 
-function ClassSkeleton() {
+function AwardSkeleton() {
   return (
     <TableRow>
+      <TableCell>
+        <Skeleton className="h-8" />
+      </TableCell>
       <TableCell>
         <Skeleton className="h-8" />
       </TableCell>
