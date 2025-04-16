@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/sheet'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { getClass } from '@/http/classes/get-class'
-
-import { ClassForm } from './class-form'
+import { ClassForm } from '@/pages/app/school/classes/class-form'
 
 interface UpdateClassProps {
   open: boolean

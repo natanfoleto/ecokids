@@ -10,8 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { getStudent } from '@/http/students/get-student'
-
-import { StudentForm } from './student-form'
+import { StudentForm } from '@/pages/app/school/students/student-form'
 
 interface UpdateStudentProps {
   open: boolean

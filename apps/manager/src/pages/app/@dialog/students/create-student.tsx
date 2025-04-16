@@ -5,8 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-
-import { StudentForm } from './student-form'
+import { StudentForm } from '@/pages/app/school/students/student-form'
 
 interface CreateStudentProps {
   open: boolean

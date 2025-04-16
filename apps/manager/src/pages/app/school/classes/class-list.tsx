@@ -35,8 +35,7 @@ import { useCurrentSchool } from '@/hooks/use-current-school'
 import { deleteClass } from '@/http/classes/delete-class'
 import { getClasses } from '@/http/classes/get-classes'
 import { queryClient } from '@/lib/react-query'
-
-import { UpdateClass } from './update-class'
+import { UpdateClass } from '@/pages/app/@sheet/classes/update-class'
 
 export function ClassList() {
   const currentSchool = useCurrentSchool()

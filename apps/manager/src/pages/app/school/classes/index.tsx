@@ -3,10 +3,10 @@ import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { usePermissions } from '@/hooks/use-permissions'
+import { CreateClass } from '@/pages/app/@sheet/classes/create-class'
 
 import { Tabs } from '../tabs'
 import { ClassList } from './class-list'
-import { CreateClass } from './create-class'
 
 export function Classes() {
   const { permissions } = usePermissions()

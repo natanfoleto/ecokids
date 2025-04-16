@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { getSchools } from '@/http/schools/get-schools'
-import { CreateSchool } from '@/pages/app/school/create-school'
+import { CreateSchool } from '@/pages/app/@sheet/schools/create-school'
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import {

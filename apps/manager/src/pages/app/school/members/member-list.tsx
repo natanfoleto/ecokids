@@ -60,10 +60,11 @@ export function MemberList() {
       <Table>
         <TableBody>
           {isLoading ? (
-            <div>
+            <>
               <MemberSkeleton />
               <MemberSkeleton />
-            </div>
+              <MemberSkeleton />
+            </>
           ) : (
             members?.map((member) => (
               <TableRow key={member.id}>
@@ -140,20 +141,22 @@ export function MemberList() {
 
 function MemberSkeleton() {
   return (
-    <div className="flex items-center justify-between p-2">
-      <div className="flex w-full items-center gap-2">
-        <Skeleton className="size-10 rounded-full" />
+    <TableRow>
+      <TableCell className="flex items-center justify-between p-2">
+        <div className="flex w-full items-center gap-2">
+          <Skeleton className="size-10 rounded-full" />
 
-        <div className="w-full space-y-1">
-          <Skeleton className="h-3 w-48" />
-          <Skeleton className="h-3 w-80" />
+          <div className="w-full space-y-1">
+            <Skeleton className="h-3 w-48" />
+            <Skeleton className="h-3 w-80" />
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-8 w-24" />
-        <Skeleton className="h-8 w-24" />
-      </div>
-    </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-8 w-24" />
+        </div>
+      </TableCell>
+    </TableRow>
   )
 }

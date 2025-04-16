@@ -1,4 +1,4 @@
-import { Gauge, GraduationCap, SquarePen, Users } from 'lucide-react'
+import { Gauge, GraduationCap, Settings, SquarePen, Users } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -23,7 +23,7 @@ export function Tabs() {
             <Button
               variant="ghost"
               size="sm"
-              className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
             >
               <Gauge className="mr-0.5 size-4" />
               Dashboard
@@ -41,7 +41,7 @@ export function Tabs() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
+                className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
               >
                 <Users className="mr-0.5 size-4" />
                 Membros
@@ -59,7 +59,7 @@ export function Tabs() {
             <Button
               variant="ghost"
               size="sm"
-              className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
             >
               <SquarePen className="mr-0.5 size-4" />
               Classes
@@ -76,10 +76,27 @@ export function Tabs() {
             <Button
               variant="ghost"
               size="sm"
-              className={`cursor-pointer border border-transparent ${isActive ? 'border-border' : 'text-muted-foreground'}`}
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
             >
               <GraduationCap className="mr-0.5 size-4" />
               Alunos
+            </Button>
+          )}
+        </NavLink>
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        <NavLink to={`/school/${currentSchool}/settings`} end>
+          {({ isActive }) => (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
+            >
+              <Settings className="mr-0.5 size-4" />
+              Configurações
             </Button>
           )}
         </NavLink>

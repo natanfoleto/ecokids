@@ -35,8 +35,7 @@ import { useCurrentSchool } from '@/hooks/use-current-school'
 import { deleteStudent } from '@/http/students/delete-student'
 import { getStudents } from '@/http/students/get-students'
 import { queryClient } from '@/lib/react-query'
-
-import { UpdateStudent } from './update-student'
+import { UpdateStudent } from '@/pages/app/@dialog/students/update-student'
 
 export function StudentList() {
   const currentSchool = useCurrentSchool()

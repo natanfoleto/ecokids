@@ -3,9 +3,9 @@ import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { usePermissions } from '@/hooks/use-permissions'
+import { CreateStudent } from '@/pages/app/@dialog/students/create-student'
 
 import { Tabs } from '../tabs'
-import { CreateStudent } from './create-student'
 import { StudentList } from './student-list'
 
 export function Students() {

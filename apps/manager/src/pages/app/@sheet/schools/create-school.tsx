@@ -5,8 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-
-import { SchoolForm } from './school-form'
+import { SchoolForm } from '@/pages/app/school/school-form'
 
 interface CreateSchoolProps {
   open: boolean

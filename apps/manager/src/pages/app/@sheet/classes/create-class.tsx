@@ -5,8 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-
-import { ClassForm } from './class-form'
+import { ClassForm } from '@/pages/app/school/classes/class-form'
 
 interface CreateClassProps {
   open: boolean
