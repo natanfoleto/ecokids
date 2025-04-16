@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 export const getStudentParamsSchema = z.object({
   schoolSlug: z.string(),
-  classId: z.string().uuid(),
   studentId: z.string().uuid(),
 })
 
@@ -21,8 +20,14 @@ export const getStudentResponseSchema = z.object({
     name: z.string(),
     cpf: z.string().nullable(),
     email: z.string().nullable(),
+    classId: z.string().uuid(),
     createdAt: z.date(),
     updatedAt: z.date(),
+    class: z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+      year: z.string(),
+    }),
   }),
 })
 

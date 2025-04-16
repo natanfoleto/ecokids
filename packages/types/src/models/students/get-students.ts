@@ -22,6 +22,11 @@ export const getStudentsResponseSchema = z.object({
       email: z.string().nullable(),
       createdAt: z.date(),
       updatedAt: z.date(),
+      class: z.object({
+        id: z.string().uuid(),
+        name: z.string(),
+        year: z.string(),
+      }),
     }),
   ),
 })

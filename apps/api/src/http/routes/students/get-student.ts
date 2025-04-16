@@ -16,7 +16,7 @@ export async function getStudent(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/schools/:schoolSlug/classes/:classId/students/:studentId',
+      '/schools/:schoolSlug/students/:studentId',
       {
         schema: {
           tags: ['Estudantes'],
@@ -53,8 +53,16 @@ export async function getStudent(app: FastifyInstance) {
             name: true,
             cpf: true,
             email: true,
+            classId: true,
             createdAt: true,
             updatedAt: true,
+            class: {
+              select: {
+                id: true,
+                name: true,
+                year: true,
+              },
+            },
           },
         })
 

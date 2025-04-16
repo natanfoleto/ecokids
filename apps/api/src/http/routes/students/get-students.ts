@@ -55,6 +55,13 @@ export async function getStudents(app: FastifyInstance) {
             email: true,
             createdAt: true,
             updatedAt: true,
+            class: {
+              select: {
+                id: true,
+                name: true,
+                year: true,
+              },
+            },
           },
         })
 

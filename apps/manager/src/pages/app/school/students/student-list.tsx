@@ -1,4 +1,4 @@
-import type { GetClassesResponse } from '@ecokids/types'
+import type { GetStudentsResponse } from '@ecokids/types'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Ellipsis, Filter, Search } from 'lucide-react'
 import { useState } from 'react'
@@ -14,7 +14,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-// import { Pagination } from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -32,21 +31,21 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useCurrentSchool } from '@/hooks/use-current-school'
-import { deleteClass } from '@/http/classes/delete-class'
-import { getClasses } from '@/http/classes/get-classes'
+import { deleteStudent } from '@/http/students/delete-student'
+import { getStudents } from '@/http/students/get-students'
 import { queryClient } from '@/lib/react-query'
 
-import { UpdateClass } from './update-class'
+import { UpdateStudent } from './update-student'
 
-export function ClassList() {
+export function StudentList() {
   const currentSchool = useCurrentSchool()
 
-  const [updateClass, setUpdateClass] = useState<string | null>(null)
+  const [updateStudent, setUpdateStudent] = useState<string | null>(null)
 
-  const { data, isError } = useQuery<GetClassesResponse>({
-    queryKey: ['schools', currentSchool, 'classes'],
+  const { data, isError } = useQuery<GetStudentsResponse>({
+    queryKey: ['schools', currentSchool, 'students'],
     queryFn: async () => {
-      const data = await getClasses({
+      const data = await getStudents({
         params: {
           schoolSlug: currentSchool!,
         },
@@ -60,21 +59,21 @@ export function ClassList() {
   if (isError) {
     return (
       <p className="text-red-500">
-        Erro ao carregar classes. Tente novamente mais tarde.
+        Erro ao carregar alunos. Tente novamente mais tarde.
       </p>
     )
   }
 
-  async function deleteClassAction(id: string) {
-    await deleteClass({
+  async function deleteStudentAction(id: string) {
+    await deleteStudent({
       params: {
         schoolSlug: currentSchool!,
-        classId: id,
+        studentId: id,
       },
     })
 
     queryClient.invalidateQueries({
-      queryKey: ['schools', currentSchool, 'classes'],
+      queryKey: ['schools', currentSchool, 'students'],
     })
   }
 
@@ -83,7 +82,7 @@ export function ClassList() {
       <form className="flex gap-3">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 size-3 -translate-y-1/2" />
-          <Input className="pl-8" placeholder="Buscar classes" />
+          <Input className="pl-8" placeholder="Buscar alunos" />
         </div>
 
         <Button type="submit" variant="outline">
@@ -96,16 +95,25 @@ export function ClassList() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="text-center">Código</TableHead>
               <TableHead>Nome</TableHead>
-              <TableHead>Ano</TableHead>
+              <TableHead>E-mail</TableHead>
+              <TableHead>CPF</TableHead>
+              <TableHead>Turma</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
-            {data?.classes.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.year}</TableCell>
+            {data?.students.map((student) => (
+              <TableRow key={student.id}>
+                <TableCell className="text-center">{student.code}</TableCell>
+                <TableCell>{student.name}</TableCell>
+                <TableCell>{student.email}</TableCell>
+                <TableCell>{student.cpf}</TableCell>
+                <TableCell>
+                  {student.class.name} - {student.class.year}
+                </TableCell>
+
                 <TableCell className="flex justify-end">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -121,7 +129,7 @@ export function ClassList() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
                         asChild
-                        onClick={() => setUpdateClass(item.id)}
+                        onClick={() => setUpdateStudent(student.id)}
                       >
                         <Button
                           variant="ghost"
@@ -143,11 +151,11 @@ export function ClassList() {
                           <AlertDialogContent>
                             <AlertDialogHeader>
                               <AlertDialogTitle>
-                                Deseja apagar a classe {item.name}?
+                                Deseja apagar o aluno {student.name}?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
                                 Esta ação não pode ser desfeita. Isso excluirá
-                                permanentemente a classe.
+                                permanentemente o aluno.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -156,7 +164,7 @@ export function ClassList() {
                               </AlertDialogCancel>
                               <AlertDialogAction
                                 className="cursor-pointer"
-                                onClick={() => deleteClassAction(item.id)}
+                                onClick={() => deleteStudentAction(student.id)}
                               >
                                 Confirmar
                               </AlertDialogAction>
@@ -168,11 +176,11 @@ export function ClassList() {
                   </DropdownMenu>
                 </TableCell>
 
-                {updateClass === item.id && (
-                  <UpdateClass
-                    open={!!updateClass}
-                    onClose={() => setUpdateClass(null)}
-                    classId={item.id}
+                {updateStudent === student.id && (
+                  <UpdateStudent
+                    open={!!updateStudent}
+                    onClose={() => setUpdateStudent(null)}
+                    studentId={student.id}
                   />
                 )}
               </TableRow>
@@ -180,9 +188,9 @@ export function ClassList() {
           </TableBody>
         </Table>
 
-        {data?.classes.length === 0 && (
+        {data?.students.length === 0 && (
           <p className="text-muted-foreground p-4 text-center text-sm">
-            Nenhuma classe encontrada.
+            Nenhum aluno encontrado.
           </p>
         )}
       </div>

@@ -7,6 +7,7 @@ import { Home } from './pages/app/home'
 import { School } from './pages/app/school'
 import { Classes } from './pages/app/school/classes'
 import { Members } from './pages/app/school/members'
+import { Students } from './pages/app/school/students'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
 import { Invite } from './pages/invite'
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
           { path: '/school/:slug', element: <School /> },
           { path: '/school/:slug/members', element: <Members /> },
           { path: '/school/:slug/classes', element: <Classes /> },
+          { path: '/school/:slug/students', element: <Students /> },
         ],
       },
       {

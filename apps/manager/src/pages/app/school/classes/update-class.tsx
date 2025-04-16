@@ -13,13 +13,13 @@ import { getClass } from '@/http/classes/get-class'
 
 import { ClassForm } from './class-form'
 
-interface UpdateSchoolProps {
+interface UpdateClassProps {
   open: boolean
   onClose: () => void
   classId: string
 }
 
-export function UpdateClass({ open, onClose, classId }: UpdateSchoolProps) {
+export function UpdateClass({ open, onClose, classId }: UpdateClassProps) {
   const currentSchool = useCurrentSchool()
 
   const { data } = useQuery<GetClassResponse>({

@@ -7,24 +7,22 @@ export const updateStudentParamsSchema = z.object({
 
 export type UpdateStudentParams = z.infer<typeof updateStudentParamsSchema>
 
-export const updateStudentBodySchema = z
-  .object({
-    code: z.number().optional(),
-    name: z.string().refine((value) => value.split(' ').length > 1, {
-      message: 'Por favor, digite seu nome completo.',
-    }),
-    email: z.string().email({ message: 'Insira um e-mail válido.' }).optional(),
-    cpf: z.string({ message: 'Insira um CPF válido.' }).optional(),
-    classId: z.string().uuid().optional(),
-  })
-  .refine((data) => data.cpf || data.email, {
-    message: 'É obrigatório passar e-mail ou CPF.',
-    path: ['cpf', 'email'],
-  })
+export const updateStudentBodySchema = z.object({
+  code: z.number({ message: 'O código deve ser um número' }).optional(),
+  name: z.string().refine((value) => value.split(' ').length > 1, {
+    message: 'Por favor, digite seu nome completo.',
+  }),
+  email: z.string().email({ message: 'Insira um e-mail válido.' }).nullable(),
+  cpf: z.string({ message: 'Insira um CPF válido.' }).nullable(),
+  password: z.string().optional(),
+  confirm_password: z.string().optional(),
+  classId: z.string().uuid({ message: 'Selecione uma classe válida.' }),
+})
 
 export type UpdateStudentBody = z.infer<typeof updateStudentBodySchema>
 
 export const updateStudentRequestSchema = z.object({
+  params: updateStudentParamsSchema,
   body: updateStudentBodySchema,
 })
 
