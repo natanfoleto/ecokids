@@ -1,4 +1,4 @@
-import { ChevronDown, LogOut } from 'lucide-react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { signOut } from '@/auth'
@@ -51,7 +51,18 @@ export function ProfileButton() {
         <ChevronDown className="text-muted-foreground size-4" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-32">
+        <DropdownMenuItem asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full cursor-pointer justify-start"
+          >
+            Perfil
+            <ChevronRight className="ml-auto size-4" />
+          </Button>
+        </DropdownMenuItem>
+
         <DropdownMenuItem asChild>
           <Button
             onClick={() => signOut(navigate)}
@@ -59,8 +70,8 @@ export function ProfileButton() {
             size="sm"
             className="w-full cursor-pointer justify-start"
           >
-            <LogOut className="mr-1 size-4" />
             Sair
+            <ChevronRight className="ml-auto size-4" />
           </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
