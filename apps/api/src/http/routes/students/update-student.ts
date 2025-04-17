@@ -3,6 +3,7 @@ import {
   updateStudentParamsSchema,
   updateStudentResponseSchema,
 } from '@ecokids/types'
+import { hash } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -31,7 +32,7 @@ export async function updateStudent(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug, studentId } = request.params
-        const { code, name, email, cpf, classId } = request.body
+        const { code, name, email, cpf, password, classId } = request.body
 
         const userId = await request.getCurrentUserId()
 
@@ -104,6 +105,7 @@ export async function updateStudent(app: FastifyInstance) {
             name,
             email,
             cpf,
+            ...(password && { passwordHash: await hash(password, 6) }),
             classId,
           },
         })

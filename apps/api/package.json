@@ -13,6 +13,7 @@
     "eslint:fix": "eslint --fix src --ext .ts,.tsx"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.787.0",
     "@ecokids/auth": "workspace:*",
     "@ecokids/env": "workspace:*",
     "@fastify/cookie": "^6.0.0",
@@ -23,6 +24,7 @@
     "@fastify/swagger-ui": "^3.0.0",
     "@prisma/client": "5.14.0",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.5.0",
     "fastify": "^4.27.0",
     "fastify-plugin": "^4.5.1",
     "fastify-type-provider-zod": "^1.2.0",

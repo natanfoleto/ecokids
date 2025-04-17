@@ -3,6 +3,8 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
+import { Home } from './pages/app/home'
+import { Profile } from './pages/app/profile'
 import { School } from './pages/app/school'
 import { Awards } from './pages/app/school/awards'
 import { Classes } from './pages/app/school/classes'
@@ -11,7 +13,6 @@ import { Settings } from './pages/app/school/settings'
 import { Students } from './pages/app/school/students'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
-import { Home } from './pages/home'
 import { Invite } from './pages/invite'
 import { NotFound } from './pages/not-found'
 
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
           { path: '/school/:slug/students', element: <Students /> },
           { path: '/school/:slug/awards', element: <Awards /> },
           { path: '/school/:slug/settings', element: <Settings /> },
+          { path: '/profile', element: <Profile /> },
         ],
       },
       {

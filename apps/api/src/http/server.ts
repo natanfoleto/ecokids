@@ -3,6 +3,7 @@ import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUI from '@fastify/swagger-ui'
+import { config } from 'dotenv'
 import { fastify } from 'fastify'
 import {
   jsonSchemaTransform,
@@ -13,8 +14,13 @@ import {
 
 import { errorHandler } from '@/http/error-handler'
 import routes from '@/http/routes'
+import S3ClientWrapper from '@/lib/aws'
+
+config()
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
+
+const s3Client = new S3ClientWrapper()
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
@@ -46,22 +52,33 @@ app.register(fastifySwaggerUI, {
 })
 
 app.register(fastifyJwt, {
-  secret: 'ecokids',
+  secret: process.env.JWT_SECRET,
 })
 
 app.register(fastifyCookie, {
-  secret: 'ecokids',
+  secret: process.env.COOKIE_SECRET,
 })
 
 app.register(fastifyCors, {
-  origin: 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN,
   credentials: true,
 })
 
-app.register(routes)
+app.register(async function (app) {
+  try {
+    app.decorate('s3Client', s3Client)
+
+    console.log('🚀 S3 inicializado com sucesso!')
+
+    app.register(routes)
+  } catch (error) {
+    console.error('❌ Falha ao inicializar S3 Client:', error)
+    process.exit(1)
+  }
+})
 
 app
-  .listen({ port: 3333, host: '0.0.0.0' })
+  .listen({ port: process.env.SERVER_PORT, host: '0.0.0.0' })
   .then(() => {
     console.log('🚀 HTTP server está rodando!')
   })

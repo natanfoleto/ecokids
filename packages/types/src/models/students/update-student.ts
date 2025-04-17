@@ -15,7 +15,7 @@ export const updateStudentBodySchema = z.object({
   email: z.string().email({ message: 'Insira um e-mail válido.' }).nullable(),
   cpf: z.string({ message: 'Insira um CPF válido.' }).nullable(),
   password: z.string().optional(),
-  confirm_password: z.string().optional(),
+  confirmPassword: z.string().optional(),
   classId: z.string().uuid({ message: 'Selecione uma classe válida.' }),
 })
 

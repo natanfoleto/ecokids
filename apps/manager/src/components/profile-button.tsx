@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { signOut } from '@/auth'
 import { useUserProfile } from '@/hooks/use-user-profile'
@@ -51,15 +51,18 @@ export function ProfileButton() {
         <ChevronDown className="text-muted-foreground size-4" />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" className="w-32">
+      <DropdownMenuContent align="end" className="text-muted-foreground w-32">
         <DropdownMenuItem asChild>
           <Button
-            variant="ghost"
+            asChild
             size="sm"
+            variant="ghost"
             className="w-full cursor-pointer justify-start"
           >
-            Perfil
-            <ChevronRight className="ml-auto size-4" />
+            <Link to="profile">
+              Perfil
+              <ChevronRight className="ml-auto size-4" />
+            </Link>
           </Button>
         </DropdownMenuItem>
 

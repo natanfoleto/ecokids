@@ -23,7 +23,7 @@ import { createStudentAction, updateStudentAction } from '../actions'
 
 interface StudentFormProps {
   isUpdating?: boolean
-  initialData?: Omit<SaveStudentBody, 'password' | 'confirm_password'>
+  initialData?: Omit<SaveStudentBody, 'password' | 'confirmPassword'>
   studentId?: string
 }
 
@@ -53,7 +53,7 @@ export function StudentForm({
     email: initialData?.email ?? null,
     cpf: initialData?.cpf ?? null,
     password: '',
-    confirm_password: '',
+    confirmPassword: '',
     classId: initialData?.classId ?? '',
   }
 
@@ -74,7 +74,7 @@ export function StudentForm({
 
   function verifyPassword(data: SaveStudentBody) {
     if (!isUpdating) {
-      if (!data.password || !data.confirm_password) {
+      if (!data.password || !data.confirmPassword) {
         if (!data.password) {
           setError('password', {
             type: 'required',
@@ -82,8 +82,8 @@ export function StudentForm({
           })
         }
 
-        if (!data.confirm_password) {
-          setError('confirm_password', {
+        if (!data.confirmPassword) {
+          setError('confirmPassword', {
             type: 'required',
             message: 'A confirmação de senha é obrigatória',
           })
@@ -92,8 +92,8 @@ export function StudentForm({
         return false
       }
 
-      if (data.password !== data.confirm_password) {
-        setError('confirm_password', {
+      if (data.password !== data.confirmPassword) {
+        setError('confirmPassword', {
           type: 'validate',
           message: 'As senhas não coincidem',
         })
@@ -101,9 +101,9 @@ export function StudentForm({
         return false
       }
     } else {
-      if (data.password || data.confirm_password) {
-        if (data.password !== data.confirm_password) {
-          setError('confirm_password', {
+      if (data.password || data.confirmPassword) {
+        if (data.password !== data.confirmPassword) {
+          setError('confirmPassword', {
             type: 'validate',
             message: 'As senhas não coincidem',
           })
@@ -231,13 +231,13 @@ export function StudentForm({
         </div>
 
         <div className="col-span-6 space-y-1.5">
-          <Label htmlFor="confirm_password">Confirmar senha</Label>
+          <Label htmlFor="confirmPassword">Confirmar senha</Label>
           <FormInput
-            {...register('confirm_password')}
-            id="confirm_password"
+            {...register('confirmPassword')}
+            id="confirmPassword"
             type="password"
             autoComplete="new-password"
-            error={errors.confirm_password?.message}
+            error={errors.confirmPassword?.message}
           />
         </div>
       </div>
