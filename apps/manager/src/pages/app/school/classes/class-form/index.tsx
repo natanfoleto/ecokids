@@ -59,12 +59,14 @@ export function ClassForm({
             body: data,
           })
 
-    handleAction(formAction, () => {
-      if (!isUpdating || !classId) reset()
+    handleAction(formAction, (data) => {
+      if (data.success) {
+        if (!isUpdating || !classId) reset()
 
-      queryClient.invalidateQueries({
-        queryKey: ['schools', currentSchool, 'classes'],
-      })
+        queryClient.invalidateQueries({
+          queryKey: ['schools', currentSchool, 'classes'],
+        })
+      }
     })
   }
 

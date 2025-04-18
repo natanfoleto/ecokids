@@ -9,6 +9,7 @@ import {
 import { useUserProfile } from '@/hooks/use-user-profile'
 import { getInitialsName } from '@/utils/get-initials-name'
 
+import { PasswordForm } from './password-form'
 import { ProfileForm } from './profile-form'
 
 export function Profile() {
@@ -42,7 +43,7 @@ export function Profile() {
           </CardHeader>
 
           <CardContent>
-            <ProfileForm />
+            <ProfileForm initialData={user} />
           </CardContent>
         </Card>
 
@@ -55,7 +56,7 @@ export function Profile() {
           </CardHeader>
 
           <CardContent>
-            <ProfileForm />
+            <PasswordForm />
           </CardContent>
         </Card>
       </div>

@@ -52,9 +52,11 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
           },
           body: data,
         }),
-      () => {
-        reset()
-        queryClient.invalidateQueries({ queryKey: ['schools'] })
+      (data) => {
+        if (data.success) {
+          reset()
+          queryClient.invalidateQueries({ queryKey: ['schools'] })
+        }
       },
     )
   }

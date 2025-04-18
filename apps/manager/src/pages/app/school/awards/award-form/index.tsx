@@ -60,12 +60,14 @@ export function AwardForm({
             body: data,
           })
 
-    handleAction(formAction, () => {
-      if (!isUpdating || !awardId) reset()
+    handleAction(formAction, (data) => {
+      if (data.success) {
+        if (!isUpdating || !awardId) reset()
 
-      queryClient.invalidateQueries({
-        queryKey: ['schools', currentSchool, 'awards'],
-      })
+        queryClient.invalidateQueries({
+          queryKey: ['schools', currentSchool, 'awards'],
+        })
+      }
     })
   }
 

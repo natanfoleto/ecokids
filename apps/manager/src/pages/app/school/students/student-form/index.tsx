@@ -63,64 +63,39 @@ export function StudentForm({
     handleSubmit,
     reset,
     setValue,
-    setError,
     formState: { errors, isDirty },
   } = useForm<SaveStudentBody>({
-    resolver: zodResolver(saveStudentBodySchema),
+    resolver: zodResolver(
+      saveStudentBodySchema
+        .refine(
+          (data) => {
+            if (!isUpdating) return !!data.password
+            return true
+          },
+          {
+            message: 'Senha é obrigatória',
+            path: ['password'],
+          },
+        )
+        .refine(
+          (data) => {
+            if (data.password || data.confirmPassword) {
+              return data.password === data.confirmPassword
+            }
+            return true
+          },
+          {
+            message: 'Senhas não conferem',
+            path: ['confirmPassword'],
+          },
+        ),
+    ),
     defaultValues,
   })
 
   const [, handleAction, isPending] = useAction()
 
-  function verifyPassword(data: SaveStudentBody) {
-    if (!isUpdating) {
-      if (!data.password || !data.confirmPassword) {
-        if (!data.password) {
-          setError('password', {
-            type: 'required',
-            message: 'A senha é obrigatória',
-          })
-        }
-
-        if (!data.confirmPassword) {
-          setError('confirmPassword', {
-            type: 'required',
-            message: 'A confirmação de senha é obrigatória',
-          })
-        }
-
-        return false
-      }
-
-      if (data.password !== data.confirmPassword) {
-        setError('confirmPassword', {
-          type: 'validate',
-          message: 'As senhas não coincidem',
-        })
-
-        return false
-      }
-    } else {
-      if (data.password || data.confirmPassword) {
-        if (data.password !== data.confirmPassword) {
-          setError('confirmPassword', {
-            type: 'validate',
-            message: 'As senhas não coincidem',
-          })
-
-          return false
-        }
-      }
-    }
-
-    return true
-  }
-
   async function onSubmit(data: SaveStudentBody) {
-    const passwordVerified = verifyPassword(data)
-
-    if (!passwordVerified) return
-
     const formAction =
       isUpdating && studentId
         ? () =>
@@ -137,12 +112,14 @@ export function StudentForm({
             body: data,
           })
 
-    handleAction(formAction, () => {
-      if (!isUpdating || !studentId) reset()
+    handleAction(formAction, (data) => {
+      if (data.success) {
+        if (!isUpdating || !studentId) reset()
 
-      queryClient.invalidateQueries({
-        queryKey: ['schools', currentSchool, 'students'],
-      })
+        queryClient.invalidateQueries({
+          queryKey: ['schools', currentSchool, 'students'],
+        })
+      }
     })
   }
 

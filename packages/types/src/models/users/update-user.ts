@@ -5,9 +5,6 @@ export const updateUserBodySchema = z.object({
     message: 'Por favor, digite seu nome completo.',
   }),
   cpf: z.string().min(14, { message: 'Insira um CPF válido.' }),
-  password: z.string().optional(),
-  oldPassword: z.string().optional(),
-  confirmPassword: z.string().optional(),
 })
 
 export type UpdateUserBody = z.infer<typeof updateUserBodySchema>
