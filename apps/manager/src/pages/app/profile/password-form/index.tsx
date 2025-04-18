@@ -15,18 +15,31 @@ import { useAction } from '@/hooks/use-actions'
 import { updateUserPasswordAction } from '../actions'
 
 export function PasswordForm() {
+  const defaultValues = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  }
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isDirty },
   } = useForm<UpdateUserPasswordBody>({
     resolver: zodResolver(updateUserPasswordBodySchema),
+    defaultValues,
   })
 
   const [, handleAction, isPending] = useAction<UpdateUserPasswordResponse>()
 
   async function onSubmit(data: UpdateUserPasswordBody) {
-    await handleAction(() => updateUserPasswordAction({ body: data }))
+    await handleAction(
+      () => updateUserPasswordAction({ body: data }),
+      (data) => {
+        if (data.success) reset()
+      },
+    )
   }
 
   return (

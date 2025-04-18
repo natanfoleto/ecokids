@@ -1,7 +1,4 @@
-import {
-  updateUserAvatarParamsSchema,
-  updateUserAvatarResponseSchema,
-} from '@ecokids/types'
+import { updateUserAvatarResponseSchema } from '@ecokids/types'
 import fastifyMultipart from '@fastify/multipart'
 import type { FastifyInstance } from 'fastify'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -22,7 +19,6 @@ export async function updateUserAvatar(app: FastifyInstance) {
         schema: {
           tags: ['Usuários'],
           summary: 'Atualizar avatar do usuário',
-          params: updateUserAvatarParamsSchema,
           response: {
             204: updateUserAvatarResponseSchema,
           },

@@ -2,7 +2,7 @@ import {
   updateUserPasswordBodySchema,
   updateUserPasswordResponseSchema,
 } from '@ecokids/types'
-import { hash } from 'bcryptjs'
+import { compare, hash } from 'bcryptjs'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -42,9 +42,12 @@ export async function updateUserPassword(app: FastifyInstance) {
           throw new BadRequestError('Nenhum usuário encontrado.')
         }
 
-        const currentPasswordHash = await hash(currentPassword, 6)
+        const isPasswordValid = await compare(
+          currentPassword,
+          user.passwordHash,
+        )
 
-        if (currentPasswordHash !== user.passwordHash) {
+        if (!isPasswordValid) {
           throw new UnauthorizedError('Senha atual incorreta.')
         }
 

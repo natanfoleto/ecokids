@@ -16,11 +16,11 @@ import { formatCPF } from '@/utils/format-cpf'
 
 import { updateUserAction } from '../actions'
 
-interface ProfileForm {
+interface ProfileFormProps {
   initialData: UpdateUserBody
 }
 
-export function ProfileForm({ initialData }: ProfileForm) {
+export function ProfileForm({ initialData }: ProfileFormProps) {
   const {
     register,
     setValue,

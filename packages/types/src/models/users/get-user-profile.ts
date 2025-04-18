@@ -7,6 +7,7 @@ export const getUserProfileResponseSchema = z.object({
     email: z.string().email(),
     cpf: z.string(),
     avatarUrl: z.string().url().nullable(),
+    createdAt: z.date(),
   }),
 })
 

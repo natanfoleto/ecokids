@@ -3,6 +3,7 @@ import { HTTPError } from 'ky'
 import { toast } from 'sonner'
 
 import { updateUser } from '@/http/users/update-user'
+import { updateUserAvatar } from '@/http/users/update-user-avatar'
 import { updateUserPassword } from '@/http/users/update-user-password'
 
 export async function updateUserAction({
@@ -27,6 +28,8 @@ export async function updateUserAction({
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
+
+      toast.error(message)
 
       return { success: false, message }
     }
@@ -61,6 +64,36 @@ export async function updateUserPasswordAction({
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
+
+      toast.error(message)
+
+      return { success: false, message }
+    }
+
+    return {
+      success: false,
+      message: 'Erro inesperado, tente novamente em alguns minutos.',
+    }
+  }
+}
+
+export async function updateUserAvatarAction({ body }: { body: FormData }) {
+  try {
+    await updateUserAvatar({
+      body,
+    })
+
+    toast.success('Avatar atualizado com sucesso!')
+
+    return {
+      success: true,
+      message: 'Avatar atualizado com sucesso!',
+    }
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
+
+      toast.error(message)
 
       return { success: false, message }
     }

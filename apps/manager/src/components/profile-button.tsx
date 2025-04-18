@@ -42,7 +42,8 @@ export function ProfileButton() {
         </div>
 
         <Avatar>
-          {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
+          <AvatarImage src={user.avatarUrl || undefined} />
+
           {user.name && (
             <AvatarFallback>{getInitialsName(user.name)}</AvatarFallback>
           )}

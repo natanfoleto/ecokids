@@ -32,6 +32,7 @@ export async function getUserProfile(app: FastifyInstance) {
             email: true,
             cpf: true,
             avatarUrl: true,
+            createdAt: true,
           },
           where: {
             id: userId,
