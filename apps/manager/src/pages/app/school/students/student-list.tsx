@@ -107,7 +107,7 @@ export function StudentList() {
               <TableHead className="w-16 text-center">Código</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>E-mail</TableHead>
-              <TableHead>CPF</TableHead>
+              <TableHead>Pontuação</TableHead>
               <TableHead>Turma</TableHead>
               <TableHead className="w-12"></TableHead>
             </TableRow>
@@ -126,7 +126,7 @@ export function StudentList() {
                   <TableCell className="text-center">{student.code}</TableCell>
                   <TableCell>{student.name}</TableCell>
                   <TableCell>{student.email}</TableCell>
-                  <TableCell>{student.cpf}</TableCell>
+                  <TableCell>{student._count.points}</TableCell>
                   <TableCell>
                     {student.class.name} - {student.class.year}
                   </TableCell>

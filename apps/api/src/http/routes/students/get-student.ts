@@ -63,6 +63,18 @@ export async function getStudent(app: FastifyInstance) {
                 year: true,
               },
             },
+            points: {
+              select: {
+                id: true,
+                amount: true,
+                createdAt: true,
+              },
+            },
+            _count: {
+              select: {
+                points: true,
+              },
+            },
           },
         })
 

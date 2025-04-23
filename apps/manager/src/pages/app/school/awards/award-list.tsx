@@ -1,6 +1,6 @@
 import type { DeleteAwardResponse, GetAwardsResponse } from '@ecokids/types'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { Ellipsis, Filter, Search } from 'lucide-react'
+import { Camera, Ellipsis, Filter, Search } from 'lucide-react'
 import { useState } from 'react'
 
 import {
@@ -104,7 +104,9 @@ export function AwardList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead></TableHead>
+              <TableHead className="flex items-center justify-center">
+                <Camera className="size-4" />
+              </TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Descrição</TableHead>
               <TableHead>Preço</TableHead>
@@ -122,11 +124,17 @@ export function AwardList() {
             ) : (
               data?.awards.map((award) => (
                 <TableRow key={award.id}>
-                  <TableCell></TableCell>
+                  <TableCell className="w-20">
+                    <img
+                      src={award.photoUrl || undefined}
+                      alt="Foto do prêmio"
+                      className="w-min"
+                    />
+                  </TableCell>
                   <TableCell>{award.name}</TableCell>
                   <TableCell>{award.description}</TableCell>
                   <TableCell>{award.value}</TableCell>
-                  <TableCell className="flex justify-end">
+                  <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
