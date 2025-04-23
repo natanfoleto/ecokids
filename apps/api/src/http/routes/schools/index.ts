@@ -6,6 +6,7 @@ import { getSchool } from './get-school'
 import { getSchools } from './get-schools'
 import { shutdownSchool } from './shutdown-school'
 import { updateSchool } from './update-school'
+import { updateSchoolLogo } from './update-school-logo'
 
 export async function registerSchoolRoutes(app: FastifyInstance) {
   app.register(createSchool)
@@ -14,4 +15,5 @@ export async function registerSchoolRoutes(app: FastifyInstance) {
   app.register(getSchool)
   app.register(getMembership)
   app.register(shutdownSchool)
+  app.register(updateSchoolLogo)
 }

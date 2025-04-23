@@ -8,7 +8,7 @@ interface UpdateUserAvatarRequest {
 
 export async function updateUserAvatar({ body }: UpdateUserAvatarRequest) {
   await api
-    .patch(`users/avatar`, {
+    .patch('users/avatar', {
       body,
     })
     .json<UpdateUserAvatarResponse>()

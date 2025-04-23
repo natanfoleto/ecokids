@@ -93,10 +93,13 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
           <div className="flex items-baseline space-x-2">
             <Checkbox
               onCheckedChange={updateShouldAttachUsersByDomain}
-              className="translate-y-0.5"
+              className="translate-y-0.5 cursor-pointer"
               id="shouldAttachUsersByDomain"
             />
-            <label htmlFor="shouldAttachUsersByDomain" className="space-y-1">
+            <label
+              htmlFor="shouldAttachUsersByDomain"
+              className="cursor-pointer space-y-1"
+            >
               <span className="text-sm font-medium leading-none">
                 Convidar automaticamente os novos membros
               </span>

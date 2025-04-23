@@ -16,10 +16,12 @@ import { getSchool } from '@/http/schools/get-school'
 import { cn } from '@/lib/utils'
 
 import { SchoolForm } from '../school-form'
+import LogoForm from './logo-form'
 import { ShutdownSchool } from './shutdown-school'
 
 const tabs = [
   { id: 'details', title: 'Detalhes' },
+  { id: 'logo', title: 'Logo' },
   { id: 'shutdown', title: 'Desligar escola' },
 ] as const
 
@@ -46,6 +48,8 @@ export function SettingsTabs() {
   })
 
   const canShutdownSchool = permissions?.can('delete', 'School')
+
+  if (!data?.school) return null
 
   return (
     <div className="flex gap-12">
@@ -82,7 +86,20 @@ export function SettingsTabs() {
             </CardHeader>
 
             <CardContent>
-              <SchoolForm isUpdating initialData={data?.school} />
+              <SchoolForm isUpdating initialData={data.school} />
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === 'logo' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Logo da escola</CardTitle>
+              <CardDescription>Atualize a logo da escola.</CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <LogoForm initialData={data.school} />
             </CardContent>
           </Card>
         )}
