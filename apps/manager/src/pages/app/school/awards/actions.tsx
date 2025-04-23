@@ -4,6 +4,7 @@ import type {
   DeleteAwardParams,
   UpdateAwardBody,
   UpdateAwardParams,
+  UpdateAwardPhotoParams,
 } from '@ecokids/types'
 import { HTTPError } from 'ky'
 import { toast } from 'sonner'
@@ -11,6 +12,7 @@ import { toast } from 'sonner'
 import { createAward } from '@/http/awards/create-award'
 import { deleteAward } from '@/http/awards/delete-award'
 import { updateAward } from '@/http/awards/update-award'
+import { updateAwardPhoto } from '@/http/awards/update-award-photo'
 
 export async function createAwardAction({
   params: { schoolSlug },
@@ -20,7 +22,7 @@ export async function createAwardAction({
   body: CreateAwardBody
 }) {
   try {
-    await createAward({
+    const award = await createAward({
       params: {
         schoolSlug: schoolSlug!,
       },
@@ -36,6 +38,7 @@ export async function createAwardAction({
     return {
       success: true,
       message: 'Prêmio criado com sucesso!',
+      data: award,
     }
   } catch (error) {
     if (error instanceof HTTPError) {
@@ -122,6 +125,41 @@ export async function deleteAwardAction({
     }
 
     toast.error('Erro inesperado, tente novamente em alguns minutos.')
+
+    return {
+      success: false,
+      message: 'Erro inesperado, tente novamente em alguns minutos.',
+    }
+  }
+}
+
+export async function updateAwardPhotoAction({
+  params: { schoolSlug, awardId },
+  body,
+}: {
+  params: UpdateAwardPhotoParams
+  body: FormData
+}) {
+  try {
+    await updateAwardPhoto({
+      params: { schoolSlug, awardId },
+      body,
+    })
+
+    toast.success('Foto atualizada com sucesso!')
+
+    return {
+      success: true,
+      message: 'Foto atualizada com sucesso!',
+    }
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
+
+      toast.error(message)
+
+      return { success: false, message }
+    }
 
     return {
       success: false,

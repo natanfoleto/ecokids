@@ -1,6 +1,12 @@
-import { type SaveAwardBody, saveAwardBodySchema } from '@ecokids/types'
+import {
+  type CreateAwardResponse,
+  type SaveAwardBody,
+  saveAwardBodySchema,
+  type UpdateAwardResponse,
+} from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { ImageIcon, Loader2, X } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { FormInput } from '@/components/form/form-input'
@@ -10,7 +16,11 @@ import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { queryClient } from '@/lib/react-query'
 
-import { createAwardAction, updateAwardAction } from '../actions'
+import {
+  createAwardAction,
+  updateAwardAction,
+  updateAwardPhotoAction,
+} from '../actions'
 
 interface AwardFormProps {
   isUpdating?: boolean
@@ -25,15 +35,21 @@ export function AwardForm({
 }: AwardFormProps) {
   const currentSchool = useCurrentSchool()
 
+  const [photo, setPhoto] = useState<File | string | null>(
+    initialData?.photoUrl || null,
+  )
+
   const defaultValues: SaveAwardBody = initialData || {
     name: '',
     description: null,
     value: 0,
+    photoUrl: null,
   }
 
   const {
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors, isDirty },
   } = useForm<SaveAwardBody>({
@@ -41,7 +57,9 @@ export function AwardForm({
     defaultValues,
   })
 
-  const [, handleAction, isPending] = useAction()
+  const [, handleAction, isPending] = useAction<
+    CreateAwardResponse | UpdateAwardResponse
+  >()
 
   async function onSubmit(data: SaveAwardBody) {
     const formAction =
@@ -60,15 +78,55 @@ export function AwardForm({
             body: data,
           })
 
-    handleAction(formAction, (data) => {
-      if (data.success) {
+    handleAction(formAction, ({ success, data }) => {
+      if (success) {
+        const id = awardId || data?.awardId
+
         if (!isUpdating || !awardId) reset()
+        if (id) handleUploadPhoto(id)
 
         queryClient.invalidateQueries({
           queryKey: ['schools', currentSchool, 'awards'],
         })
       }
     })
+  }
+
+  async function handleUploadPhoto(awardId: string) {
+    if (photo === null) {
+      await updateAwardPhotoAction({
+        params: { schoolSlug: currentSchool!, awardId },
+        body: new FormData(),
+      })
+    }
+
+    if (photo instanceof File) {
+      const formData = new FormData()
+      formData.append('file', photo)
+
+      await updateAwardPhotoAction({
+        params: { schoolSlug: currentSchool!, awardId },
+        body: formData,
+      })
+    }
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (!file) return
+
+    setPhoto(file)
+    setValue('photoUrl', '', { shouldDirty: true })
+
+    setTimeout(() => {
+      event.target.value = ''
+    }, 0)
+  }
+
+  const handleFileRemove = () => {
+    setPhoto(null)
+    setValue('photoUrl', null, { shouldDirty: true })
   }
 
   return (
@@ -102,6 +160,59 @@ export function AwardForm({
             placeholder="200"
             error={errors.value?.message}
           />
+        </div>
+
+        <div className="col-span-12 space-y-1.5">
+          <div className="flex items-center justify-between">
+            <Label>Foto do prêmio</Label>
+
+            {photo && (
+              <div
+                onClick={handleFileRemove}
+                className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-0.5 text-xs transition-colors"
+              >
+                <X className="size-4" />
+                <span>
+                  {photo instanceof File
+                    ? photo.name
+                    : 'Remover foto do prêmio'}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="relative space-y-2">
+            {photo ? (
+              <img
+                src={
+                  photo instanceof File
+                    ? URL.createObjectURL(photo)
+                    : photo || undefined
+                }
+                alt="Foto do prêmio"
+                className="h-80 w-full cursor-pointer rounded-sm border object-cover"
+                onClick={() => document.getElementById('file')?.click()}
+              />
+            ) : (
+              <div
+                onClick={() => document.getElementById('file')?.click()}
+                className="flex h-80 w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-sm border"
+              >
+                <ImageIcon className="text-muted-foreground size-20 stroke-[0.375]" />
+                <p className="text-muted-foreground text-xs">
+                  Clique para selecionar uma imagem
+                </p>
+              </div>
+            )}
+
+            <input
+              hidden
+              id="file"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e)}
+            />
+          </div>
         </div>
       </div>
 

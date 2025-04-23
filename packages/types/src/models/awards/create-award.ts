@@ -12,6 +12,7 @@ export const createAwardBodySchema = z.object({
     .min(1, { message: 'O nome precisa ter no mínimo um caracter.' }),
   description: z.string().nullable(),
   value: z.number().positive({ message: 'O valor precisa ser positivo.' }),
+  photoUrl: z.string().nullable().optional(),
 })
 
 export type CreateAwardBody = z.infer<typeof createAwardBodySchema>

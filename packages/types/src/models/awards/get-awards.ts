@@ -19,6 +19,7 @@ export const getAwardsResponseSchema = z.object({
       name: z.string(),
       description: z.string().nullable(),
       value: z.number(),
+      photoUrl: z.string().nullable(),
       createdAt: z.date(),
       updatedAt: z.date(),
     }),

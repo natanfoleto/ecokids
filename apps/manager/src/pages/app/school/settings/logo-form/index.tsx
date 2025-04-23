@@ -35,7 +35,7 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
   const currentSchool = getCurrentSchool()
 
   const [hasChanges, setHasChanges] = useState(false)
-  const [sourceAvatar, setSourceAvatar] = useState(logoUrl)
+  const [sourceLogo, setSourceLogo] = useState(logoUrl)
 
   const initialValues = { logoFile: null }
 
@@ -54,9 +54,9 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
     document.getElementById('logo')?.click()
   }
 
-  function handleDeleteLoadedAvatar() {
+  function handleDeleteLoadedLogo() {
     setHasChanges(true)
-    setSourceAvatar(null)
+    setSourceLogo(null)
     setValue('logoFile', null, { shouldDirty: true, shouldValidate: true })
   }
 
@@ -73,13 +73,13 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
     }
 
     setHasChanges(true)
-    setSourceAvatar(null)
+    setSourceLogo(null)
   }
 
   const [, handleAction, isPending] = useAction()
 
   async function onSubmit({ logoFile }: UpdateSchoolLogo) {
-    const compressedAvatar = logoFile
+    const compressedLogo = logoFile
       ? await compressImage(logoFile, {
         quality: 0.6,
         maxWidth: 1920,
@@ -88,9 +88,9 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
       : logoFile
 
     const file =
-      compressedAvatar && logoFile
-        ? new File([compressedAvatar], logoFile.name, {
-          type: compressedAvatar.type,
+      compressedLogo && logoFile
+        ? new File([compressedLogo], logoFile.name, {
+          type: compressedLogo.type,
         })
         : logoFile
 
@@ -129,8 +129,8 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
         <div className="flex items-center gap-3">
           <Avatar className="size-20 cursor-pointer" onClick={handleInputClick}>
             <AvatarImage
-              src={sourceAvatar || logoFileString || undefined}
-              alt="Avatar"
+              src={sourceLogo || logoFileString || undefined}
+              alt="Logo"
             />
             <AvatarFallback />
 
@@ -141,9 +141,9 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
             )}
           </Avatar>
 
-          {getValues('logoFile') || sourceAvatar ? (
+          {getValues('logoFile') || sourceLogo ? (
             <div
-              onClick={handleDeleteLoadedAvatar}
+              onClick={handleDeleteLoadedLogo}
               className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1 text-center text-xs transition-colors"
             >
               <X className="size-4" />
