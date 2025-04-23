@@ -223,16 +223,16 @@ function AwardSkeleton() {
   return (
     <TableRow>
       <TableCell>
-        <Skeleton className="h-8" />
+        <Skeleton className="h-14" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-8" />
+        <Skeleton className="h-14" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-8" />
+        <Skeleton className="h-14" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-8" />
+        <Skeleton className="h-14" />
       </TableCell>
     </TableRow>
   )
