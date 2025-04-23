@@ -40,7 +40,7 @@ export function ClassForm({
     defaultValues,
   })
 
-  const [{ success, message }, handleAction, isPending] = useAction()
+  const [, handleAction, isPending] = useAction()
 
   async function onSubmit(data: SaveClassBody) {
     const formAction =
@@ -59,9 +59,10 @@ export function ClassForm({
             body: data,
           })
 
-    handleAction(formAction, (data) => {
-      if (data.success) {
+    handleAction(formAction, ({ success }) => {
+      if (success) {
         if (!isUpdating || !classId) reset()
+        else reset(data)
 
         queryClient.invalidateQueries({
           queryKey: ['schools', currentSchool, 'classes'],

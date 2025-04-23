@@ -30,9 +30,3 @@
 - NodeJS (fastify, swagger, zod)
 - ReactJS (vite, zod, rhf, tanstack-query)
 - S3 (amazon), R2 na cloudflare
-
-### Fixs
-
-- Testar dirty do salvar do prêmio
-- Apagar pasta da escola quando ela for excluída
-- Apagar foto do prêmio quando ele for excluído

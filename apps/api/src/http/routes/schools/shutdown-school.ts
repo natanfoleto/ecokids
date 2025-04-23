@@ -46,11 +46,21 @@ export async function shutdownSchool(app: FastifyInstance) {
           )
         }
 
-        await prisma.school.delete({
+        const { id } = await prisma.school.delete({
           where: {
             id: school.id,
           },
+          select: {
+            id: true,
+          },
         })
+
+        if (id) {
+          await app.s3Client.deleteFolder(
+            process.env.R2_BUCKET_NAME,
+            `schools/${schoolSlug}`,
+          )
+        }
 
         return reply.status(204).send()
       },

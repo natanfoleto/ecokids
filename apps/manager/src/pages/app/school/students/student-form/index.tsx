@@ -112,9 +112,10 @@ export function StudentForm({
             body: data,
           })
 
-    handleAction(formAction, (data) => {
-      if (data.success) {
+    handleAction(formAction, ({ success }) => {
+      if (success) {
         if (!isUpdating || !studentId) reset()
+        else reset(data)
 
         queryClient.invalidateQueries({
           queryKey: ['schools', currentSchool, 'students'],

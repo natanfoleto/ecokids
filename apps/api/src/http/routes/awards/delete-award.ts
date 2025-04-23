@@ -41,11 +41,21 @@ export async function deleteAward(app: FastifyInstance) {
           )
         }
 
-        await prisma.award.delete({
+        const { id } = await prisma.award.delete({
           where: {
             id: awardId,
           },
+          select: {
+            id: true,
+          },
         })
+
+        if (id) {
+          await app.s3Client.deleteFolder(
+            process.env.R2_BUCKET_NAME,
+            `schools/${schoolSlug}/awards/${awardId}`,
+          )
+        }
 
         return reply.status(204).send()
       },

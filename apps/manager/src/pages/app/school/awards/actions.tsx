@@ -146,7 +146,7 @@ export async function updateAwardPhotoAction({
       body,
     })
 
-    toast.success('Foto atualizada com sucesso!')
+    // toast.success('Foto atualizada com sucesso!')
 
     return {
       success: true,

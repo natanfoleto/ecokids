@@ -78,12 +78,14 @@ export function AwardForm({
             body: data,
           })
 
-    handleAction(formAction, ({ success, data }) => {
+    handleAction(formAction, async ({ success, data: responseData }) => {
       if (success) {
-        const id = awardId || data?.awardId
+        const id = awardId || responseData?.awardId
 
         if (!isUpdating || !awardId) reset()
-        if (id) handleUploadPhoto(id)
+        else reset(data)
+
+        if (id) await handleUploadPhoto(id)
 
         queryClient.invalidateQueries({
           queryKey: ['schools', currentSchool, 'awards'],

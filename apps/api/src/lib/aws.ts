@@ -1,7 +1,7 @@
 import {
-  DeleteObjectCommand,
-  GetObjectCommand,
+  DeleteObjectsCommand,
   ListBucketsCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
@@ -51,43 +51,58 @@ class S3ClientWrapper {
       return response
     } catch (error) {
       console.error('Erro ao enviar arquivo:', error)
-
       throw error
     }
   }
 
-  async deleteFile(bucketName: string, fileKey: string) {
+  async deleteFolder(bucketName: string, folderKey: string) {
     try {
-      const command = new DeleteObjectCommand({
-        Bucket: bucketName,
-        Key: fileKey,
-      })
+      let continuationToken: string | undefined
 
-      const response = await this.client.send(command)
+      do {
+        const command = new ListObjectsV2Command({
+          Bucket: bucketName,
+          Prefix: folderKey,
+          ContinuationToken: continuationToken,
+        })
 
-      return response
+        const listResponse = await this.client.send(command)
+
+        if (!listResponse.Contents || listResponse.Contents.length === 0) return
+
+        const chunks = this.chunkArray(listResponse.Contents, 1000)
+
+        await Promise.all(
+          chunks.map(async (chunk) => {
+            const command = new DeleteObjectsCommand({
+              Bucket: bucketName,
+              Delete: {
+                Objects: chunk.map((object) => ({
+                  Key: object.Key,
+                })),
+              },
+            })
+
+            await this.client.send(command)
+          }),
+        )
+
+        continuationToken = listResponse.NextContinuationToken
+      } while (continuationToken)
     } catch (error) {
-      console.error('Erro ao deletar arquivo:', error)
-
+      console.log(error)
       throw error
     }
   }
 
-  async getFile(bucketName: string, fileKey: string) {
-    try {
-      const command = new GetObjectCommand({
-        Bucket: bucketName,
-        Key: fileKey,
-      })
+  chunkArray<T>(array: T[], size: number): T[][] {
+    const result = []
 
-      const response = await this.client.send(command)
-
-      return response.Body
-    } catch (error) {
-      console.error('Erro ao obter arquivo:', error)
-
-      throw error
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size))
     }
+
+    return result
   }
 }
 
