@@ -28,7 +28,10 @@ export function Awards() {
         <h1 className="text-xl font-medium">Prêmios</h1>
 
         {canCreateAward && (
-          <Button className="cursor-pointer" onClick={toggleCreateAward}>
+          <Button
+            className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+            onClick={toggleCreateAward}
+          >
             <Plus className="size-4" />
             Criar prêmio
           </Button>

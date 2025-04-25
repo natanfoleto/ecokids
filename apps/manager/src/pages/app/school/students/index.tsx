@@ -28,7 +28,10 @@ export function Students() {
         <h1 className="text-xl font-medium">Alunos</h1>
 
         {canCreateStudent && (
-          <Button className="cursor-pointer" onClick={toggleCreateStudent}>
+          <Button
+            className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+            onClick={toggleCreateStudent}
+          >
             <Plus className="size-4" />
             Criar aluno
           </Button>

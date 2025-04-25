@@ -28,7 +28,10 @@ export function Classes() {
         <h1 className="text-xl font-medium">Turmas</h1>
 
         {canCreateClass && (
-          <Button className="cursor-pointer" onClick={toggleCreateClass}>
+          <Button
+            className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+            onClick={toggleCreateClass}
+          >
             <Plus className="size-4" />
             Criar turma
           </Button>

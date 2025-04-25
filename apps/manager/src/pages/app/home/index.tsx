@@ -18,7 +18,10 @@ export function Home() {
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-medium">Escolas</h1>
 
-        <Button className="cursor-pointer" onClick={toggleCreateSchool}>
+        <Button
+          className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+          onClick={toggleCreateSchool}
+        >
           <Plus className="size-4" />
           Criar escola
         </Button>

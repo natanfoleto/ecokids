@@ -60,7 +60,12 @@ app.register(fastifyCookie, {
 })
 
 app.register(fastifyCors, {
-  origin: process.env.CORS_ORIGIN,
+  origin: (origin, cb) => {
+    const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || []
+
+    if (!origin || allowedOrigins.includes(origin)) cb(null, true)
+    else cb(new Error('Not allowed'), false)
+  },
   credentials: true,
 })
 
