@@ -29,9 +29,9 @@ export function SchoolList() {
     <div className="flex w-full flex-wrap items-center justify-center gap-4">
       {isLoading ? (
         <>
-          <Skeleton className="h-40 w-full rounded-b-lg" />
-          <Skeleton className="h-40 w-full rounded-b-lg" />
-          <Skeleton className="h-40 w-full rounded-b-lg" />
+          <Skeleton className="h-48 w-1/4 rounded-b-lg" />
+          <Skeleton className="h-48 w-1/4 rounded-b-lg" />
+          <Skeleton className="h-48 w-1/4 rounded-b-lg" />
         </>
       ) : (
         data?.schools.map((school) => {

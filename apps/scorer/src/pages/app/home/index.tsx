@@ -7,6 +7,7 @@ export function Home() {
       <h1 className="text-muted-foreground">
         Selecione a escola para pontuar!
       </h1>
+
       <SchoolList />
       <Logout />
     </div>
