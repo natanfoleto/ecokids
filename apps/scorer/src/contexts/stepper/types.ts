@@ -14,5 +14,7 @@ export interface StepperContextType {
   canPrevStep: boolean
   canNextStep: boolean
   student: GetStudentByCodeResponse['student'] | null
-  setStudent: (student: GetStudentByCodeResponse['student']) => void
+  setStudent: (student: GetStudentByCodeResponse['student'] | null) => void
+  points: number | null
+  setPoints: (points: number | null) => void
 }

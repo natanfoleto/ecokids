@@ -5,21 +5,30 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useStepper } from '@/contexts/stepper'
 
-import { CaptureAmount } from './capture-amount'
-import { CaptureCode } from './capture-code'
+import { CodeEntry } from './code-entry'
+import { PointCapture } from './point-capture'
+import { Success } from './success'
 
 export function Stepper() {
-  const { step, canPrevStep, canNextStep, prevStep, nextStep, student } =
-    useStepper()
+  const {
+    step,
+    totalSteps,
+    canPrevStep,
+    canNextStep,
+    prevStep,
+    nextStep,
+    student,
+  } = useStepper()
 
   const steps: Record<number, JSX.Element> = {
-    1: <CaptureCode />,
-    2: <CaptureAmount />,
+    1: <CodeEntry />,
+    2: <PointCapture />,
+    3: <Success />,
   }
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-between gap-4 p-4">
-      {canPrevStep && (
+      {canPrevStep && step !== totalSteps && (
         <Button
           variant="outline"
           size="icon"
@@ -30,7 +39,7 @@ export function Stepper() {
         </Button>
       )}
 
-      {canNextStep && student && (
+      {canNextStep && student && step !== totalSteps - 1 && (
         <Button
           variant="outline"
           size="icon"

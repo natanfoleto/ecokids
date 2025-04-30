@@ -9,12 +9,12 @@ const StepperContext = createContext<StepperContextType>(
 
 const StepperProvider = ({ children }: StepperProviderProps) => {
   const [step, setStep] = useState(1)
-
   const [student, setStudent] = useState<
     GetStudentByCodeResponse['student'] | null
   >(null)
+  const [points, setPoints] = useState<number | null>(null)
 
-  const totalSteps = 2
+  const totalSteps = 3
 
   const canPrevStep = step > 1
   const canNextStep = step < totalSteps
@@ -43,6 +43,8 @@ const StepperProvider = ({ children }: StepperProviderProps) => {
         canNextStep,
         student,
         setStudent,
+        points,
+        setPoints,
       }}
     >
       {children}

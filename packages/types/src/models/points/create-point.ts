@@ -8,7 +8,9 @@ export const createPointParamsSchema = z.object({
 export type CreatePointParams = z.infer<typeof createPointParamsSchema>
 
 export const createPointBodySchema = z.object({
-  amount: z.number(),
+  amount: z
+    .number({ message: 'Por favor, digite um número válido para pontuar.' })
+    .min(1, { message: 'O número mínimo para pontuar é de 1 ponto.' }),
 })
 
 export type CreatePointBody = z.infer<typeof createPointBodySchema>

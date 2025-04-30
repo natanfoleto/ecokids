@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -9,12 +9,18 @@ import { useStepper } from '@/contexts/stepper'
 import { useCurrentSchool } from '@/hooks/use-current-school'
 import { getStudentByCode } from '@/http/students/get-student-by-code'
 
-export function CaptureCode() {
+export function CodeEntry() {
   const currentSchool = useCurrentSchool()
 
   const { nextStep, setStudent } = useStepper()
 
   const [code, setCode] = useState('')
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   const { mutate: getStudentByCodeAction, isPending } = useMutation({
     mutationFn: async () => {
@@ -48,6 +54,7 @@ export function CaptureCode() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-4">
       <Input
+        ref={inputRef}
         type="number"
         placeholder="Código do aluno"
         onChange={(e) => setCode(e.target.value)}
