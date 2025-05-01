@@ -69,16 +69,22 @@ export async function getStudents(app: FastifyInstance) {
                 createdAt: true,
               },
             },
-            _count: {
-              select: {
-                points: true,
-              },
-            },
           },
         })
 
+        const studentsWithPointsAdded = students.map((student) => {
+          const totalPoints = student.points.reduce((sum, point) => {
+            return sum + point.amount
+          }, 0)
+
+          return {
+            ...student,
+            totalPoints,
+          }
+        })
+
         return reply.send({
-          students,
+          students: studentsWithPointsAdded,
         })
       },
     )

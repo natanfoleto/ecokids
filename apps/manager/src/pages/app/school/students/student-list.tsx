@@ -126,7 +126,7 @@ export function StudentList() {
                   <TableCell className="text-center">{student.code}</TableCell>
                   <TableCell>{student.name}</TableCell>
                   <TableCell>{student.email}</TableCell>
-                  <TableCell>{student._count.points}</TableCell>
+                  <TableCell>{student.totalPoints}</TableCell>
                   <TableCell>
                     {student.class.name} - {student.class.year}
                   </TableCell>

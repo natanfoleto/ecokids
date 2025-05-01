@@ -34,9 +34,7 @@ export const getStudentsResponseSchema = z.object({
           createdAt: z.date(),
         }),
       ),
-      _count: z.object({
-        points: z.number(),
-      }),
+      totalPoints: z.number(),
     }),
   ),
 })
