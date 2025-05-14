@@ -11,6 +11,7 @@ import { permissions } from './permissions'
 import { awardSubject } from './subjects/award'
 import { classSubject } from './subjects/class'
 import { inviteSubject } from './subjects/invite'
+import { itemSubject } from './subjects/item'
 import { memberSubject } from './subjects/member'
 import { pointSubject } from './subjects/point'
 import { schoolSubject } from './subjects/school'
@@ -32,6 +33,7 @@ const appAbilitiesSchema = z.union([
   studentSubject,
   pointSubject,
   awardSubject,
+  itemSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

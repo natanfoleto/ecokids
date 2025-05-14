@@ -1,4 +1,4 @@
-import { getAwardParamsSchema, getAwardResponseSchema } from '@ecokids/types'
+import { getItemParamsSchema, getItemResponseSchema } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -8,24 +8,24 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getAward(app: FastifyInstance) {
+export async function getItem(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/schools/:schoolSlug/awards/:awardId',
+      '/schools/:schoolSlug/items/:itemId',
       {
         schema: {
-          tags: ['Prêmios'],
-          summary: 'Buscar um prêmio',
-          params: getAwardParamsSchema,
+          tags: ['Itens'],
+          summary: 'Buscar um item',
+          params: getItemParamsSchema,
           response: {
-            200: getAwardResponseSchema,
+            200: getItemResponseSchema,
           },
         },
       },
       async (request, reply) => {
-        const { schoolSlug, awardId } = request.params
+        const { schoolSlug, itemId } = request.params
 
         const userId = await request.getCurrentUserId()
 
@@ -33,23 +33,23 @@ export async function getAward(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Award')) {
+        if (cannot('get', 'Item')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para buscar um prêmio.',
+            'Você não tem permissão para buscar um item.',
           )
         }
 
-        const award = await prisma.award.findFirst({
+        const item = await prisma.item.findFirst({
           where: {
-            id: awardId,
+            id: itemId,
           },
         })
 
-        if (!award) {
-          throw new BadRequestError('Nenhum prêmio encontrado.')
+        if (!item) {
+          throw new BadRequestError('Nenhum item encontrado.')
         }
 
-        return reply.status(200).send({ award })
+        return reply.status(200).send({ item })
       },
     )
 }

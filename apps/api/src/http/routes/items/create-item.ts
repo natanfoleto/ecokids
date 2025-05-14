@@ -1,4 +1,8 @@
-import { getAwardsParamsSchema, getAwardsResponseSchema } from '@ecokids/types'
+import {
+  createItemBodySchema,
+  createItemParamsSchema,
+  createItemResponseSchema,
+} from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -7,24 +11,27 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getAwards(app: FastifyInstance) {
+export async function createItem(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .get(
-      '/schools/:schoolSlug/awards',
+    .post(
+      '/schools/:schoolSlug/items',
       {
         schema: {
-          tags: ['Prêmios'],
-          summary: 'Buscar os prêmios de uma escola',
-          params: getAwardsParamsSchema,
+          tags: ['Itens'],
+          summary: 'Criar item para uma escola',
+          security: [{ bearerAuth: [] }],
+          params: createItemParamsSchema,
+          body: createItemBodySchema,
           response: {
-            200: getAwardsResponseSchema,
+            201: createItemResponseSchema,
           },
         },
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
+        const { name, description, value } = request.body
 
         const userId = await request.getCurrentUserId()
 
@@ -33,19 +40,22 @@ export async function getAwards(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Award')) {
+        if (cannot('create', 'Item')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para buscar os prêmios.',
+            'Você não tem permissão para criar itens para uma escola.',
           )
         }
 
-        const awards = await prisma.award.findMany({
-          where: {
+        const { id } = await prisma.item.create({
+          data: {
+            name,
+            description,
+            value,
             schoolId: school.id,
           },
         })
 
-        return reply.status(200).send({ awards })
+        return reply.status(201).send({ itemId: id })
       },
     )
 }

@@ -1,6 +1,6 @@
 import {
-  updateAwardPhotoParamsSchema,
-  updateAwardPhotoResponseSchema,
+  updateItemPhotoParamsSchema,
+  updateItemPhotoResponseSchema,
 } from '@ecokids/types'
 import fastifyMultipart from '@fastify/multipart'
 import type { FastifyInstance } from 'fastify'
@@ -13,25 +13,25 @@ import { prisma } from '@/lib/prisma'
 import { getS3ObjectName, getS3PathURL } from '@/utils/aws'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function updateAwardPhoto(app: FastifyInstance) {
+export async function updateItemPhoto(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .register(fastifyMultipart)
     .patch(
-      '/schools/:schoolSlug/awards/:awardId/photo',
+      '/schools/:schoolSlug/items/:itemId/photo',
       {
         schema: {
-          tags: ['Prêmios'],
-          summary: 'Atualizar foto do prêmio',
-          params: updateAwardPhotoParamsSchema,
+          tags: ['Itens'],
+          summary: 'Atualizar foto do item',
+          params: updateItemPhotoParamsSchema,
           response: {
-            204: updateAwardPhotoResponseSchema,
+            204: updateItemPhotoResponseSchema,
           },
         },
       },
       async function (request, reply) {
-        const { schoolSlug, awardId } = request.params
+        const { schoolSlug, itemId } = request.params
 
         const userId = await request.getCurrentUserId()
 
@@ -39,19 +39,19 @@ export async function updateAwardPhoto(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('update', 'Award')) {
+        if (cannot('update', 'Item')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para atualizar a foto desse prêmio.',
+            'Você não tem permissão para atualizar a foto desse item.',
           )
         }
 
-        const award = await prisma.award.findUnique({
+        const item = await prisma.item.findUnique({
           where: {
-            id: awardId,
+            id: itemId,
           },
         })
 
-        if (!award) throw new BadRequestError('Nenhum prêmio encontrado.')
+        if (!item) throw new BadRequestError('Nenhum item encontrado.')
 
         const data = await request.file()
 
@@ -64,7 +64,7 @@ export async function updateAwardPhoto(app: FastifyInstance) {
             )
 
           const extension = data.filename.split('.')[1]
-          const objectName = `schools/${schoolSlug}/awards/${awardId}/photo.${extension}`
+          const objectName = `schools/${schoolSlug}/items/${itemId}/photo.${extension}`
 
           await app.s3Client.uploadFile(
             process.env.R2_BUCKET_NAME,
@@ -75,17 +75,17 @@ export async function updateAwardPhoto(app: FastifyInstance) {
 
           const url = getS3PathURL({ objectName })
 
-          await prisma.award.update({
+          await prisma.item.update({
             where: {
-              id: award.id,
+              id: item.id,
             },
             data: {
               photoUrl: url,
             },
           })
         } else {
-          if (award.photoUrl) {
-            const objectName = getS3ObjectName(award.photoUrl)
+          if (item.photoUrl) {
+            const objectName = getS3ObjectName(item.photoUrl)
 
             await app.s3Client.deleteFile(
               process.env.R2_BUCKET_NAME,
@@ -93,9 +93,9 @@ export async function updateAwardPhoto(app: FastifyInstance) {
             )
           }
 
-          await prisma.award.update({
+          await prisma.item.update({
             where: {
-              id: award.id,
+              id: item.id,
             },
             data: {
               photoUrl: null,

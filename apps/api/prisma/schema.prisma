@@ -109,6 +109,7 @@ model School {
   invites  Invite[]
   members  Member[]
   settings SchoolSettings[]
+  items    Item[]
 
   @@map("schools")
 }
@@ -171,7 +172,23 @@ model Point {
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String  @map("student_id")
 
+  score_items ScoreItems[]
+
   @@map("points")
+}
+
+model ScoreItems {
+  id     String @id @default(uuid())
+  amount Int
+  value  Int
+
+  point   Point  @relation(fields: [pointId], references: [id], onDelete: Cascade)
+  pointId String @map("point_id")
+
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId String @map("item_id")
+
+  @@map("score_items")
 }
 
 model Award {
@@ -187,4 +204,21 @@ model Award {
   schoolId String @map("school_id")
 
   @@map("awards")
+}
+
+model Item {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  value       Int
+  photoUrl    String?  @map("photo_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  score_items ScoreItems[]
+
+  @@map("items")
 }

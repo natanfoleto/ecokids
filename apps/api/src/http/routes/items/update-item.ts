@@ -1,31 +1,36 @@
-import { getAwardParamsSchema, getAwardResponseSchema } from '@ecokids/types'
+import {
+  updateItemBodySchema,
+  updateItemParamsSchema,
+  updateItemResponseSchema,
+} from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { auth } from '@/http/middlewares/auth'
-import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getAward(app: FastifyInstance) {
+export async function updateItem(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
-    .get(
-      '/schools/:schoolSlug/awards/:awardId',
+    .put(
+      '/schools/:schoolSlug/items/:itemId',
       {
         schema: {
-          tags: ['Prêmios'],
-          summary: 'Buscar um prêmio',
-          params: getAwardParamsSchema,
+          tags: ['Itens'],
+          summary: 'Atualizar um item',
+          params: updateItemParamsSchema,
+          body: updateItemBodySchema,
           response: {
-            200: getAwardResponseSchema,
+            204: updateItemResponseSchema,
           },
         },
       },
       async (request, reply) => {
-        const { schoolSlug, awardId } = request.params
+        const { schoolSlug, itemId } = request.params
+        const { name, description, value } = request.body
 
         const userId = await request.getCurrentUserId()
 
@@ -33,23 +38,24 @@ export async function getAward(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Award')) {
+        if (cannot('update', 'Item')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para buscar um prêmio.',
+            'Você não tem permissão para atualizar um item.',
           )
         }
 
-        const award = await prisma.award.findFirst({
+        await prisma.item.update({
           where: {
-            id: awardId,
+            id: itemId,
+          },
+          data: {
+            name,
+            description,
+            value,
           },
         })
 
-        if (!award) {
-          throw new BadRequestError('Nenhum prêmio encontrado.')
-        }
-
-        return reply.status(200).send({ award })
+        return reply.status(204).send()
       },
     )
 }

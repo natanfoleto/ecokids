@@ -1,4 +1,4 @@
-import { getAwardsParamsSchema, getAwardsResponseSchema } from '@ecokids/types'
+import { getItemsParamsSchema, getItemsResponseSchema } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -7,19 +7,19 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-export async function getAwards(app: FastifyInstance) {
+export async function getItems(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/schools/:schoolSlug/awards',
+      '/schools/:schoolSlug/items',
       {
         schema: {
-          tags: ['Prêmios'],
-          summary: 'Buscar os prêmios de uma escola',
-          params: getAwardsParamsSchema,
+          tags: ['Itens'],
+          summary: 'Buscar os itens de uma escola',
+          params: getItemsParamsSchema,
           response: {
-            200: getAwardsResponseSchema,
+            200: getItemsResponseSchema,
           },
         },
       },
@@ -33,19 +33,19 @@ export async function getAwards(app: FastifyInstance) {
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Award')) {
+        if (cannot('get', 'Item')) {
           throw new UnauthorizedError(
-            'Você não tem permissão para buscar os prêmios.',
+            'Você não tem permissão para buscar os itens.',
           )
         }
 
-        const awards = await prisma.award.findMany({
+        const items = await prisma.item.findMany({
           where: {
             schoolId: school.id,
           },
         })
 
-        return reply.status(200).send({ awards })
+        return reply.status(200).send({ items })
       },
     )
 }
