@@ -2,6 +2,7 @@ import {
   Gauge,
   GraduationCap,
   Medal,
+  Paperclip,
   Settings,
   SquarePen,
   Users,
@@ -68,6 +69,23 @@ export function Tabs() {
             >
               <GraduationCap className="mr-0.5 size-4" />
               Alunos
+            </Button>
+          )}
+        </NavLink>
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        <NavLink to={`/school/${currentSchool}/items`} end>
+          {({ isActive }) => (
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
+            >
+              <Paperclip className="mr-0.5 size-4" />
+              Itens
             </Button>
           )}
         </NavLink>
