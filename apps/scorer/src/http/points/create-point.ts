@@ -4,12 +4,12 @@ import { api } from '../api'
 
 export async function createPoint({
   params: { schoolSlug, studentId },
-  body: { amount },
+  body: { items },
 }: CreatePointRequest) {
   const result = await api
     .post(`schools/${schoolSlug}/students/${studentId}/points`, {
       json: {
-        amount,
+        items,
       },
     })
     .json<CreatePointResponse>()

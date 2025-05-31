@@ -125,11 +125,13 @@ export function AwardList() {
               data?.awards.map((award) => (
                 <TableRow key={award.id}>
                   <TableCell className="w-20">
-                    <img
-                      src={award.photoUrl || undefined}
-                      alt="Foto do prêmio"
-                      className="w-min"
-                    />
+                    {award.photoUrl && (
+                      <img
+                        src={award.photoUrl || undefined}
+                        alt="Foto do prêmio"
+                        className="w-min"
+                      />
+                    )}
                   </TableCell>
                   <TableCell>{award.name}</TableCell>
                   <TableCell>{award.description}</TableCell>

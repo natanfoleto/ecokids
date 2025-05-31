@@ -1,43 +1,33 @@
 import { type CreatePointBody, createPointBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { FormError } from '@/components/form/form-error'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { useStepper } from '@/contexts/stepper'
 import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchool } from '@/hooks/use-current-school'
-import { cn } from '@/lib/utils'
 import { getInitialsName } from '@/utils/get-initials-name'
 
-import { createPointAction } from '../actions'
+import { createPointAction } from '../../actions'
+import { ItemList } from './item-list'
 
 export function PointCapture() {
   const currentSchool = useCurrentSchool()
 
-  const { nextStep, goToStep, student, setPoints } = useStepper()
+  const { nextStep, goToStep, student } = useStepper()
 
-  const {
-    register,
-    handleSubmit,
-    setFocus,
-    formState: { errors },
-  } = useForm<CreatePointBody>({
+  const { handleSubmit, setValue } = useForm<CreatePointBody>({
     resolver: zodResolver(createPointBodySchema),
   })
-
-  useEffect(() => {
-    setFocus('amount')
-  }, [setFocus])
 
   const [, handleAction, isPending] = useAction()
 
   async function onSubmit(data: CreatePointBody) {
     if (!student) return
+
+    console.log({ data })
 
     handleAction(
       () =>
@@ -49,7 +39,6 @@ export function PointCapture() {
           body: data,
         }),
       () => {
-        setPoints(data.amount)
         nextStep()
       },
     )
@@ -62,7 +51,7 @@ export function PointCapture() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-8">
       <div className="flex flex-col items-center gap-2 py-4">
         <Avatar className="size-20">
           {student.name && (
@@ -82,26 +71,13 @@ export function PointCapture() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col items-center gap-4"
+        className="flex w-full flex-col items-center gap-8"
       >
-        <div className="flex w-full flex-col items-center gap-2">
-          <Input
-            {...register('amount', { valueAsNumber: true })}
-            type="number"
-            min={1}
-            placeholder="Quantidade de pontos"
-            className={cn(
-              errors.amount?.message ? 'disabled:opacity-1 border-red-400' : '',
-              'h-20 w-1/2 text-center !text-2xl',
-            )}
-          />
-
-          <FormError error={errors.amount?.message} />
-        </div>
+        <ItemList setValue={setValue} />
 
         <Button
           type="submit"
-          className="h-16 w-1/2 cursor-pointer bg-emerald-500 py-5 text-xl hover:bg-emerald-600"
+          className="h-16 min-w-48 cursor-pointer bg-emerald-500 py-5 text-xl hover:bg-emerald-600"
         >
           {isPending ? <Loader2 className="size-4" /> : 'Pontuar'}
         </Button>

@@ -1,4 +1,4 @@
-import type { GetStudentByCodeResponse } from '@ecokids/types'
+import type { CreatePointBody, GetStudentByCodeResponse } from '@ecokids/types'
 import type { ReactNode } from 'react'
 
 export interface StepperProviderProps {
@@ -15,6 +15,9 @@ export interface StepperContextType {
   canNextStep: boolean
   student: GetStudentByCodeResponse['student'] | null
   setStudent: (student: GetStudentByCodeResponse['student'] | null) => void
-  points: number | null
-  setPoints: (points: number | null) => void
+  items: CreatePointBody['items']
+  setItems: (items: CreatePointBody['items']) => void
+  manual: (itemId: string, value: number, amount: number) => void
+  increment: (itemId: string, value: number) => void
+  decrement: (itemId: string) => void
 }

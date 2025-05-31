@@ -5,7 +5,7 @@ import { createPoint } from '@/http/points/create-point'
 
 export async function createPointAction({
   params: { schoolSlug, studentId },
-  body: { amount },
+  body: { items },
 }: {
   params: CreatePointParams
   body: CreatePointBody
@@ -17,7 +17,7 @@ export async function createPointAction({
         studentId,
       },
       body: {
-        amount,
+        items,
       },
     })
 

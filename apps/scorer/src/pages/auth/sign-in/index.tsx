@@ -7,7 +7,6 @@ import { Loader2, LogIn, UserRoundX } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
 
 import { FormInput } from '@/components/form/form-input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -50,10 +49,7 @@ export function SignIn() {
   async function onSubmit(data: AuthenticateUserWithPasswordBody) {
     await handleAction(
       () => authenticateUserWithPasswordAction({ body: data }),
-      () => {
-        toast(message)
-        navigate('/')
-      },
+      () => navigate('/'),
     )
   }
 

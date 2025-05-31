@@ -31,12 +31,10 @@ export async function createPoint(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug, studentId } = request.params
-        const { amount } = request.body
+        const { items } = request.body
 
         const userId = await request.getCurrentUserId()
-
         const { membership } = await request.getUserMembership(schoolSlug)
-
         const { cannot } = getUserPermissions(userId, membership.role)
 
         if (cannot('create', 'Point')) {
@@ -45,14 +43,28 @@ export async function createPoint(app: FastifyInstance) {
           )
         }
 
-        const { id } = await prisma.point.create({
+        const totalPoints = items.reduce(
+          (acc, item) => acc + item.value * item.amount,
+          0,
+        )
+
+        const point = await prisma.point.create({
           data: {
-            amount,
+            amount: totalPoints,
             studentId,
+            score_items: {
+              create: items.map(({ itemId, amount, value }) => ({
+                itemId,
+                amount,
+                value,
+              })),
+            },
           },
         })
 
-        return reply.status(201).send({ pointId: id })
+        return reply.status(201).send({
+          pointId: point.id,
+        })
       },
     )
 }

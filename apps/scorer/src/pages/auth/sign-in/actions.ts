@@ -1,5 +1,6 @@
 import type { AuthenticateUserWithPasswordBody } from '@ecokids/types'
 import { HTTPError } from 'ky'
+import { toast } from 'sonner'
 
 import { authenticateUserWithPassword } from '@/http/auth/authenticate-user-with-password'
 
@@ -17,6 +18,8 @@ export async function authenticateUserWithPasswordAction({
         password,
       },
     })
+
+    toast.success('Logado com sucesso!')
 
     return {
       success: true,

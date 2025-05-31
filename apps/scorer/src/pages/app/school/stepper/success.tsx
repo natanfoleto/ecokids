@@ -8,7 +8,7 @@ import { useStepper } from '@/contexts/stepper'
 export function Success() {
   const { width, height } = useWindowSize()
 
-  const { goToStep, student, setStudent, points, setPoints } = useStepper()
+  const { goToStep, student, setStudent, items, setItems } = useStepper()
 
   if (!student) {
     goToStep(1)
@@ -17,15 +17,17 @@ export function Success() {
   }
 
   function handleScoreSameStudent() {
-    setPoints(null)
+    setItems([])
     goToStep(2)
   }
 
   function handleScoreAnotherStudent() {
     setStudent(null)
-    setPoints(null)
+    setItems([])
     goToStep(1)
   }
+
+  const points = items.reduce((acc, item) => acc + item.value * item.amount, 0)
 
   return (
     <div className="flex h-full w-full items-center justify-center gap-4">

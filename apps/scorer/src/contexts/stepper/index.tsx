@@ -1,4 +1,4 @@
-import type { GetStudentByCodeResponse } from '@ecokids/types'
+import type { CreatePointBody, GetStudentByCodeResponse } from '@ecokids/types'
 import { createContext, useContext, useState } from 'react'
 
 import type { StepperContextType, StepperProviderProps } from './types'
@@ -12,7 +12,43 @@ const StepperProvider = ({ children }: StepperProviderProps) => {
   const [student, setStudent] = useState<
     GetStudentByCodeResponse['student'] | null
   >(null)
-  const [points, setPoints] = useState<number | null>(null)
+  const [items, setItems] = useState<CreatePointBody['items']>([])
+
+  const increment = (itemId: string, value: number) => {
+    setItems((prev) =>
+      prev.some((item) => item.itemId === itemId)
+        ? prev.map((item) =>
+            item.itemId === itemId ? { ...item, amount: item.amount++ } : item,
+          )
+        : [...prev, { itemId, value, amount: 1 }],
+    )
+  }
+
+  const decrement = (itemId: string) => {
+    setItems((prev) =>
+      prev
+        .map((item) =>
+          item.itemId === itemId ? { ...item, amount: item.amount - 1 } : item,
+        )
+        .filter((item) => item.amount > 0),
+    )
+  }
+
+  const manual = (itemId: string, value: number, amount: number) => {
+    setItems((prev) => {
+      const index = prev.findIndex((item) => item.itemId === itemId)
+
+      if (index !== -1) {
+        const updated = [...prev]
+
+        updated[index] = { ...updated[index], amount }
+
+        return updated
+      }
+
+      return [...prev, { itemId, value, amount }]
+    })
+  }
 
   const totalSteps = 3
 
@@ -43,8 +79,11 @@ const StepperProvider = ({ children }: StepperProviderProps) => {
         canNextStep,
         student,
         setStudent,
-        points,
-        setPoints,
+        items,
+        setItems,
+        manual,
+        increment,
+        decrement,
       }}
     >
       {children}

@@ -125,11 +125,13 @@ export function ItemList() {
               data?.items.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="w-20">
-                    <img
-                      src={item.photoUrl || undefined}
-                      alt="Foto do prêmio"
-                      className="w-min"
-                    />
+                    {item.photoUrl && (
+                      <img
+                        src={item.photoUrl || undefined}
+                        alt="Foto do prêmio"
+                        className="w-min"
+                      />
+                    )}
                   </TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.description}</TableCell>
