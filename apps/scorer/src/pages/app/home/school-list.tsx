@@ -26,12 +26,12 @@ export function SchoolList() {
   }
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-center gap-4">
+    <div className="flex w-full flex-wrap items-center justify-center gap-4 overflow-y-scroll pr-4 md:pr-0">
       {isLoading ? (
         <>
-          <Skeleton className="h-48 w-1/4 rounded-b-lg" />
-          <Skeleton className="h-48 w-1/4 rounded-b-lg" />
-          <Skeleton className="h-48 w-1/4 rounded-b-lg" />
+          <Skeleton className="lg:min-w-1/3 md:min-w-1/2 h-40 min-w-full rounded-b-lg" />
+          <Skeleton className="lg:min-w-1/3 md:min-w-1/2 h-40 min-w-full rounded-b-lg" />
+          <Skeleton className="lg:min-w-1/3 md:min-w-1/2 h-40 min-w-full rounded-b-lg" />
         </>
       ) : (
         data?.schools.map((school) => {
@@ -39,7 +39,7 @@ export function SchoolList() {
             <Link
               key={school.id}
               to={`/school/${school.slug}`}
-              className="min-w-1/4 h-full"
+              className="lg:min-w-1/3 md:min-w-1/2 min-w-full"
             >
               <Card className="h-full">
                 <CardHeader>

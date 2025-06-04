@@ -39,11 +39,6 @@ export function ItemList({ setValue }: ItemListProps) {
     scrollRef.current?.scrollBy({ left: 258, behavior: 'smooth' })
   }
 
-  const totalPoints = items.reduce(
-    (acc, item) => acc + item.value * item.amount,
-    0,
-  )
-
   if (isLoading)
     return (
       <div className="h-76 flex items-center gap-4">
@@ -52,19 +47,9 @@ export function ItemList({ setValue }: ItemListProps) {
     )
 
   return (
-    <div className="w-full min-w-96 space-y-3">
-      <div className="flex items-center justify-center gap-8">
-        <Button
-          type="button"
-          size="icon"
-          variant="outline"
-          onClick={scrollLeft}
-          className="cursor-pointer rounded-full"
-        >
-          <ChevronLeft />
-        </Button>
-
-        <div ref={scrollRef} className="overflow-x-auto pb-3">
+    <div className="w-full min-w-96">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <div ref={scrollRef} className="w-full overflow-x-scroll pb-2">
           <div className="flex gap-4">
             {data?.items.map((item) => {
               const amount =
@@ -73,7 +58,7 @@ export function ItemList({ setValue }: ItemListProps) {
               return (
                 <Card
                   key={item.id}
-                  className={`min-w-60 flex-shrink-0 transition-colors ${amount > 0 ? 'bg-muted' : ''}`}
+                  className={`bg-muted min-w-60 flex-shrink-0 rounded-md border-transparent shadow-none transition-colors ${amount > 0 ? '' : ''}`}
                 >
                   <CardHeader className="space-y-2">
                     <CardTitle className="text-center text-lg">
@@ -102,13 +87,13 @@ export function ItemList({ setValue }: ItemListProps) {
                         variant="outline"
                         size="icon"
                         className="cursor-pointer disabled:cursor-not-allowed"
-                        disabled={!items.some((i) => i.itemId === item.id)}
                         onClick={() => decrement(item.id)}
                       >
                         -
                       </Button>
 
                       <Input
+                        type="number"
                         value={amount}
                         onChange={(e) =>
                           manual(item.id, item.value, Number(e.target.value))
@@ -133,20 +118,28 @@ export function ItemList({ setValue }: ItemListProps) {
           </div>
         </div>
 
-        <Button
-          type="button"
-          size="icon"
-          variant="outline"
-          onClick={scrollRight}
-          className="cursor-pointer rounded-full"
-        >
-          <ChevronRight />
-        </Button>
-      </div>
+        <div className="flex w-full items-start justify-between">
+          <Button
+            type="button"
+            size="icon"
+            variant="secondary"
+            onClick={scrollLeft}
+            className="cursor-pointer"
+          >
+            <ChevronLeft />
+          </Button>
 
-      <p className="text-muted-foreground text-center text-xl font-medium">
-        Total de {totalPoints} pontos
-      </p>
+          <Button
+            type="button"
+            size="icon"
+            variant="secondary"
+            onClick={scrollRight}
+            className="cursor-pointer"
+          >
+            <ChevronRight />
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }

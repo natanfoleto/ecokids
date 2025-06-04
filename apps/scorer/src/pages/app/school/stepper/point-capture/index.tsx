@@ -1,6 +1,5 @@
 import { type CreatePointBody, createPointBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -16,13 +15,13 @@ import { ItemList } from './item-list'
 export function PointCapture() {
   const currentSchool = useCurrentSchool()
 
-  const { nextStep, goToStep, student } = useStepper()
+  const { nextStep, goToStep, student, items } = useStepper()
 
   const { handleSubmit, setValue } = useForm<CreatePointBody>({
     resolver: zodResolver(createPointBodySchema),
   })
 
-  const [, handleAction, isPending] = useAction()
+  const [, handleAction, isLoading] = useAction()
 
   async function onSubmit(data: CreatePointBody) {
     if (!student) return
@@ -44,6 +43,11 @@ export function PointCapture() {
     )
   }
 
+  const totalPoints = items.reduce(
+    (acc, item) => acc + item.value * item.amount,
+    0,
+  )
+
   if (!student) {
     goToStep(1)
 
@@ -51,22 +55,28 @@ export function PointCapture() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-8">
-      <div className="flex flex-col items-center gap-2 py-4">
-        <Avatar className="size-20">
-          {student.name && (
-            <AvatarFallback className="text-muted-foreground text-xl">
-              {getInitialsName(student.name)}
-            </AvatarFallback>
-          )}
-        </Avatar>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+      <div className="flex w-full items-end justify-between">
+        <div className="flex w-full items-center gap-2">
+          <Avatar className="size-14">
+            {student.name && (
+              <AvatarFallback className="text-muted-foreground">
+                {getInitialsName(student.name)}
+              </AvatarFallback>
+            )}
+          </Avatar>
 
-        <div className="text-center">
-          <h1 className="text-xl">{student.name}</h1>
-          <p className="text-muted-foreground text-xs">
-            {student.class.name} - {student.class.year}
-          </p>
+          <div>
+            <h1 className="text-sm">{student.name}</h1>
+            <p className="text-muted-foreground text-xs">
+              {student.class.name} - {student.class.year}
+            </p>
+          </div>
         </div>
+
+        <p className="text-muted-foreground w-full text-end">
+          Total de <span className="font-semibold">{totalPoints}</span> pontos
+        </p>
       </div>
 
       <form
@@ -77,9 +87,13 @@ export function PointCapture() {
 
         <Button
           type="submit"
-          className="h-16 min-w-48 cursor-pointer bg-emerald-500 py-5 text-xl hover:bg-emerald-600"
+          className="h-12 cursor-pointer bg-emerald-400 text-lg hover:bg-emerald-600"
+          disabled={isLoading}
         >
-          {isPending ? <Loader2 className="size-4" /> : 'Pontuar'}
+          <p>
+            Pontuar <span className="text-yellow-300">{student.name}</span> com{' '}
+            <span className="text-yellow-300">{totalPoints}</span> pontos
+          </p>
         </Button>
       </form>
     </div>

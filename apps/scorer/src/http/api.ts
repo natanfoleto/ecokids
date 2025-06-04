@@ -1,7 +1,7 @@
 import ky, { type AfterResponseHook, BeforeRequestHook } from 'ky'
 
 const beforeRequest: BeforeRequestHook = async (_request) => {
-  // await new Promise((resolve) => setTimeout(resolve, 2000))
+  // await new Promise((resolve) => setTimeout(resolve, 5000))
 
   const cookies: Record<string, string> = document.cookie.split(';').reduce(
     (acc, cookie) => {
@@ -28,7 +28,7 @@ const afterResponse: AfterResponseHook = async (
 }
 
 export const api = ky.create({
-  prefixUrl: 'http://localhost:3333',
+  prefixUrl: 'http://192.168.4.2:3333',
   hooks: {
     beforeRequest: [beforeRequest],
     afterResponse: [afterResponse],

@@ -54,7 +54,7 @@ export function SignIn() {
   }
 
   return (
-    <div className="flex w-1/3 flex-col items-center space-y-6">
+    <div className="flex w-full flex-col items-center space-y-6 px-8 md:w-full xl:w-1/2">
       <div className="flex items-center gap-2">
         <LogIn />
         <h1 className="text-2xl">Fazer login</h1>
@@ -77,7 +77,7 @@ export function SignIn() {
             id="email"
             {...register('email')}
             placeholder="Seu e-mail"
-            className="py-5 text-center"
+            className="w-full py-5 text-center"
             error={errors.email?.message}
           />
 
