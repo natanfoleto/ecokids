@@ -32,7 +32,7 @@ export async function updateMember(app: FastifyInstance) {
       async (request, reply) => {
         const { schoolSlug, memberId } = request.params
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { school, membership } =
           await request.getUserMembership(schoolSlug)

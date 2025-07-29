@@ -6,18 +6,19 @@ import { prisma } from '@/lib/prisma'
 
 export const auth = fastifyPlugin(async (app: FastifyInstance) => {
   app.addHook('preHandler', async (request) => {
-    request.getCurrentUserId = async () => {
+    request.getCurrentEntityId = async () => {
       try {
         const { sub } = await request.jwtVerify<{ sub: string }>()
 
         return sub
-      } catch {
+      } catch (err) {
+        console.log(err)
         throw new UnauthorizedError('Token de autenticação inválido.')
       }
     }
 
     request.getUserMembership = async (schoolSlug: string) => {
-      const userId = await request.getCurrentUserId()
+      const userId = await request.getCurrentEntityId()
 
       const member = await prisma.member.findFirst({
         where: {

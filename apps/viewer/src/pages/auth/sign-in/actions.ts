@@ -1,17 +1,17 @@
-import type { AuthenticateUserWithPasswordBody } from '@ecokids/types'
+import type { AuthenticateStudentWithPasswordBody } from '@ecokids/types'
 import { HTTPError } from 'ky'
 
-import { authenticateUserWithPassword } from '@/http/auth/authenticate-user-with-password'
+import { authenticateStudentWithPassword } from '@/http/auth/authenticate-student-with-password'
 
-export async function authenticateUserWithPasswordAction({
+export async function authenticateStudentWithPasswordAction({
   body,
 }: {
-  body: AuthenticateUserWithPasswordBody
+  body: AuthenticateStudentWithPasswordBody
 }) {
   const { email, password } = body
 
   try {
-    await authenticateUserWithPassword({
+    await authenticateStudentWithPassword({
       body: {
         email,
         password,

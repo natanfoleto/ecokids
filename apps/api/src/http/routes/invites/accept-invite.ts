@@ -27,7 +27,7 @@ export async function acceptInvite(app: FastifyInstance) {
         },
       },
       async (request, reply) => {
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { inviteId } = request.params
 

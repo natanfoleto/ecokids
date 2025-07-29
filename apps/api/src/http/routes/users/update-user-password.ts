@@ -30,7 +30,7 @@ export async function updateUserPassword(app: FastifyInstance) {
       async (request, reply) => {
         const { currentPassword, newPassword, confirmPassword } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const user = await prisma.user.findUnique({
           where: {

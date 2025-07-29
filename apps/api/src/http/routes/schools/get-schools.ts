@@ -22,7 +22,7 @@ export async function getSchools(app: FastifyInstance) {
         },
       },
       async (request, reply) => {
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const schoolWithUserRole = await prisma.school.findMany({
           where: { members: { some: { userId } } },

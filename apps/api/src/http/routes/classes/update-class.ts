@@ -33,7 +33,7 @@ export async function updateClass(app: FastifyInstance) {
         const { schoolSlug, classId } = request.params
         const { name, year } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { school, membership } =
           await request.getUserMembership(schoolSlug)

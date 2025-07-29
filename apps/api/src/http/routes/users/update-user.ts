@@ -25,7 +25,7 @@ export async function updateUser(app: FastifyInstance) {
       async (request, reply) => {
         const { name, cpf } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         if (cpf) {
           const studentWithSameCpf = await prisma.student.findUnique({

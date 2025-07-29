@@ -31,7 +31,7 @@ export async function getStudentByCode(app: FastifyInstance) {
       async (request, reply) => {
         const { schoolSlug, code } = request.params
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { membership } = await request.getUserMembership(schoolSlug)
 

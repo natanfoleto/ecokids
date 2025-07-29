@@ -28,7 +28,7 @@ export async function getClass(app: FastifyInstance) {
       async (request, reply) => {
         const { schoolSlug, classId } = request.params
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { school, membership } =
           await request.getUserMembership(schoolSlug)

@@ -23,24 +23,60 @@ export async function getStudentProfile(app: FastifyInstance) {
         },
       },
       async (request, reply) => {
-        const userId = await request.getCurrentUserId()
+        const studentId = await request.getCurrentEntityId()
 
-        const user = await prisma.user.findUnique({
+        const student = await prisma.student.findUnique({
           select: {
             id: true,
+            code: true,
             name: true,
+            cpf: true,
             email: true,
+            school: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            class: {
+              select: {
+                id: true,
+                name: true,
+                year: true,
+              },
+            },
+            points: {
+              select: {
+                id: true,
+                amount: true,
+                createdAt: true,
+              },
+            },
+            _count: {
+              select: {
+                points: true,
+              },
+            },
           },
           where: {
-            id: userId,
+            id: studentId,
           },
         })
 
-        if (!user) {
+        if (!student) {
           throw new BadRequestError('Estudante não encontrado.')
         }
 
-        return reply.send({ user })
+        const totalPoints = student.points.reduce((sum, point) => {
+          return sum + point.amount
+        }, 0)
+
+        const studentWithPointsAdded = {
+          ...student,
+          totalPoints,
+        }
+
+        return reply.send({ student: studentWithPointsAdded })
       },
     )
 }

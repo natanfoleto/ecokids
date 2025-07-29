@@ -33,7 +33,7 @@ export async function createPoint(app: FastifyInstance) {
         const { schoolSlug, studentId } = request.params
         const { items } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
         const { membership } = await request.getUserMembership(schoolSlug)
         const { cannot } = getUserPermissions(userId, membership.role)
 

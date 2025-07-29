@@ -32,7 +32,7 @@ export async function updateAward(app: FastifyInstance) {
         const { schoolSlug, awardId } = request.params
         const { name, description, value } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { membership } = await request.getUserMembership(schoolSlug)
 

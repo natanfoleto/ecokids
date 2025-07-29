@@ -34,7 +34,7 @@ export async function createStudent(app: FastifyInstance) {
         const { schoolSlug } = request.params
         const { code, name, email, cpf, password, classId } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { school, membership } =
           await request.getUserMembership(schoolSlug)

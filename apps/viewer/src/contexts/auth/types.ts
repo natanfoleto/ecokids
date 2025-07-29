@@ -1,3 +1,4 @@
+import type { GetStudentProfileResponse } from '@ecokids/types'
 import type { ReactNode } from 'react'
 
 export interface AuthProviderProps {
@@ -6,6 +7,7 @@ export interface AuthProviderProps {
 
 export interface AuthContextType {
   signed: boolean
-  user: [] | null
+  student: GetStudentProfileResponse['student'] | null
+  setStudent(student: GetStudentProfileResponse['student'] | null): void
   signOut(): void
 }

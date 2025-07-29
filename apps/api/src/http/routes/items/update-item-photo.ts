@@ -33,7 +33,7 @@ export async function updateItemPhoto(app: FastifyInstance) {
       async function (request, reply) {
         const { schoolSlug, itemId } = request.params
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { membership } = await request.getUserMembership(schoolSlug)
 

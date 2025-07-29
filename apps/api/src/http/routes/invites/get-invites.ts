@@ -30,7 +30,7 @@ export async function getInvites(app: FastifyInstance) {
       async (request) => {
         const { schoolSlug } = request.params
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { school, membership } =
           await request.getUserMembership(schoolSlug)

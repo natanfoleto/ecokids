@@ -1,22 +1,37 @@
-import { createContext, useContext, useState } from 'react'
+import type { GetStudentProfileResponse } from '@ecokids/types'
+import { useQuery } from '@tanstack/react-query'
+import { createContext, useContext, useEffect, useState } from 'react'
 
-// import { useStorage } from '@/hooks/use-storage'
+import { getStudentProfile } from '@/http/students/get-student-profile'
+
 import type { AuthContextType, AuthProviderProps } from './types'
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<[] | null>(null)
+  const [student, setStudent] = useState<
+    GetStudentProfileResponse['student'] | null
+  >(null)
+
+  const { data, isSuccess } = useQuery({
+    queryKey: ['profile', 'student'],
+    queryFn: getStudentProfile,
+  })
+
+  useEffect(() => {
+    if (isSuccess && data) setStudent(data.student)
+  }, [isSuccess, data, setStudent])
 
   const signOut = () => {
-    setUser(null)
+    setStudent(null)
   }
 
   return (
     <AuthContext.Provider
       value={{
-        signed: !!user,
-        user,
+        signed: !!student,
+        student,
+        setStudent,
         signOut,
       }}
     >

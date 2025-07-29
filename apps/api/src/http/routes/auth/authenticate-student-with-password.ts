@@ -15,7 +15,7 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
     {
       schema: {
         tags: ['Autenticação'],
-        summary: 'Autenticar com e-mail e senha',
+        summary: 'Autenticar estudante com e-mail e senha',
         body: authenticateStudentWithPasswordBodySchema,
         response: {
           201: authenticateStudentWithPasswordResponseSchema,
@@ -25,21 +25,21 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
     async (request, reply) => {
       const { email, password } = request.body
 
-      const userFromEmail = await prisma.user.findUnique({
+      const studentFromEmail = await prisma.student.findUnique({
         where: { email },
       })
 
-      if (!userFromEmail) {
+      if (!studentFromEmail) {
         throw new BadRequestError('Credenciais inválidas.')
       }
 
-      if (userFromEmail.passwordHash === null) {
+      if (studentFromEmail.passwordHash === null) {
         throw new BadRequestError('Usuário não contém uma senha.')
       }
 
       const isPasswordValid = await compare(
         password,
-        userFromEmail.passwordHash,
+        studentFromEmail.passwordHash,
       )
 
       if (!isPasswordValid) {
@@ -48,7 +48,7 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
 
       const token = await reply.jwtSign(
         {
-          sub: userFromEmail.id,
+          sub: studentFromEmail.id,
         },
         {
           sign: {
@@ -56,6 +56,13 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
           },
         },
       )
+
+      reply.setCookie('token', token, {
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 dias
+      })
 
       return reply.status(201).send({ token })
     },

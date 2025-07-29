@@ -23,12 +23,12 @@ const afterResponse: AfterResponseHook = async (
   response,
 ) => {
   if (response.status === 401) {
-    //
+    console.log(response)
   }
 }
 
 export const api = ky.create({
-  prefixUrl: 'http://192.168.4.2:3333',
+  prefixUrl: 'http://localhost:3333',
   hooks: {
     beforeRequest: [beforeRequest],
     afterResponse: [afterResponse],

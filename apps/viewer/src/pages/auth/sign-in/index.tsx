@@ -1,64 +1,41 @@
 import {
-  type AuthenticateUserWithPasswordBody,
-  authenticateUserWithPasswordBodySchema,
+  type AuthenticateStudentWithPasswordBody,
+  authenticateStudentWithPasswordBodySchema,
 } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, LogIn, UserRoundX } from 'lucide-react'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 import { FormInput } from '@/components/form/form-input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useAction } from '@/hooks/use-actions'
 
-import { authenticateUserWithPasswordAction } from './actions'
+import { authenticateStudentWithPasswordAction } from './actions'
 
 export function SignIn() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
 
   const {
     register,
     handleSubmit,
-    setValue,
-    setFocus,
     formState: { errors },
-  } = useForm<AuthenticateUserWithPasswordBody>({
-    resolver: zodResolver(authenticateUserWithPasswordBodySchema),
+  } = useForm<AuthenticateStudentWithPasswordBody>({
+    resolver: zodResolver(authenticateStudentWithPasswordBodySchema),
   })
-
-  useEffect(() => {
-    const email = searchParams.get('email')
-
-    if (email) {
-      setValue('email', email)
-
-      const params = new URLSearchParams(searchParams)
-      params.delete('email')
-
-      navigate({ search: params.toString() }, { replace: true })
-
-      setFocus('password')
-    }
-  }, [navigate, searchParams, setValue, setFocus])
 
   const [{ success, message }, handleAction, isPending] = useAction()
 
-  async function onSubmit(data: AuthenticateUserWithPasswordBody) {
+  async function onSubmit(data: AuthenticateStudentWithPasswordBody) {
     await handleAction(
-      () => authenticateUserWithPasswordAction({ body: data }),
-      () => {
-        toast(message)
-        navigate('/')
-      },
+      () => authenticateStudentWithPasswordAction({ body: data }),
+      () => navigate('/ranking'),
     )
   }
 
   return (
-    <div className="flex w-1/3 flex-col items-center space-y-6">
+    <div className="flex w-full flex-col items-center space-y-6 px-8 lg:w-1/3">
       <div className="flex items-center gap-2">
         <LogIn />
         <h1 className="text-2xl">Fazer login</h1>

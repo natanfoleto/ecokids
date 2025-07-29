@@ -31,7 +31,7 @@ export async function createSchool(app: FastifyInstance) {
       async (request, reply) => {
         const { name, domain, shouldAttachUsersByDomain } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         let schoolSlug = createSlug(name)
 

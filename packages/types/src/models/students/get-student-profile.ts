@@ -1,10 +1,29 @@
 import { z } from 'zod'
 
 export const getStudentProfileResponseSchema = z.object({
-  user: z.object({
+  student: z.object({
     id: z.string().uuid(),
-    name: z.string().nullable(),
-    email: z.string().email(),
+    code: z.number(),
+    name: z.string(),
+    cpf: z.string().nullable(),
+    email: z.string().email().nullable(),
+    school: z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+    }),
+    class: z.object({
+      id: z.string().uuid(),
+      name: z.string(),
+      year: z.string(),
+    }),
+    points: z.array(
+      z.object({
+        id: z.string(),
+        amount: z.number(),
+        createdAt: z.date(),
+      }),
+    ),
+    totalPoints: z.number(),
   }),
 })
 

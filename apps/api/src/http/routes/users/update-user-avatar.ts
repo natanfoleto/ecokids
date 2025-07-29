@@ -25,7 +25,7 @@ export async function updateUserAvatar(app: FastifyInstance) {
         },
       },
       async function (request, reply) {
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const user = await prisma.user.findUnique({
           where: {

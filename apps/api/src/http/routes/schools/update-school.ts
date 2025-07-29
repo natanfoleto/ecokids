@@ -35,7 +35,7 @@ export async function updateSchool(app: FastifyInstance) {
         const { schoolSlug } = request.params
         const { name, domain, shouldAttachUsersByDomain } = request.body
 
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const { membership, school } =
           await request.getUserMembership(schoolSlug)

@@ -23,7 +23,7 @@ export async function getPendingInvites(app: FastifyInstance) {
         },
       },
       async (request, reply) => {
-        const userId = await request.getCurrentUserId()
+        const userId = await request.getCurrentEntityId()
 
         const user = await prisma.user.findUnique({
           where: {
