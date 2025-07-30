@@ -16,14 +16,6 @@ export const getStudentProfileResponseSchema = z.object({
       name: z.string(),
       year: z.string(),
     }),
-    points: z.array(
-      z.object({
-        id: z.string(),
-        amount: z.number(),
-        createdAt: z.date(),
-      }),
-    ),
-    totalPoints: z.number(),
   }),
 })
 

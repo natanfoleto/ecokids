@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { Loader2, Power } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -36,14 +35,6 @@ export function Profile() {
         </div>
       </div>
 
-      <Button
-        onClick={() => signOut(navigate)}
-        className="absolute right-4 size-10"
-        variant="secondary"
-      >
-        <Power className="size-6" />
-      </Button>
-
       <div className="w-full space-y-3">
         <div className="bg-muted space-y-2 rounded-md p-3 text-xs">
           <div className="space-y-0.5">
@@ -71,21 +62,13 @@ export function Profile() {
           </div>
         </div>
 
-        <div className="bg-muted w-full space-y-2 rounded-md p-3 text-xs">
-          <div className="text-muted-foreground flex items-center justify-between">
-            <p>Histórico de pontos</p>
-            <span>{student.totalPoints} pontos</span>
-          </div>
-
-          <div className="max-h-96 space-y-0.5 overflow-y-auto">
-            {student.points.map((point) => (
-              <p key={point.id} className="text-sm">
-                {point.amount} pontos -{' '}
-                {dayjs(point.createdAt).format('DD/MM/YYYY [às] HH:mm')}
-              </p>
-            ))}
-          </div>
-        </div>
+        <Button
+          onClick={() => signOut(navigate)}
+          variant="secondary"
+          className="w-full"
+        >
+          <Power className="size-5" />
+        </Button>
       </div>
     </div>
   )

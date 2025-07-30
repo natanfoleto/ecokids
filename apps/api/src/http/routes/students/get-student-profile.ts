@@ -11,7 +11,7 @@ export async function getStudentProfile(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/profile/students',
+      '/students/profile',
       {
         schema: {
           tags: ['Estudantes'],
@@ -45,18 +45,6 @@ export async function getStudentProfile(app: FastifyInstance) {
                 year: true,
               },
             },
-            points: {
-              select: {
-                id: true,
-                amount: true,
-                createdAt: true,
-              },
-            },
-            _count: {
-              select: {
-                points: true,
-              },
-            },
           },
           where: {
             id: studentId,
@@ -67,16 +55,7 @@ export async function getStudentProfile(app: FastifyInstance) {
           throw new BadRequestError('Estudante não encontrado.')
         }
 
-        const totalPoints = student.points.reduce((sum, point) => {
-          return sum + point.amount
-        }, 0)
-
-        const studentWithPointsAdded = {
-          ...student,
-          totalPoints,
-        }
-
-        return reply.send({ student: studentWithPointsAdded })
+        return reply.send({ student })
       },
     )
 }

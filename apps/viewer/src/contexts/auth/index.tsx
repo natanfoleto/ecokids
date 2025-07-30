@@ -14,7 +14,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   >(null)
 
   const { data, isSuccess } = useQuery({
-    queryKey: ['profile', 'student'],
+    queryKey: ['student', 'profile'],
     queryFn: getStudentProfile,
   })
 

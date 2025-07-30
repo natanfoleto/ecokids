@@ -39,7 +39,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['profile', 'users'],
+            queryKey: ['users', 'profile'],
           })
       },
     )

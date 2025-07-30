@@ -11,7 +11,7 @@ export async function getUserProfile(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/profile/users',
+      '/users/profile',
       {
         schema: {
           tags: ['Usuários'],

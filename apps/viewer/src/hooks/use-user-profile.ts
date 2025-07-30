@@ -4,7 +4,7 @@ import { getUserProfile } from '@/http/users/get-user-profile'
 
 export function useUserProfile() {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['profile', 'users'],
+    queryKey: ['users', 'profile'],
     queryFn: () => getUserProfile(),
   })
 

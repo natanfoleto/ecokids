@@ -3,10 +3,10 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
-import { Awards } from './pages/app/awards'
 import { Points } from './pages/app/points'
 import { Profile } from './pages/app/profile'
 import { Ranking } from './pages/app/ranking'
+import { Shop } from './pages/app/shop'
 import { SignIn } from './pages/auth/sign-in'
 import { NotFound } from './pages/not-found'
 
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
       {
         path: '/',
         element: <AppLayout />,
-        children: [{ path: '/awards', element: <Awards /> }],
+        children: [{ path: '/shop', element: <Shop /> }],
       },
       {
         path: '/',

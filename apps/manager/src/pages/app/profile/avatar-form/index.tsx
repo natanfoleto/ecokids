@@ -67,17 +67,17 @@ export function AvatarForm({
   async function onSubmit({ avatarFile }: UpdateUserAvatar) {
     const compressedAvatar = avatarFile
       ? await compressImage(avatarFile, {
-        quality: 0.6,
-        maxWidth: 1920,
-        maxHeight: 1080,
-      })
+          quality: 0.6,
+          maxWidth: 1920,
+          maxHeight: 1080,
+        })
       : avatarFile
 
     const file =
       compressedAvatar && avatarFile
         ? new File([compressedAvatar], avatarFile.name, {
-          type: compressedAvatar.type,
-        })
+            type: compressedAvatar.type,
+          })
         : avatarFile
 
     const formData = new FormData()
@@ -91,7 +91,7 @@ export function AvatarForm({
           setHasChanges(false)
 
           queryClient.invalidateQueries({
-            queryKey: ['profile', 'users'],
+            queryKey: ['users', 'profile'],
           })
         }
       },
