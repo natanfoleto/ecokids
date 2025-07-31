@@ -10,6 +10,7 @@ import { registerPointRoutes } from './points'
 import { registerSchoolRoutes } from './schools'
 import { registerStudentRoutes } from './students'
 import { registerUserRoutes } from './users'
+import { registerViewerRoutes } from './viewers'
 
 export default async function (app: FastifyInstance) {
   await registerAuthRoutes(app)
@@ -22,4 +23,5 @@ export default async function (app: FastifyInstance) {
   await registerPointRoutes(app)
   await registerAwardRoutes(app)
   await registerItemRoutes(app)
+  await registerViewerRoutes(app)
 }

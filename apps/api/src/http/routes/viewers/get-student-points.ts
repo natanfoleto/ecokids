@@ -13,7 +13,7 @@ export async function getStudentPoints(app: FastifyInstance) {
       '/students/points',
       {
         schema: {
-          tags: ['Estudantes'],
+          tags: ['Espectadores'],
           summary: 'Buscar pontos do estudante autenticado',
           security: [{ bearerAuth: [] }],
           response: {
@@ -46,6 +46,9 @@ export async function getStudentPoints(app: FastifyInstance) {
                 },
               },
             },
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         })
 

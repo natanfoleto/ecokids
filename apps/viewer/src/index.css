@@ -116,6 +116,10 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  --breakpoint-xs: 28rem;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

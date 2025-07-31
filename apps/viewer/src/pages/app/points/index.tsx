@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { Loader2 } from 'lucide-react'
 
+import { LoadingPage } from '@/components/loading-page'
 import {
   Accordion,
   AccordionContent,
@@ -16,13 +16,7 @@ export function Points() {
     queryFn: getStudentPoints,
   })
 
-  if (isLoading)
-    return (
-      <div className="text-muted-foreground flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-2">
-        <Loader2 className="animate-spin" />
-        Carregando shop de prêmios
-      </div>
-    )
+  if (isLoading) return <LoadingPage message="Carregando pontos do estudante" />
 
   const points = data?.points
   const totalPoints = data?.totalPoints
@@ -36,12 +30,12 @@ export function Points() {
   )
 
   return (
-    <div className="flex flex-col items-center justify-between gap-4 p-4">
-      <div className="bg-muted flex w-full flex-col items-center justify-between gap-3 rounded-md p-4">
-        <h1 className="text-4xl">🏆</h1>
+    <div className="flex min-h-screen flex-col items-center gap-4 p-4">
+      <div className="bg-muted flex w-full flex-col justify-between gap-3 rounded-xl border-t-4 border-emerald-400 p-4">
+        <h1 className="font-semibold">Sua pontuação</h1>
 
-        <div className="w-full space-y-1.5">
-          <div className="flex w-full items-center justify-between">
+        <div className="w-full space-y-0.5">
+          <div className="items-cente flex w-full justify-between text-sm">
             <p>Total de pontos</p>
             <span>{totalPoints}</span>
           </div>
@@ -70,8 +64,8 @@ export function Points() {
       {!points?.length ? (
         <div className="w-full text-center text-sm">...</div>
       ) : (
-        <div className="bg-muted w-full rounded-md px-3 pt-3">
-          <p className="mb-3 text-center text-sm">Histórico de pontos</p>
+        <div className="bg-muted w-full rounded-xl border-t-4 border-emerald-400 px-3 pt-3">
+          <p className="mb-3 font-semibold">Histórico de pontos</p>
 
           <Accordion
             type="single"

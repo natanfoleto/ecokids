@@ -14,7 +14,7 @@ export async function getStudentProfile(app: FastifyInstance) {
       '/students/profile',
       {
         schema: {
-          tags: ['Estudantes'],
+          tags: ['Espectadores'],
           summary: 'Buscar perfil do estudante autenticado',
           security: [{ bearerAuth: [] }],
           response: {
@@ -45,6 +45,11 @@ export async function getStudentProfile(app: FastifyInstance) {
                 year: true,
               },
             },
+            points: {
+              select: {
+                amount: true,
+              },
+            },
           },
           where: {
             id: studentId,
@@ -55,7 +60,23 @@ export async function getStudentProfile(app: FastifyInstance) {
           throw new BadRequestError('Estudante não encontrado.')
         }
 
-        return reply.send({ student })
+        const totalPoints = await prisma.point
+          .aggregate({
+            where: {
+              studentId,
+            },
+            _sum: {
+              amount: true,
+            },
+          })
+          .then((data) => data._sum.amount ?? 0)
+
+        const studentsWithPointsAdded = {
+          ...student,
+          totalPoints,
+        }
+
+        return reply.send({ student: studentsWithPointsAdded })
       },
     )
 }

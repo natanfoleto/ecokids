@@ -1,8 +1,9 @@
-import { Loader2, Power } from 'lucide-react'
+import { Power } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import mascoteSvg from '@/assets/mascote.svg'
 import { signOut } from '@/auth'
+import { LoadingPage } from '@/components/loading-page'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth'
@@ -13,30 +14,28 @@ export function Profile() {
 
   const navigate = useNavigate()
 
-  if (!student)
-    return (
-      <div className="text-muted-foreground flex min-h-[calc(100vh-64px)] flex-col items-center justify-center gap-2">
-        <Loader2 className="animate-spin" />
-        Carregando dados do estudante
-      </div>
-    )
+  if (!student) return <LoadingPage message="Carregando dados do estudante" />
 
   return (
-    <div className="flex flex-col items-center justify-between gap-6 p-4">
-      <div className="flex flex-col items-center gap-3">
-        <Avatar className="size-24">
-          <AvatarImage src={mascoteSvg} alt="Mascote" className="bg-muted" />
+    <div className="flex min-h-screen flex-col items-center gap-6 p-4">
+      <div className="bg-muted flex w-full items-center gap-3 space-y-2 rounded-xl border-t-4 border-emerald-400 p-3">
+        <Avatar className="size-20 rounded-lg">
+          <AvatarImage
+            src={mascoteSvg}
+            alt="Mascote"
+            className="bg-background"
+          />
           <AvatarFallback>{getInitialsName(student.name)}</AvatarFallback>
         </Avatar>
 
-        <div className="text-center">
+        <div>
           <h1 className="font-medium">{student.name}</h1>
           <p className="text-muted-foreground text-sm">{student.email}</p>
         </div>
       </div>
 
       <div className="w-full space-y-3">
-        <div className="bg-muted space-y-2 rounded-md p-3 text-xs">
+        <div className="bg-muted space-y-2 rounded-xl border-t-4 border-emerald-400 p-3 text-xs">
           <div className="space-y-0.5">
             <p className="text-muted-foreground">Seu código</p>
             <p className="text-sm">#{student.code}</p>
@@ -65,7 +64,8 @@ export function Profile() {
         <Button
           onClick={() => signOut(navigate)}
           variant="secondary"
-          className="w-full"
+          size="lg"
+          className="w-full rounded-xl border-t-4 border-emerald-400"
         >
           <Power className="size-5" />
         </Button>
