@@ -8,7 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getClass } from '@/http/classes/get-class'
 import { ClassForm } from '@/pages/app/school/classes/class-form'
 
@@ -19,14 +19,14 @@ interface UpdateClassProps {
 }
 
 export function UpdateClass({ open, onClose, classId }: UpdateClassProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { data } = useQuery<GetClassResponse>({
-    queryKey: ['schools', currentSchool, 'classes', classId],
+    queryKey: ['schools', schoolSlug, 'classes', classId],
     queryFn: async () => {
       const data = await getClass({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
           classId,
         },
       })

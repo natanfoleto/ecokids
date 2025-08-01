@@ -32,7 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getAwards } from '@/http/awards/get-awards'
 import { queryClient } from '@/lib/react-query'
 import { UpdateAward } from '@/pages/app/@dialog/awards/update-award'
@@ -40,16 +40,16 @@ import { UpdateAward } from '@/pages/app/@dialog/awards/update-award'
 import { deleteAwardAction } from './actions'
 
 export function AwardList() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [updateAward, setUpdateAward] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<GetAwardsResponse>({
-    queryKey: ['schools', currentSchool, 'awards'],
+    queryKey: ['schools', schoolSlug, 'awards'],
     queryFn: async () => {
       const data = await getAwards({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
         },
       })
 
@@ -65,14 +65,14 @@ export function AwardList() {
       () =>
         deleteAwardAction({
           params: {
-            schoolSlug: currentSchool!,
+            schoolSlug: schoolSlug!,
             awardId,
           },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'awards'],
+            queryKey: ['schools', schoolSlug, 'awards'],
           })
       },
     )

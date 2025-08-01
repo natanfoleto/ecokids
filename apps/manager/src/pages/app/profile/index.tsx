@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { useMetadata } from '@/hooks/use-metadata'
 import { useUserProfile } from '@/hooks/use-user-profile'
 
 import { AvatarForm } from './avatar-form'
@@ -19,6 +20,8 @@ import { PasswordForm } from './password-form'
 import { ProfileForm } from './profile-form'
 
 export function Profile() {
+  useMetadata('Perfil - Ecokids', 'Gerencie seu perfil.')
+
   const navigate = useNavigate()
 
   const { user } = useUserProfile()

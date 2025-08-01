@@ -2,11 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 
 import { LoadingPage } from '@/components/loading-page'
 import { useAuth } from '@/contexts/auth'
+import { useMetadata } from '@/hooks/use-metadata'
 import { getSchoolShop } from '@/http/students/get-school-shop'
 
 import { Item } from './item'
 
 export function Shop() {
+  useMetadata('Ecokids - Shop')
+
   const { student } = useAuth()
 
   const schoolId = student?.school.id

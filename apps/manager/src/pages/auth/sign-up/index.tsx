@@ -11,11 +11,17 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
+import { useMetadata } from '@/hooks/use-metadata'
 import { formatCPF } from '@/utils/format-cpf'
 
 import { createUserAction } from './actions'
 
 export function SignUp() {
+  useMetadata(
+    'Criar conta - Ecokids',
+    'Cria sua conta no Ecokids e gerencie sua escola.',
+  )
+
   const navigate = useNavigate()
 
   const {

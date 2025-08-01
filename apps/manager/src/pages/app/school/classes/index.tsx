@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { useMetadataSchool } from '@/hooks/use-metadata'
 import { usePermissions } from '@/hooks/use-permissions'
 import { CreateClass } from '@/pages/app/@sheet/classes/create-class'
 
@@ -9,6 +10,8 @@ import { Tabs } from '../tabs'
 import { ClassList } from './class-list'
 
 export function Classes() {
+  useMetadataSchool('Classes')
+
   const { permissions } = usePermissions()
 
   const [createClass, setCreateClass] = useState(false)

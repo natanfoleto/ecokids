@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { useStepper } from '@/contexts/stepper'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-current-school'
 import { getSchool } from '@/http/schools/get-school'
 
 import { CodeEntry } from './code-entry'
@@ -13,7 +13,7 @@ import { PointCapture } from './point-capture'
 import { Success } from './success'
 
 export function Stepper() {
-  const currentSchool = useCurrentSchool()
+  const currentSchool = useCurrentSchoolSlug()
 
   const {
     step,

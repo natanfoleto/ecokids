@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getAward } from '@/http/awards/get-award'
 import { AwardForm } from '@/pages/app/school/awards/award-form'
 
@@ -19,14 +19,14 @@ interface UpdateAwardProps {
 }
 
 export function UpdateAward({ open, onClose, awardId }: UpdateAwardProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { data } = useQuery<GetAwardResponse>({
-    queryKey: ['schools', currentSchool, 'awards', awardId],
+    queryKey: ['schools', schoolSlug, 'awards', awardId],
     queryFn: async () => {
       const data = await getAward({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
           awardId,
         },
       })

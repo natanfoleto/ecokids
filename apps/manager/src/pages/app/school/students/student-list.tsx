@@ -32,7 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getStudents } from '@/http/students/get-students'
 import { queryClient } from '@/lib/react-query'
 import { UpdateStudent } from '@/pages/app/@dialog/students/update-student'
@@ -40,16 +40,16 @@ import { UpdateStudent } from '@/pages/app/@dialog/students/update-student'
 import { deleteStudentAction } from './actions'
 
 export function StudentList() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [updateStudent, setUpdateStudent] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<GetStudentsResponse>({
-    queryKey: ['schools', currentSchool, 'students'],
+    queryKey: ['schools', schoolSlug, 'students'],
     queryFn: async () => {
       const data = await getStudents({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
         },
       })
 
@@ -65,14 +65,14 @@ export function StudentList() {
       () =>
         deleteStudentAction({
           params: {
-            schoolSlug: currentSchool!,
+            schoolSlug: schoolSlug!,
             studentId,
           },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'students'],
+            queryKey: ['schools', schoolSlug, 'students'],
           })
       },
     )

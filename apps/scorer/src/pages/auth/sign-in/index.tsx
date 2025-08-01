@@ -12,10 +12,13 @@ import { FormInput } from '@/components/form/form-input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { useAction } from '@/hooks/use-actions'
+import { useMetadata } from '@/hooks/use-metadata'
 
 import { authenticateUserWithPasswordAction } from './actions'
 
 export function SignIn() {
+  useMetadata('Entrar - Ecokids')
+
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 

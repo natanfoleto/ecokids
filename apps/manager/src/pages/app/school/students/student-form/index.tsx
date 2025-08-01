@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { SelectItem } from '@/components/ui/select'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getClasses } from '@/http/classes/get-classes'
 import { queryClient } from '@/lib/react-query'
 import { formatCPF } from '@/utils/format-cpf'
@@ -32,14 +32,14 @@ export function StudentForm({
   initialData,
   studentId,
 }: StudentFormProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { data } = useQuery<GetClassesResponse>({
-    queryKey: ['schools', currentSchool, 'classes'],
+    queryKey: ['schools', schoolSlug, 'classes'],
     queryFn: async () => {
       const data = await getClasses({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
         },
       })
 
@@ -99,18 +99,18 @@ export function StudentForm({
     const formAction =
       isUpdating && studentId
         ? () =>
-          updateStudentAction({
-            params: {
-              schoolSlug: currentSchool!,
-              studentId,
-            },
-            body: data,
-          })
+            updateStudentAction({
+              params: {
+                schoolSlug: schoolSlug!,
+                studentId,
+              },
+              body: data,
+            })
         : () =>
-          createStudentAction({
-            params: { schoolSlug: currentSchool! },
-            body: data,
-          })
+            createStudentAction({
+              params: { schoolSlug: schoolSlug! },
+              body: data,
+            })
 
     handleAction(formAction, ({ success }) => {
       if (success) {
@@ -118,7 +118,7 @@ export function StudentForm({
         else reset(data)
 
         queryClient.invalidateQueries({
-          queryKey: ['schools', currentSchool, 'students'],
+          queryKey: ['schools', schoolSlug, 'students'],
         })
       }
     })

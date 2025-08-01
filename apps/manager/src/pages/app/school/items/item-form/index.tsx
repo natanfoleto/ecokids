@@ -13,7 +13,7 @@ import { FormInput } from '@/components/form/form-input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { queryClient } from '@/lib/react-query'
 
 import {
@@ -29,7 +29,7 @@ interface ItemFormProps {
 }
 
 export function ItemForm({ isUpdating, initialData, itemId }: ItemFormProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [photo, setPhoto] = useState<File | string | null>(
     initialData?.photoUrl || null,
@@ -61,18 +61,18 @@ export function ItemForm({ isUpdating, initialData, itemId }: ItemFormProps) {
     const formAction =
       isUpdating && itemId
         ? () =>
-          updateItemAction({
-            params: {
-              schoolSlug: currentSchool!,
-              itemId,
-            },
-            body: data,
-          })
+            updateItemAction({
+              params: {
+                schoolSlug: schoolSlug!,
+                itemId,
+              },
+              body: data,
+            })
         : () =>
-          createItemAction({
-            params: { schoolSlug: currentSchool! },
-            body: data,
-          })
+            createItemAction({
+              params: { schoolSlug: schoolSlug! },
+              body: data,
+            })
 
     handleAction(formAction, async ({ success, data: responseData }) => {
       if (success) {
@@ -84,7 +84,7 @@ export function ItemForm({ isUpdating, initialData, itemId }: ItemFormProps) {
         if (id) await handleUploadPhoto(id)
 
         queryClient.invalidateQueries({
-          queryKey: ['schools', currentSchool, 'items'],
+          queryKey: ['schools', schoolSlug, 'items'],
         })
       }
     })
@@ -93,7 +93,7 @@ export function ItemForm({ isUpdating, initialData, itemId }: ItemFormProps) {
   async function handleUploadPhoto(itemId: string) {
     if (photo === null) {
       await updateItemPhotoAction({
-        params: { schoolSlug: currentSchool!, itemId },
+        params: { schoolSlug: schoolSlug!, itemId },
         body: new FormData(),
       })
     }
@@ -103,7 +103,7 @@ export function ItemForm({ isUpdating, initialData, itemId }: ItemFormProps) {
       formData.append('file', photo)
 
       await updateItemPhotoAction({
-        params: { schoolSlug: currentSchool!, itemId },
+        params: { schoolSlug: schoolSlug!, itemId },
         body: formData,
       })
     }

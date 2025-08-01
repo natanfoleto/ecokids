@@ -1,9 +1,12 @@
+import { useMetadataSchool } from '@/hooks/use-metadata'
 import { usePermissions } from '@/hooks/use-permissions'
 
 import { Tabs } from '../tabs'
 import { Invites } from './invites'
 
 export function Members() {
+  useMetadataSchool('Membros')
+
   const { permissions } = usePermissions()
 
   const canGetInvites = permissions?.can('get', 'Invite')

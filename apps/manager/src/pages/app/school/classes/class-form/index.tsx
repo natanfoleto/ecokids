@@ -7,7 +7,7 @@ import { FormInput } from '@/components/form/form-input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { queryClient } from '@/lib/react-query'
 
 import { createClassAction, updateClassAction } from '../actions'
@@ -23,7 +23,7 @@ export function ClassForm({
   initialData,
   classId,
 }: ClassFormProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const defaultValues: SaveClassBody = initialData || {
     name: '',
@@ -46,18 +46,18 @@ export function ClassForm({
     const formAction =
       isUpdating && classId
         ? () =>
-          updateClassAction({
-            params: {
-              schoolSlug: currentSchool!,
-              classId,
-            },
-            body: data,
-          })
+            updateClassAction({
+              params: {
+                schoolSlug: schoolSlug!,
+                classId,
+              },
+              body: data,
+            })
         : () =>
-          createClassAction({
-            params: { schoolSlug: currentSchool! },
-            body: data,
-          })
+            createClassAction({
+              params: { schoolSlug: schoolSlug! },
+              body: data,
+            })
 
     handleAction(formAction, ({ success }) => {
       if (success) {
@@ -65,7 +65,7 @@ export function ClassForm({
         else reset(data)
 
         queryClient.invalidateQueries({
-          queryKey: ['schools', currentSchool, 'classes'],
+          queryKey: ['schools', schoolSlug, 'classes'],
         })
       }
     })

@@ -15,10 +15,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
+import { useMetadata } from '@/hooks/use-metadata'
 
 import { authenticateUserWithPasswordAction } from './actions'
 
 export function SignIn() {
+  useMetadata('Entrar - Ecokids', 'Acesse sua conta no Ecokids.')
+
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
 

@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getItem } from '@/http/items/get-item'
 
 import { ItemForm } from '../../school/items/item-form'
@@ -20,14 +20,14 @@ interface UpdateItemProps {
 }
 
 export function UpdateItem({ open, onClose, itemId }: UpdateItemProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { data } = useQuery<GetItemResponse>({
-    queryKey: ['schools', currentSchool, 'items', itemId],
+    queryKey: ['schools', schoolSlug, 'items', itemId],
     queryFn: async () => {
       const data = await getItem({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
           itemId,
         },
       })

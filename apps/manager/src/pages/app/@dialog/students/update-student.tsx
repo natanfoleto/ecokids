@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getStudent } from '@/http/students/get-student'
 import { StudentForm } from '@/pages/app/school/students/student-form'
 
@@ -23,14 +23,14 @@ export function UpdateStudent({
   onClose,
   studentId,
 }: UpdateStudentProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { data } = useQuery<GetStudentResponse>({
-    queryKey: ['schools', currentSchool, 'students', studentId],
+    queryKey: ['schools', schoolSlug, 'students', studentId],
     queryFn: async () => {
       const data = await getStudent({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
           studentId,
         },
       })

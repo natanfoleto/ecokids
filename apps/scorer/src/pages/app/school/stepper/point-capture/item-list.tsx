@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useStepper } from '@/contexts/stepper'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-current-school'
 import { getItems } from '@/http/items/get-items'
 
 interface ItemListProps {
@@ -16,7 +16,7 @@ interface ItemListProps {
 }
 
 export function ItemList({ setValue }: ItemListProps) {
-  const currentSchool = useCurrentSchool()
+  const currentSchool = useCurrentSchoolSlug()
 
   const { items, manual, increment, decrement } = useStepper()
 

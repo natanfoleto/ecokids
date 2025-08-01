@@ -10,8 +10,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getInvites } from '@/http/invites/get-invites'
 import { queryClient } from '@/lib/react-query'
 
@@ -20,13 +20,13 @@ import { CreateInviteForm } from './create-invite-form'
 import { MemberList } from './member-list'
 
 export function Invites() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { permissions } = usePermissions()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['schools', currentSchool, 'invites'],
-    queryFn: () => getInvites({ params: { schoolSlug: currentSchool! } }),
+    queryKey: ['schools', schoolSlug, 'invites'],
+    queryFn: () => getInvites({ params: { schoolSlug: schoolSlug! } }),
   })
 
   const [, handleAction] = useAction<RevokeInviteResponse>()
@@ -36,14 +36,14 @@ export function Invites() {
       () =>
         revokeInviteAction({
           params: {
-            schoolSlug: currentSchool!,
+            schoolSlug: schoolSlug!,
             inviteId,
           },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'invites'],
+            queryKey: ['schools', schoolSlug, 'invites'],
           })
       },
     )

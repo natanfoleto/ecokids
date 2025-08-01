@@ -1,6 +1,10 @@
+import { useMetadataSchool } from '@/hooks/use-metadata'
+
 import { Tabs } from './tabs'
 
 export function School() {
+  useMetadataSchool('Dashboard')
+
   return (
     <div className="space-y-4">
       <Tabs />

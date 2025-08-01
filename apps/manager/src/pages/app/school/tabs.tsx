@@ -11,11 +11,11 @@ import { NavLink } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 
 export function Tabs() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { permissions, isLoading } = usePermissions()
 
@@ -26,7 +26,7 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        <NavLink to={`/school/${currentSchool}`} end>
+        <NavLink to={`/school/${schoolSlug}`} end>
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -43,7 +43,7 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        <NavLink to={`/school/${currentSchool}/classes`} end>
+        <NavLink to={`/school/${schoolSlug}/classes`} end>
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -60,7 +60,7 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        <NavLink to={`/school/${currentSchool}/students`} end>
+        <NavLink to={`/school/${schoolSlug}/students`} end>
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -77,7 +77,7 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        <NavLink to={`/school/${currentSchool}/items`} end>
+        <NavLink to={`/school/${schoolSlug}/items`} end>
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -94,7 +94,7 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        <NavLink to={`/school/${currentSchool}/awards`} end>
+        <NavLink to={`/school/${schoolSlug}/awards`} end>
           {({ isActive }) => (
             <Button
               variant="ghost"
@@ -112,7 +112,7 @@ export function Tabs() {
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
         canGetMembers && (
-          <NavLink to={`/school/${currentSchool}/members`} end>
+          <NavLink to={`/school/${schoolSlug}/members`} end>
             {({ isActive }) => (
               <Button
                 variant="ghost"
@@ -130,7 +130,7 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        <NavLink to={`/school/${currentSchool}/settings`} end>
+        <NavLink to={`/school/${schoolSlug}/settings`} end>
           {({ isActive }) => (
             <Button
               variant="ghost"

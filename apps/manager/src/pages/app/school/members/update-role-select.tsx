@@ -5,7 +5,7 @@ import type { ComponentProps } from 'react'
 import { FormSelect } from '@/components/form/form-select'
 import { Select, SelectItem } from '@/components/ui/select'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { queryClient } from '@/lib/react-query'
 
 import { updateMemberAction } from './actions'
@@ -18,7 +18,7 @@ export function UpdateRoleMember({
   memberId,
   ...props
 }: UpdateRoleMemberProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [, handleAction] = useAction<UpdateMemberResponse>()
 
@@ -26,7 +26,7 @@ export function UpdateRoleMember({
     handleAction(
       () =>
         updateMemberAction({
-          params: { schoolSlug: currentSchool!, memberId },
+          params: { schoolSlug: schoolSlug!, memberId },
           body: {
             role,
           },
@@ -34,7 +34,7 @@ export function UpdateRoleMember({
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'members'],
+            queryKey: ['schools', schoolSlug, 'members'],
           })
       },
     )

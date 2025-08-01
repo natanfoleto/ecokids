@@ -8,9 +8,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { useMetadata } from '@/hooks/use-metadata'
 import { getStudentPoints } from '@/http/students/get-student-points'
 
 export function Points() {
+  useMetadata('Ecokids - Pontos')
+
   const { data, isLoading } = useQuery({
     queryKey: ['student', 'points'],
     queryFn: getStudentPoints,

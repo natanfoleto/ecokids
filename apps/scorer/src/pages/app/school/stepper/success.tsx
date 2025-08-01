@@ -4,8 +4,11 @@ import { useWindowSize } from 'react-use'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useStepper } from '@/contexts/stepper'
+import { useMetadata } from '@/hooks/use-metadata'
 
 export function Success() {
+  useMetadata('Pontuador - Sucesso')
+
   const { width, height } = useWindowSize()
 
   const { goToStep, student, setStudent, items, setItems } = useStepper()

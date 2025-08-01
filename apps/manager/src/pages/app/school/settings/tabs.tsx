@@ -10,8 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getSchool } from '@/http/schools/get-school'
 import { cn } from '@/lib/utils'
 
@@ -28,17 +28,17 @@ const tabs = [
 type TabId = (typeof tabs)[number]['id']
 
 export function SettingsTabs() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
   const { permissions } = usePermissions()
 
   const [activeTab, setActiveTab] = useState<TabId>('details')
 
   const { data } = useQuery<GetSchoolResponse>({
-    queryKey: ['schools', currentSchool],
+    queryKey: ['schools', schoolSlug],
     queryFn: async () => {
       const data = await getSchool({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
         },
       })
 

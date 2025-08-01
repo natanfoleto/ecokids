@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { useMetadataSchool } from '@/hooks/use-metadata'
 import { usePermissions } from '@/hooks/use-permissions'
 
 import { CreateItem } from '../../@dialog/items/create-item'
@@ -9,6 +10,8 @@ import { Tabs } from '../tabs'
 import { ItemList } from './item-list'
 
 export function Items() {
+  useMetadataSchool('Prêmios')
+
   const { permissions } = usePermissions()
 
   const [createItem, setCreateItem] = useState(false)

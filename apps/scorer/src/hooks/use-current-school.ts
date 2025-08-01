@@ -8,7 +8,7 @@ import { getCurrentSchool } from '@/auth'
   com base na URL, e usa o cookie apenas como fallback. 
 */
 
-export function useCurrentSchool(): string | null {
+export function useCurrentSchoolSlug(): string | null {
   const location = useLocation()
 
   return useMemo(() => {

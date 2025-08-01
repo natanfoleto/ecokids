@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { ability } from '@/auth'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getMembership } from '@/http/schools/get-membership'
 
 export function usePermissions() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['schools', currentSchool, 'membership'],
-    queryFn: () => getMembership({ params: { schoolSlug: currentSchool! } }),
-    enabled: !!currentSchool,
+    queryKey: ['schools', schoolSlug, 'membership'],
+    queryFn: () => getMembership({ params: { schoolSlug: schoolSlug! } }),
+    enabled: !!schoolSlug,
   })
 
   const permissions = data ? ability({ membership: data.membership }) : null

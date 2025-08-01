@@ -8,8 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useMetadata } from '@/hooks/use-metadata'
 
 export function Ranking() {
+  useMetadata('Ecokids - Ranking')
+
   return (
     <div className="flex min-h-screen flex-col items-center gap-4 p-4">
       <div className="bg-muted flex w-full flex-col justify-between gap-4 rounded-xl border-t-4 border-emerald-400 p-4">

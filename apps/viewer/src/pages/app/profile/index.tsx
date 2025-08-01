@@ -7,9 +7,12 @@ import { LoadingPage } from '@/components/loading-page'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth'
+import { useMetadata } from '@/hooks/use-metadata'
 import { getInitialsName } from '@/utils/get-initials-name'
 
 export function Profile() {
+  useMetadata('Ecokids - Perfil')
+
   const { student } = useAuth()
 
   const navigate = useNavigate()

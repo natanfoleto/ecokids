@@ -32,7 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getItems } from '@/http/items/get-items'
 import { queryClient } from '@/lib/react-query'
 
@@ -40,16 +40,16 @@ import { UpdateItem } from '../../@dialog/items/update-item'
 import { deleteItemAction } from './actions'
 
 export function ItemList() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [updateItem, setUpdateItem] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<GetItemsResponse>({
-    queryKey: ['schools', currentSchool, 'items'],
+    queryKey: ['schools', schoolSlug, 'items'],
     queryFn: async () => {
       const data = await getItems({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
         },
       })
 
@@ -65,14 +65,14 @@ export function ItemList() {
       () =>
         deleteItemAction({
           params: {
-            schoolSlug: currentSchool!,
+            schoolSlug: schoolSlug!,
             itemId,
           },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'items'],
+            queryKey: ['schools', schoolSlug, 'items'],
           })
       },
     )

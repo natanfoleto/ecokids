@@ -81,17 +81,17 @@ export default function LogoForm({ initialData: { logoUrl } }: LogoFormProps) {
   async function onSubmit({ logoFile }: UpdateSchoolLogo) {
     const compressedLogo = logoFile
       ? await compressImage(logoFile, {
-        quality: 0.6,
-        maxWidth: 1920,
-        maxHeight: 1080,
-      })
+          quality: 0.6,
+          maxWidth: 1920,
+          maxHeight: 1080,
+        })
       : logoFile
 
     const file =
       compressedLogo && logoFile
         ? new File([compressedLogo], logoFile.name, {
-          type: compressedLogo.type,
-        })
+            type: compressedLogo.type,
+          })
         : logoFile
 
     const formData = new FormData()

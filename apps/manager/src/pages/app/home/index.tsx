@@ -2,11 +2,14 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { useMetadata } from '@/hooks/use-metadata'
 import { CreateSchool } from '@/pages/app/@sheet/schools/create-school'
 
 import { SchoolList } from './school-list'
 
 export function Home() {
+  useMetadata('Escolas - Ecokids', 'Escolha uma escola para gerenciar.')
+
   const [createSchool, setCreateSchool] = useState(false)
 
   function toggleCreateSchool() {

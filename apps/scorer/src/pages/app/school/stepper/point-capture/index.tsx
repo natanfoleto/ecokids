@@ -6,14 +6,17 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useStepper } from '@/contexts/stepper'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-current-school'
+import { useMetadata } from '@/hooks/use-metadata'
 import { getInitialsName } from '@/utils/get-initials-name'
 
 import { createPointAction } from '../../actions'
 import { ItemList } from './item-list'
 
 export function PointCapture() {
-  const currentSchool = useCurrentSchool()
+  useMetadata('Pontuador - Itens')
+
+  const currentSchool = useCurrentSchoolSlug()
 
   const { nextStep, goToStep, student, items } = useStepper()
 

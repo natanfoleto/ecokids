@@ -1,14 +1,16 @@
+import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { getCurrentSchool } from '@/auth'
+import { getSchool } from '@/http/schools/get-school'
 
 /* 
   Esse hook funciona de forma reativa e segura para garantir que o slug da escola esteja sempre atualizado 
   com base na URL, e usa o cookie apenas como fallback. 
 */
 
-export function useCurrentSchool(): string | null {
+export function useCurrentSchoolSlug(): string | null {
   const location = useLocation()
 
   return useMemo(() => {
@@ -23,4 +25,24 @@ export function useCurrentSchool(): string | null {
 
     return getCurrentSchool()
   }, [location])
+}
+
+export function useCurrentSchool() {
+  const schoolSlug = useCurrentSchoolSlug()
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['schools', schoolSlug],
+    queryFn: () =>
+      getSchool({
+        params: {
+          schoolSlug: schoolSlug!,
+        },
+      }),
+  })
+
+  return {
+    school: data?.school,
+    isLoading,
+    isError,
+  }
 }

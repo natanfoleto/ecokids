@@ -32,7 +32,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getClasses } from '@/http/classes/get-classes'
 import { queryClient } from '@/lib/react-query'
 import { UpdateClass } from '@/pages/app/@sheet/classes/update-class'
@@ -40,16 +40,16 @@ import { UpdateClass } from '@/pages/app/@sheet/classes/update-class'
 import { deleteClassAction } from './actions'
 
 export function ClassList() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [updateClass, setUpdateClass] = useState<string | null>(null)
 
   const { data, isLoading, isError } = useQuery<GetClassesResponse>({
-    queryKey: ['schools', currentSchool, 'classes'],
+    queryKey: ['schools', schoolSlug, 'classes'],
     queryFn: async () => {
       const data = await getClasses({
         params: {
-          schoolSlug: currentSchool!,
+          schoolSlug: schoolSlug!,
         },
       })
 
@@ -65,14 +65,14 @@ export function ClassList() {
       () =>
         deleteClassAction({
           params: {
-            schoolSlug: currentSchool!,
+            schoolSlug: schoolSlug!,
             classId,
           },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'classes'],
+            queryKey: ['schools', schoolSlug, 'classes'],
           })
       },
     )

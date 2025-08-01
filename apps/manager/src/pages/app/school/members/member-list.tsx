@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
 import { usePermissions } from '@/hooks/use-permissions'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getMembers } from '@/http/members/get-members'
 import { getSchool } from '@/http/schools/get-school'
 import { queryClient } from '@/lib/react-query'
@@ -18,27 +18,27 @@ import { removeMemberAction } from './actions'
 import { UpdateRoleMember } from './update-role-select'
 
 export function MemberList() {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const { permissions, membership } = usePermissions()
 
   const results = useQueries({
     queries: [
       {
-        queryKey: ['schools', currentSchool, 'members'],
+        queryKey: ['schools', schoolSlug, 'members'],
         queryFn: () =>
           getMembers({
             params: {
-              schoolSlug: currentSchool!,
+              schoolSlug: schoolSlug!,
             },
           }),
       },
       {
-        queryKey: ['schools', currentSchool],
+        queryKey: ['schools', schoolSlug],
         queryFn: () =>
           getSchool({
             params: {
-              schoolSlug: currentSchool!,
+              schoolSlug: schoolSlug!,
             },
           }),
       },
@@ -56,12 +56,12 @@ export function MemberList() {
     handleAction(
       () =>
         removeMemberAction({
-          params: { schoolSlug: currentSchool!, memberId },
+          params: { schoolSlug: schoolSlug!, memberId },
         }),
       (data) => {
         if (data.success)
           queryClient.invalidateQueries({
-            queryKey: ['schools', currentSchool, 'members'],
+            queryKey: ['schools', schoolSlug, 'members'],
           })
       },
     )

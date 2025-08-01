@@ -6,11 +6,14 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useStepper } from '@/contexts/stepper'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-current-school'
+import { useMetadata } from '@/hooks/use-metadata'
 import { getStudentByCode } from '@/http/students/get-student-by-code'
 
 export function CodeEntry() {
-  const currentSchool = useCurrentSchool()
+  useMetadata('Pontuador - Código do aluno')
+
+  const currentSchool = useCurrentSchoolSlug()
 
   const { nextStep, setStudent } = useStepper()
 

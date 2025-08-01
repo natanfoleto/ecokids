@@ -13,7 +13,7 @@ import { FormInput } from '@/components/form/form-input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useAction } from '@/hooks/use-actions'
-import { useCurrentSchool } from '@/hooks/use-current-school'
+import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { queryClient } from '@/lib/react-query'
 
 import {
@@ -33,7 +33,7 @@ export function AwardForm({
   initialData,
   awardId,
 }: AwardFormProps) {
-  const currentSchool = useCurrentSchool()
+  const schoolSlug = useCurrentSchoolSlug()
 
   const [photo, setPhoto] = useState<File | string | null>(
     initialData?.photoUrl || null,
@@ -65,18 +65,18 @@ export function AwardForm({
     const formAction =
       isUpdating && awardId
         ? () =>
-          updateAwardAction({
-            params: {
-              schoolSlug: currentSchool!,
-              awardId,
-            },
-            body: data,
-          })
+            updateAwardAction({
+              params: {
+                schoolSlug: schoolSlug!,
+                awardId,
+              },
+              body: data,
+            })
         : () =>
-          createAwardAction({
-            params: { schoolSlug: currentSchool! },
-            body: data,
-          })
+            createAwardAction({
+              params: { schoolSlug: schoolSlug! },
+              body: data,
+            })
 
     handleAction(formAction, async ({ success, data: responseData }) => {
       if (success) {
@@ -88,7 +88,7 @@ export function AwardForm({
         if (id) await handleUploadPhoto(id)
 
         queryClient.invalidateQueries({
-          queryKey: ['schools', currentSchool, 'awards'],
+          queryKey: ['schools', schoolSlug, 'awards'],
         })
       }
     })
@@ -97,7 +97,7 @@ export function AwardForm({
   async function handleUploadPhoto(awardId: string) {
     if (photo === null) {
       await updateAwardPhotoAction({
-        params: { schoolSlug: currentSchool!, awardId },
+        params: { schoolSlug: schoolSlug!, awardId },
         body: new FormData(),
       })
     }
@@ -107,7 +107,7 @@ export function AwardForm({
       formData.append('file', photo)
 
       await updateAwardPhotoAction({
-        params: { schoolSlug: currentSchool!, awardId },
+        params: { schoolSlug: schoolSlug!, awardId },
         body: formData,
       })
     }
