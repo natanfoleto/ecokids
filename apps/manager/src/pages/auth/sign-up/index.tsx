@@ -52,12 +52,12 @@ export function SignUp() {
   }
 
   return (
-    <div className="animate-in slide-in-from-right flex w-2/5 flex-col items-center space-y-8 duration-500">
+    <div className="animate-in slide-in-from-right flex w-full flex-col items-center space-y-8 px-4 duration-500 md:w-4/5 xl:w-3/5 2xl:w-2/5">
       <img src={logo} alt="Ecokids" className="w-64" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col items-center gap-8 rounded-md border p-12"
+        className="flex w-full flex-col items-center gap-8 rounded-md border p-6 sm:p-12"
       >
         {!success && message && (
           <Alert variant="destructive">
@@ -78,7 +78,7 @@ export function SignUp() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="email">E-mail</Label>
               <FormInput
@@ -102,7 +102,7 @@ export function SignUp() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="password">Senha</Label>
               <FormInput

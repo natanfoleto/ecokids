@@ -60,12 +60,12 @@ export function SignIn() {
   }
 
   return (
-    <div className="animate-in slide-in-from-left flex w-1/3 flex-col items-center space-y-8 duration-500">
+    <div className="animate-in slide-in-from-left flex w-full flex-col items-center space-y-8 px-4 duration-500 md:w-2/3 xl:w-1/3">
       <img src={logo} alt="Ecokids" className="w-64" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col items-center gap-8 rounded-md border p-12"
+        className="flex w-full flex-col items-center gap-8 rounded-md border p-6 sm:p-12"
       >
         {!success && message && (
           <Alert variant="destructive">

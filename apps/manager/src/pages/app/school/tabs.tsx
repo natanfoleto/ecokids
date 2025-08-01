@@ -1,11 +1,11 @@
 import {
   Gauge,
   GraduationCap,
-  Medal,
   Paperclip,
   Settings,
   SquarePen,
   Users,
+  Volleyball,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
@@ -101,7 +101,7 @@ export function Tabs() {
               size="sm"
               className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
             >
-              <Medal className="mr-0.5 size-4" />
+              <Volleyball className="mr-0.5 size-4" />
               Prêmios
             </Button>
           )}
