@@ -49,9 +49,7 @@ export function UpdateItem({ open, onClose, itemId }: UpdateItemProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-4">
-          <ItemForm isUpdating initialData={data.item} itemId={data.item.id} />
-        </div>
+        <ItemForm isUpdating initialData={data.item} itemId={data.item.id} />
       </DialogContent>
     </Dialog>
   )

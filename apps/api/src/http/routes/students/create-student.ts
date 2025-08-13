@@ -32,7 +32,7 @@ export async function createStudent(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
-        const { code, name, email, cpf, password, classId } = request.body
+        const { name, email, cpf, password, classId } = request.body
 
         const userId = await request.getCurrentEntityId()
 
@@ -67,46 +67,42 @@ export async function createStudent(app: FastifyInstance) {
           }
         }
 
-        let newCode
-
-        if (code) {
-          const studentWithSameCode = await prisma.student.findFirst({
-            where: {
-              schoolId: school.id,
-              code,
-            },
-          })
-
-          if (studentWithSameCode) {
-            throw new BadRequestError('Um usuário com esse código já existe.')
-          }
-
-          newCode = code
-        } else {
-          const lastStudentCode = await prisma.schoolSettings.findFirst({
-            where: {
-              schoolId: school.id,
-            },
-          })
-
-          newCode = (lastStudentCode?.lastStudentCode || 0) + 1
-        }
-
-        const passwordHash = await hash(password ?? '123456', 6)
-
-        const { id } = await prisma.student.create({
-          data: {
-            code: newCode,
-            name,
-            email,
-            cpf,
-            passwordHash,
+        const lastStudentCode = await prisma.schoolSettings.findFirst({
+          where: {
             schoolId: school.id,
-            classId,
           },
         })
 
-        return reply.status(201).send({ studentId: id })
+        const code = (lastStudentCode?.lastStudentCode || 0) + 1
+
+        const passwordHash = await hash(password ?? '123456', 6)
+
+        const studentId = await prisma.$transaction(async (prisma) => {
+          const { id } = await prisma.student.create({
+            data: {
+              code,
+              name,
+              email,
+              cpf,
+              passwordHash,
+              schoolId: school.id,
+              classId,
+            },
+          })
+
+          await prisma.schoolSettings.update({
+            where: {
+              schoolId: school.id,
+            },
+            data: {
+              lastStudentCode: code,
+            },
+          })
+
+          return id
+        })
+
+        return reply.status(201).send({ studentId })
       },
     )
 }

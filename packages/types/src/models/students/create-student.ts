@@ -7,7 +7,6 @@ export const createStudentParamsSchema = z.object({
 export type CreateStudentParams = z.infer<typeof createStudentParamsSchema>
 
 export const createStudentBodySchema = z.object({
-  code: z.number({ message: 'O código deve ser um número' }).optional(),
   name: z.string().refine((value) => value.split(' ').length > 1, {
     message: 'Por favor, digite seu nome completo.',
   }),

@@ -32,12 +32,11 @@ export async function updateStudent(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug, studentId } = request.params
-        const { code, name, email, cpf, password, classId } = request.body
+        const { name, email, cpf, password, classId } = request.body
 
         const userId = await request.getCurrentEntityId()
 
-        const { school, membership } =
-          await request.getUserMembership(schoolSlug)
+        const { membership } = await request.getUserMembership(schoolSlug)
 
         const { cannot } = getUserPermissions(userId, membership.role)
 
@@ -77,31 +76,11 @@ export async function updateStudent(app: FastifyInstance) {
           }
         }
 
-        let newCode
-
-        if (code && code !== studentById.code) {
-          const studentWithSameCode = await prisma.student.findFirst({
-            where: {
-              schoolId: school.id,
-              code,
-            },
-          })
-
-          if (studentWithSameCode && studentWithSameCode.code !== code) {
-            throw new BadRequestError('Um usuário com esse código já existe.')
-          }
-
-          newCode = code
-        } else {
-          newCode = studentById.code
-        }
-
         await prisma.student.update({
           where: {
             id: studentId,
           },
           data: {
-            code: newCode,
             name,
             email,
             cpf,

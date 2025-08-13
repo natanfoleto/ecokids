@@ -48,7 +48,6 @@ export function StudentForm({
   })
 
   const defaultValues: SaveStudentBody = {
-    code: initialData?.code ?? 0,
     name: initialData?.name ?? '',
     email: initialData?.email ?? null,
     cpf: initialData?.cpf ?? null,
@@ -131,15 +130,6 @@ export function StudentForm({
   return (
     <form className="flex flex-col space-y-8" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-3 space-y-1.5">
-          <Label htmlFor="code">Código</Label>
-          <FormInput
-            {...register('code', { valueAsNumber: true })}
-            id="code"
-            error={errors.code?.message}
-          />
-        </div>
-
         <div className="col-span-4 space-y-1.5">
           <Label>Turma atual</Label>
           <Controller
@@ -165,7 +155,7 @@ export function StudentForm({
           />
         </div>
 
-        <div className="col-span-5 space-y-1.5">
+        <div className="col-span-8 space-y-1.5">
           <Label htmlFor="name">Nome do aluno</Label>
           <FormInput
             {...register('name')}

@@ -52,13 +52,11 @@ export function UpdateStudent({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-4">
-          <StudentForm
-            isUpdating
-            initialData={data.student}
-            studentId={data.student.id}
-          />
-        </div>
+        <StudentForm
+          isUpdating
+          initialData={data.student}
+          studentId={data.student.id}
+        />
       </DialogContent>
     </Dialog>
   )

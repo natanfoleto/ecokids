@@ -23,9 +23,7 @@ export function CreateAward({ open, onClose }: CreateAwardProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-4">
-          <AwardForm />
-        </div>
+        <AwardForm />
       </DialogContent>
     </Dialog>
   )

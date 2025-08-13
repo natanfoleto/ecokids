@@ -24,9 +24,7 @@ export function CreateItem({ open, onClose }: CreateItemProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-4">
-          <ItemForm />
-        </div>
+        <ItemForm />
       </DialogContent>
     </Dialog>
   )

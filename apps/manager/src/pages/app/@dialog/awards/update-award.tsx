@@ -48,13 +48,11 @@ export function UpdateAward({ open, onClose, awardId }: UpdateAwardProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-4">
-          <AwardForm
-            isUpdating
-            initialData={data.award}
-            awardId={data.award.id}
-          />
-        </div>
+        <AwardForm
+          isUpdating
+          initialData={data.award}
+          awardId={data.award.id}
+        />
       </DialogContent>
     </Dialog>
   )

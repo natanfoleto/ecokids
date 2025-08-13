@@ -23,9 +23,7 @@ export function CreateStudent({ open, onClose }: CreateStudentProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="p-4">
-          <StudentForm />
-        </div>
+        <StudentForm />
       </DialogContent>
     </Dialog>
   )

@@ -8,7 +8,6 @@ export const updateStudentParamsSchema = z.object({
 export type UpdateStudentParams = z.infer<typeof updateStudentParamsSchema>
 
 export const updateStudentBodySchema = z.object({
-  code: z.number({ message: 'O código deve ser um número' }).optional(),
   name: z.string().refine((value) => value.split(' ').length > 1, {
     message: 'Por favor, digite seu nome completo.',
   }),
