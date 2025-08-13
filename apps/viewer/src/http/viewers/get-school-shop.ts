@@ -6,7 +6,7 @@ export async function getSchoolShop({
   params: { schoolId },
 }: GetSchoolShopRequest) {
   const result = await api
-    .get(`schools/${schoolId}/shop`)
+    .get(`viewers/schools/${schoolId}/shop`)
     .json<GetSchoolShopResponse>()
 
   return result

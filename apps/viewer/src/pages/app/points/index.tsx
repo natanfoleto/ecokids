@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { useMetadata } from '@/hooks/use-metadata'
-import { getStudentPoints } from '@/http/students/get-student-points'
+import { getStudentPoints } from '@/http/viewers/get-student-points'
 
 export function Points() {
   useMetadata('Ecokids - Pontos')

@@ -1,6 +1,6 @@
 import {
-  getSchoolShopParamsSchema,
-  getSchoolShopResponseSchema,
+  getSchoolClassesParamsSchema,
+  getSchoolClassesResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
@@ -8,39 +8,38 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { auth } from '@/http/middlewares/auth'
 import { prisma } from '@/lib/prisma'
 
-export async function getSchoolShop(app: FastifyInstance) {
+export async function getSchoolClasses(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/viewers/schools/:schoolId/shop',
+      '/viewers/schools/:schoolId/classes',
       {
         schema: {
           tags: ['Espectadores'],
-          summary: 'Buscar os itens da loja de uma escola',
-          params: getSchoolShopParamsSchema,
+          summary: 'Buscar todas as turmas de uma escola',
+          security: [{ bearerAuth: [] }],
+          params: getSchoolClassesParamsSchema,
           response: {
-            200: getSchoolShopResponseSchema,
+            200: getSchoolClassesResponseSchema,
           },
         },
       },
       async (request, reply) => {
         const { schoolId } = request.params
 
-        const itens = await prisma.award.findMany({
+        const classes = await prisma.class.findMany({
           where: {
             schoolId,
           },
           select: {
             id: true,
             name: true,
-            description: true,
-            value: true,
-            photoUrl: true,
+            year: true,
           },
         })
 
-        return reply.status(200).send({ itens })
+        return reply.send({ classes })
       },
     )
 }

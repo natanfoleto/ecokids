@@ -4,7 +4,7 @@ import { api } from '../api'
 
 export async function getStudentPoints() {
   const result = await api
-    .get('students/points')
+    .get('viewers/students/points')
     .json<GetStudentPointsResponse>()
 
   return result

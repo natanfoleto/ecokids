@@ -26,7 +26,7 @@ export function Item({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-3 text-center">
+      <div className="flex flex-1 flex-col items-center gap-3 text-center">
         <div>
           <h2 className="font-semibold">{name}</h2>
           <span className="text-xs text-emerald-500">{value} pontos</span>

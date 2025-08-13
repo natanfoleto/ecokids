@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { LoadingPage } from '@/components/loading-page'
 import { useAuth } from '@/contexts/auth'
 import { useMetadata } from '@/hooks/use-metadata'
-import { getSchoolShop } from '@/http/students/get-school-shop'
+import { getSchoolShop } from '@/http/viewers/get-school-shop'
 
 import { Item } from './item'
 

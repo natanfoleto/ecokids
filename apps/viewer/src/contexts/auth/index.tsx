@@ -2,7 +2,7 @@ import type { GetStudentProfileResponse } from '@ecokids/types'
 import { useQuery } from '@tanstack/react-query'
 import { createContext, useContext, useEffect, useState } from 'react'
 
-import { getStudentProfile } from '@/http/students/get-student-profile'
+import { getStudentProfile } from '@/http/viewers/get-student-profile'
 
 import type { AuthContextType, AuthProviderProps } from './types'
 

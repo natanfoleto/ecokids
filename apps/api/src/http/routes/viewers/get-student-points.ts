@@ -10,7 +10,7 @@ export async function getStudentPoints(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/students/points',
+      '/viewers/students/points',
       {
         schema: {
           tags: ['Espectadores'],
