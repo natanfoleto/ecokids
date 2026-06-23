@@ -17,11 +17,13 @@ import { cn } from '@/lib/utils'
 
 import { SchoolForm } from '../school-form'
 import LogoForm from './logo-form'
+import { SeasonForm } from './season-form'
 import { ShutdownSchool } from './shutdown-school'
 
 const tabs = [
   { id: 'details', title: 'Detalhes' },
   { id: 'logo', title: 'Logo' },
+  { id: 'season', title: 'Temporada de trocas' },
   { id: 'shutdown', title: 'Desligar escola' },
 ] as const
 
@@ -48,6 +50,7 @@ export function SettingsTabs() {
   })
 
   const canShutdownSchool = permissions?.can('delete', 'School')
+  const canManageSeason = permissions?.can('create', 'ExchangeSeason') || permissions?.can('update', 'ExchangeSeason')
 
   if (!data?.school) return null
 
@@ -56,6 +59,7 @@ export function SettingsTabs() {
       <aside className="flex w-80 flex-col gap-1">
         {tabs.map((tab) => {
           if (tab.id === 'shutdown' && !canShutdownSchool) return null
+          if (tab.id === 'season' && !canManageSeason) return null
 
           return (
             <Button
@@ -100,6 +104,21 @@ export function SettingsTabs() {
 
             <CardContent>
               <LogoForm initialData={data.school} />
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === 'season' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Temporada de trocas</CardTitle>
+              <CardDescription>
+                Gerencie os períodos em que os alunos podem trocar seus pontos por prêmios.
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <SeasonForm />
             </CardContent>
           </Card>
         )}

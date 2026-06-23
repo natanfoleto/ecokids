@@ -1,4 +1,4 @@
-import { CircleUser, Hand, Trophy, Volleyball } from 'lucide-react'
+import { CircleUser, Gift, Hand, Trophy, Volleyball } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 export function BottomNavigation() {
@@ -22,6 +22,17 @@ export function BottomNavigation() {
           >
             <Volleyball className="size-6" />
             Shop
+          </button>
+        )}
+      </NavLink>
+
+      <NavLink to="/my-redemptions" end>
+        {({ isActive }) => (
+          <button
+            className={`flex h-full cursor-pointer flex-col items-center justify-between gap-1 border border-none py-2 text-xs ${isActive ? 'text-emerald-500' : 'text-muted-foreground'}`}
+          >
+            <Gift className="size-6" />
+            Resgates
           </button>
         )}
       </NavLink>

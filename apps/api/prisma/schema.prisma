@@ -110,6 +110,8 @@ model School {
   members  Member[]
   settings SchoolSettings[]
   items    Item[]
+  seasons     ExchangeSeason[]
+  redemptions RewardRedemption[]
 
   @@map("schools")
 }
@@ -157,8 +159,9 @@ model Student {
   class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
   classId String @map("class_id")
 
-  points Point[]
-  tokens StudentToken[]
+  points      Point[]
+  tokens      StudentToken[]
+  redemptions RewardRedemption[]
 
   @@unique([code, schoolId])
   @@map("students")
@@ -202,6 +205,7 @@ model Award {
 
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   schoolId String @map("school_id")
+  redemptions RewardRedemption[]
 
   @@map("awards")
 }
@@ -221,4 +225,60 @@ model Item {
   score_items ScoreItems[]
 
   @@map("items")
+}
+
+enum SeasonStatus {
+  OPEN
+  CLOSED
+}
+
+enum RedemptionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+  DELIVERED
+}
+
+model ExchangeSeason {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  status      SeasonStatus @default(OPEN)
+  openedAt    DateTime     @default(now()) @map("opened_at")
+  closedAt    DateTime?    @map("closed_at")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  redemptions RewardRedemption[]
+
+  @@map("exchange_seasons")
+}
+
+model RewardRedemption {
+  id                 String           @id @default(uuid())
+  pointsCost         Int              @map("points_cost")
+  status             RedemptionStatus @default(PENDING)
+  createdAt          DateTime         @default(now()) @map("created_at")
+  approvedAt         DateTime?        @map("approved_at")
+  rejectedAt         DateTime?        @map("rejected_at")
+  deliveredAt        DateTime?        @map("delivered_at")
+  cancelledAt        DateTime?        @map("cancelled_at")
+  rejectionReason    String?          @map("rejection_reason")
+  pickupInstructions String?          @map("pickup_instructions")
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String  @map("student_id")
+
+  award   Award  @relation(fields: [awardId], references: [id], onDelete: Cascade)
+  awardId String @map("award_id")
+
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  schoolId String @map("school_id")
+
+  season   ExchangeSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  seasonId String         @map("season_id")
+
+  @@map("reward_redemptions")
 }

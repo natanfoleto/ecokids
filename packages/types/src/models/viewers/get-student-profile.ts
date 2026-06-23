@@ -10,6 +10,7 @@ export const getStudentProfileResponseSchema = z.object({
     school: z.object({
       id: z.string().uuid(),
       name: z.string(),
+      slug: z.string(),
     }),
     class: z.object({
       id: z.string().uuid(),
@@ -17,6 +18,8 @@ export const getStudentProfileResponseSchema = z.object({
       year: z.string(),
     }),
     totalPoints: z.number(),
+    reservedPoints: z.number(),
+    availablePoints: z.number(),
   }),
 })
 

@@ -1,5 +1,6 @@
 import {
   Gauge,
+  Gift,
   GraduationCap,
   Paperclip,
   Settings,
@@ -20,6 +21,7 @@ export function Tabs() {
   const { permissions, isLoading } = usePermissions()
 
   const canGetMembers = permissions?.can('get', 'Member')
+  const canGetRedemptions = permissions?.can('get', 'RewardRedemption')
 
   return (
     <nav className="flex items-center gap-2">
@@ -106,6 +108,25 @@ export function Tabs() {
             </Button>
           )}
         </NavLink>
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        canGetRedemptions && (
+          <NavLink to={`/school/${schoolSlug}/redemptions`} end>
+            {({ isActive }) => (
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
+              >
+                <Gift className="mr-0.5 size-4" />
+                Resgates
+              </Button>
+            )}
+          </NavLink>
+        )
       )}
 
       {isLoading ? (

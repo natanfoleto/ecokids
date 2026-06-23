@@ -10,6 +10,7 @@ import { Awards } from './pages/app/school/awards'
 import { Classes } from './pages/app/school/classes'
 import { Items } from './pages/app/school/items'
 import { Members } from './pages/app/school/members'
+import { Redemptions } from './pages/app/school/redemptions'
 import { Settings } from './pages/app/school/settings'
 import { Students } from './pages/app/school/students'
 import { SignIn } from './pages/auth/sign-in'
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
           { path: '/school/:slug/students', element: <Students /> },
           { path: '/school/:slug/items', element: <Items /> },
           { path: '/school/:slug/awards', element: <Awards /> },
+          { path: '/school/:slug/redemptions', element: <Redemptions /> },
           { path: '/school/:slug/settings', element: <Settings /> },
           { path: '/profile', element: <Profile /> },
         ],

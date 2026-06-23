@@ -40,7 +40,19 @@ export async function getSchoolShop(app: FastifyInstance) {
           },
         })
 
-        return reply.status(200).send({ itens })
+        const activeSeason = await prisma.exchangeSeason.findFirst({
+          where: {
+            schoolId,
+            status: 'OPEN',
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+          },
+        })
+
+        return reply.status(200).send({ itens, activeSeason })
       },
     )
 }

@@ -22,6 +22,11 @@ export const getSchoolShopResponseSchema = z.object({
       photoUrl: z.string().nullable(),
     }),
   ),
+  activeSeason: z.object({
+    id: z.string().uuid(),
+    title: z.string(),
+    description: z.string().nullable(),
+  }).nullable(),
 })
 
 export type GetSchoolShopResponse = z.infer<typeof getSchoolShopResponseSchema>

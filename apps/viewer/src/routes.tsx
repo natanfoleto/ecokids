@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
+import { MyRedemptions } from './pages/app/my-redemptions'
 import { Points } from './pages/app/points'
 import { Profile } from './pages/app/profile'
 import { Ranking } from './pages/app/ranking'
@@ -24,6 +25,11 @@ export const router = createBrowserRouter([
         path: '/',
         element: <AppLayout />,
         children: [{ path: '/shop', element: <Shop /> }],
+      },
+      {
+        path: '/',
+        element: <AppLayout />,
+        children: [{ path: '/my-redemptions', element: <MyRedemptions /> }],
       },
       {
         path: '/',

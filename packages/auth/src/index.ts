@@ -16,6 +16,8 @@ import { memberSubject } from './subjects/member'
 import { pointSubject } from './subjects/point'
 import { schoolSubject } from './subjects/school'
 import { studentSubject } from './subjects/student'
+import { exchangeSeasonSubject } from './subjects/exchange-season'
+import { rewardRedemptionSubject } from './subjects/reward-redemption'
 
 export * from './models/school'
 export * from './models/member'
@@ -24,6 +26,8 @@ export * from './models/student'
 export * from './models/point'
 export * from './models/award'
 export * from './roles'
+export * from './subjects/exchange-season'
+export * from './subjects/reward-redemption'
 
 const appAbilitiesSchema = z.union([
   memberSubject,
@@ -34,6 +38,8 @@ const appAbilitiesSchema = z.union([
   pointSubject,
   awardSubject,
   itemSubject,
+  exchangeSeasonSubject,
+  rewardRedemptionSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

@@ -36,6 +36,7 @@ export async function getStudentProfile(app: FastifyInstance) {
               select: {
                 id: true,
                 name: true,
+                slug: true,
               },
             },
             class: {
@@ -71,9 +72,39 @@ export async function getStudentProfile(app: FastifyInstance) {
           })
           .then((data) => data._sum.amount ?? 0)
 
+        const reservedPoints = await prisma.rewardRedemption
+          .aggregate({
+            where: {
+              studentId,
+              status: 'PENDING',
+            },
+            _sum: {
+              pointsCost: true,
+            },
+          })
+          .then((data) => data._sum.pointsCost ?? 0)
+
+        const consumedPoints = await prisma.rewardRedemption
+          .aggregate({
+            where: {
+              studentId,
+              status: {
+                in: ['APPROVED', 'DELIVERED'],
+              },
+            },
+            _sum: {
+              pointsCost: true,
+            },
+          })
+          .then((data) => data._sum.pointsCost ?? 0)
+
+        const availablePoints = totalPoints - reservedPoints - consumedPoints
+
         const studentsWithPointsAdded = {
           ...student,
           totalPoints,
+          reservedPoints,
+          availablePoints,
         }
 
         return reply.send({ student: studentsWithPointsAdded })
