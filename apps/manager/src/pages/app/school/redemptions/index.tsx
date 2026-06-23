@@ -1,5 +1,13 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { Ban, Check, ClipboardCheck, Gift, Loader2, X } from 'lucide-react'
+import {
+  Ban,
+  Check,
+  ClipboardCheck,
+  Clock,
+  Gift,
+  Loader2,
+  X,
+} from 'lucide-react'
 import { useState } from 'react'
 
 import { FormError } from '@/components/form/form-error'
@@ -33,6 +41,7 @@ import { useMetadataSchool } from '@/hooks/use-metadata'
 import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getRedemptions } from '@/http/redemptions/get-redemptions'
 import { queryClient } from '@/lib/react-query'
+import { cn } from '@/lib/utils'
 
 import { Tabs } from '../tabs'
 import {
@@ -44,6 +53,8 @@ import {
 export function Redemptions() {
   useMetadataSchool('Resgate de Prêmios')
   const schoolSlug = useCurrentSchoolSlug()
+
+  const [activeTab, setActiveTab] = useState('pending')
 
   const [approveRedemptionId, setApproveRedemptionId] = useState<string | null>(
     null,
@@ -177,19 +188,174 @@ export function Redemptions() {
         </p>
       </div>
 
-      <ContentTabs defaultValue="pending" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="pending" className="cursor-pointer">
-            Pendentes ({pending.length})
+      <ContentTabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full"
+      >
+        <TabsList className="mb-6 grid h-auto w-full grid-cols-1 gap-4 bg-transparent p-0 sm:grid-cols-2 lg:grid-cols-4">
+          <TabsTrigger
+            value="pending"
+            className={cn(
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              activeTab === 'pending'
+                ? 'border-amber-500/50 bg-amber-500/5 text-amber-600 ring-[1px] ring-amber-500/50 dark:bg-amber-950/20 dark:text-amber-400'
+                : 'text-muted-foreground hover:bg-muted/40',
+            )}
+          >
+            <div className="flex w-full items-center justify-between">
+              <span
+                className={cn(
+                  'text-xs font-semibold uppercase tracking-wider',
+                  activeTab === 'pending'
+                    ? 'text-amber-600 dark:text-amber-400'
+                    : 'text-muted-foreground',
+                )}
+              >
+                Pendentes
+              </span>
+              <div
+                className={cn(
+                  'rounded-lg border p-1.5 transition-colors',
+                  activeTab === 'pending'
+                    ? 'border-amber-500/30 bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                    : 'border-border bg-muted/50 text-muted-foreground',
+                )}
+              >
+                <Clock className="size-4" />
+              </div>
+            </div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-foreground text-2xl font-bold tracking-tight">
+                {pending.length}
+              </span>
+              <span className="text-muted-foreground text-xs font-light">
+                solicitações
+              </span>
+            </div>
           </TabsTrigger>
-          <TabsTrigger value="approved" className="cursor-pointer">
-            Aprovados ({approved.length})
+
+          <TabsTrigger
+            value="approved"
+            className={cn(
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              activeTab === 'approved'
+                ? 'border-blue-500/50 bg-blue-500/5 text-blue-600 ring-[1px] ring-blue-500/50 dark:bg-blue-950/20 dark:text-blue-400'
+                : 'text-muted-foreground hover:bg-muted/40',
+            )}
+          >
+            <div className="flex w-full items-center justify-between">
+              <span
+                className={cn(
+                  'text-xs font-semibold uppercase tracking-wider',
+                  activeTab === 'approved'
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-muted-foreground',
+                )}
+              >
+                Aprovados
+              </span>
+              <div
+                className={cn(
+                  'rounded-lg border p-1.5 transition-colors',
+                  activeTab === 'approved'
+                    ? 'border-blue-500/30 bg-blue-500/20 text-blue-600 dark:text-blue-400'
+                    : 'border-border bg-muted/50 text-muted-foreground',
+                )}
+              >
+                <Check className="size-4" />
+              </div>
+            </div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-foreground text-2xl font-bold tracking-tight">
+                {approved.length}
+              </span>
+              <span className="text-muted-foreground text-xs font-light">
+                solicitações
+              </span>
+            </div>
           </TabsTrigger>
-          <TabsTrigger value="delivered" className="cursor-pointer">
-            Entregues ({delivered.length})
+
+          <TabsTrigger
+            value="delivered"
+            className={cn(
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              activeTab === 'delivered'
+                ? 'border-emerald-500/50 bg-emerald-500/5 text-emerald-600 ring-[1px] ring-emerald-500/50 dark:bg-emerald-950/20 dark:text-emerald-400'
+                : 'text-muted-foreground hover:bg-muted/40',
+            )}
+          >
+            <div className="flex w-full items-center justify-between">
+              <span
+                className={cn(
+                  'text-xs font-semibold uppercase tracking-wider',
+                  activeTab === 'delivered'
+                    ? 'text-emerald-600 dark:text-emerald-400'
+                    : 'text-muted-foreground',
+                )}
+              >
+                Entregues
+              </span>
+              <div
+                className={cn(
+                  'rounded-lg border p-1.5 transition-colors',
+                  activeTab === 'delivered'
+                    ? 'border-emerald-500/30 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                    : 'border-border bg-muted/50 text-muted-foreground',
+                )}
+              >
+                <ClipboardCheck className="size-4" />
+              </div>
+            </div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-foreground text-2xl font-bold tracking-tight">
+                {delivered.length}
+              </span>
+              <span className="text-muted-foreground text-xs font-light">
+                solicitações
+              </span>
+            </div>
           </TabsTrigger>
-          <TabsTrigger value="other" className="cursor-pointer">
-            Rejeitados / Cancelados ({other.length})
+
+          <TabsTrigger
+            value="other"
+            className={cn(
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              activeTab === 'other'
+                ? 'border-red-500/50 bg-red-500/5 text-red-600 ring-[1px] ring-red-500/50 dark:bg-red-950/20 dark:text-red-400'
+                : 'text-muted-foreground hover:bg-muted/40',
+            )}
+          >
+            <div className="flex w-full items-center justify-between">
+              <span
+                className={cn(
+                  'text-xs font-semibold uppercase tracking-wider',
+                  activeTab === 'other'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-muted-foreground',
+                )}
+              >
+                Rejeitados / Cancelados
+              </span>
+              <div
+                className={cn(
+                  'rounded-lg border p-1.5 transition-colors',
+                  activeTab === 'other'
+                    ? 'border-red-500/30 bg-red-500/20 text-red-600 dark:text-red-400'
+                    : 'border-border bg-muted/50 text-muted-foreground',
+                )}
+              >
+                <Ban className="size-4" />
+              </div>
+            </div>
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-foreground text-2xl font-bold tracking-tight">
+                {other.length}
+              </span>
+              <span className="text-muted-foreground text-xs font-light">
+                solicitações
+              </span>
+            </div>
           </TabsTrigger>
         </TabsList>
 

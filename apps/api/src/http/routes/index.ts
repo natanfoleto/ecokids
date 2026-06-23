@@ -8,6 +8,7 @@ import { registerItemRoutes } from './items'
 import { registerMemberRoutes } from './members'
 import { registerPointRoutes } from './points'
 import { registerRedemptionRoutes } from './redemptions'
+import { registerSchoolSeasonRoutes } from './school-seasons'
 import { registerSchoolRoutes } from './schools'
 import { registerSeasonRoutes } from './seasons'
 import { registerStudentRoutes } from './students'
@@ -28,4 +29,5 @@ export default async function (app: FastifyInstance) {
   await registerViewerRoutes(app)
   await registerSeasonRoutes(app)
   await registerRedemptionRoutes(app)
+  await registerSchoolSeasonRoutes(app)
 }

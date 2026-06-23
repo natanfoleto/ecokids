@@ -30,29 +30,41 @@ export async function getSchoolMetrics(app: FastifyInstance) {
 
         const { school } = await request.getUserMembership(schoolSlug)
 
+        // Find active school season
+        const activeSchoolSeason = await prisma.schoolSeason.findFirst({
+          where: {
+            schoolId: school.id,
+            status: 'ACTIVE',
+          },
+        })
+
         // 1. Total active students
         const totalStudents = await prisma.student.count({
           where: { schoolId: school.id, active: true },
         })
 
-        // 2. Inactive students (active students with 0 points)
+        // 2. Inactive students (active students with 0 points in active season)
         const inactiveStudentsCount = await prisma.student.count({
           where: {
             schoolId: school.id,
             active: true,
             points: {
-              none: {},
+              none: {
+                seasonId: activeSchoolSeason?.id ?? '',
+              },
             },
           },
         })
 
-        // 3. Participation count (active students with at least 1 point)
+        // 3. Participation count (active students with at least 1 point in active season)
         const activeStudentsWithPointsCount = await prisma.student.count({
           where: {
             schoolId: school.id,
             active: true,
             points: {
-              some: {},
+              some: {
+                seasonId: activeSchoolSeason?.id ?? '',
+              },
             },
           },
         })
@@ -62,25 +74,33 @@ export async function getSchoolMetrics(app: FastifyInstance) {
             ? Math.round((activeStudentsWithPointsCount / totalStudents) * 100)
             : 0
 
-        // 4. Total points generated
+        // 4. Total points generated in active season
         const pointsSum = await prisma.point.aggregate({
-          where: { student: { schoolId: school.id } },
+          where: {
+            student: { schoolId: school.id },
+            seasonId: activeSchoolSeason?.id ?? '',
+          },
           _sum: {
             amount: true,
           },
         })
         const totalPoints = pointsSum._sum.amount ?? 0
 
-        // 5. Total items recycled
+        // 5. Total items recycled in active season
         const itemsSum = await prisma.scoreItems.aggregate({
-          where: { point: { student: { schoolId: school.id } } },
+          where: {
+            point: {
+              student: { schoolId: school.id },
+              seasonId: activeSchoolSeason?.id ?? '',
+            },
+          },
           _sum: {
             amount: true,
           },
         })
         const totalItemsRecycled = itemsSum._sum.amount ?? 0
 
-        // 6. Classrooms Leaderboard
+        // 6. Classrooms Leaderboard in active season
         const classes = await prisma.class.findMany({
           where: { schoolId: school.id },
           select: {
@@ -91,6 +111,9 @@ export async function getSchoolMetrics(app: FastifyInstance) {
               select: {
                 id: true,
                 points: {
+                  where: {
+                    seasonId: activeSchoolSeason?.id ?? '',
+                  },
                   select: {
                     amount: true,
                   },
@@ -127,10 +150,15 @@ export async function getSchoolMetrics(app: FastifyInstance) {
           })
           .sort((a, b) => b.totalPoints - a.totalPoints)
 
-        // 7. Most Recycled Items
+        // 7. Most Recycled Items in active season
         const scoreItemsGrouped = await prisma.scoreItems.groupBy({
           by: ['itemId'],
-          where: { point: { student: { schoolId: school.id } } },
+          where: {
+            point: {
+              student: { schoolId: school.id },
+              seasonId: activeSchoolSeason?.id ?? '',
+            },
+          },
           _sum: {
             amount: true,
           },
@@ -157,9 +185,12 @@ export async function getSchoolMetrics(app: FastifyInstance) {
           })
           .sort((a, b) => b.totalQuantity - a.totalQuantity)
 
-        // 8. Recent Activity
+        // 8. Recent Activity in active season
         const recentPoints = await prisma.point.findMany({
-          where: { student: { schoolId: school.id } },
+          where: {
+            student: { schoolId: school.id },
+            seasonId: activeSchoolSeason?.id ?? '',
+          },
           orderBy: { createdAt: 'desc' },
           take: 5,
           select: {

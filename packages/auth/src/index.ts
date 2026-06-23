@@ -10,14 +10,15 @@ import { Member } from './models/member'
 import { permissions } from './permissions'
 import { awardSubject } from './subjects/award'
 import { classSubject } from './subjects/class'
+import { exchangeSeasonSubject } from './subjects/exchange-season'
 import { inviteSubject } from './subjects/invite'
 import { itemSubject } from './subjects/item'
 import { memberSubject } from './subjects/member'
 import { pointSubject } from './subjects/point'
-import { schoolSubject } from './subjects/school'
-import { studentSubject } from './subjects/student'
-import { exchangeSeasonSubject } from './subjects/exchange-season'
 import { rewardRedemptionSubject } from './subjects/reward-redemption'
+import { schoolSubject } from './subjects/school'
+import { schoolSeasonSubject } from './subjects/school-season'
+import { studentSubject } from './subjects/student'
 
 export * from './models/school'
 export * from './models/member'
@@ -28,6 +29,7 @@ export * from './models/award'
 export * from './roles'
 export * from './subjects/exchange-season'
 export * from './subjects/reward-redemption'
+export * from './subjects/school-season'
 
 const appAbilitiesSchema = z.union([
   memberSubject,
@@ -40,6 +42,7 @@ const appAbilitiesSchema = z.union([
   itemSubject,
   exchangeSeasonSubject,
   rewardRedemptionSubject,
+  schoolSeasonSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

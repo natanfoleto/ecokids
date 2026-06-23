@@ -43,7 +43,7 @@ export function ShutdownSchool() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="cursor-pointer">
+        <Button variant="destructive" className="cursor-pointer" disabled>
           Desligar
         </Button>
       </AlertDialogTrigger>

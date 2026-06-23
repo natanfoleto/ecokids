@@ -61,10 +61,19 @@ export async function getStudentProfile(app: FastifyInstance) {
           throw new BadRequestError('Estudante não encontrado.')
         }
 
+        // Find active school season for the student's school
+        const activeSchoolSeason = await prisma.schoolSeason.findFirst({
+          where: {
+            schoolId: student.school.id,
+            status: 'ACTIVE',
+          },
+        })
+
         const totalPoints = await prisma.point
           .aggregate({
             where: {
               studentId,
+              seasonId: activeSchoolSeason?.id ?? '',
             },
             _sum: {
               amount: true,
@@ -77,6 +86,7 @@ export async function getStudentProfile(app: FastifyInstance) {
             where: {
               studentId,
               status: 'PENDING',
+              schoolSeasonId: activeSchoolSeason?.id ?? '',
             },
             _sum: {
               pointsCost: true,
@@ -91,6 +101,7 @@ export async function getStudentProfile(app: FastifyInstance) {
               status: {
                 in: ['APPROVED', 'DELIVERED'],
               },
+              schoolSeasonId: activeSchoolSeason?.id ?? '',
             },
             _sum: {
               pointsCost: true,

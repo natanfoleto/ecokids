@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { auth } from '@/http/middlewares/auth'
+import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { prisma } from '@/lib/prisma'
 
 export async function getStudentPoints(app: FastifyInstance) {
@@ -24,9 +25,27 @@ export async function getStudentPoints(app: FastifyInstance) {
       async (request, reply) => {
         const studentId = await request.getCurrentEntityId()
 
+        const student = await prisma.student.findUnique({
+          where: { id: studentId },
+          select: { schoolId: true },
+        })
+
+        if (!student) {
+          throw new BadRequestError('Estudante não encontrado.')
+        }
+
+        // Find active school season
+        const activeSchoolSeason = await prisma.schoolSeason.findFirst({
+          where: {
+            schoolId: student.schoolId,
+            status: 'ACTIVE',
+          },
+        })
+
         const rawPoints = await prisma.point.findMany({
           where: {
             studentId,
+            seasonId: activeSchoolSeason?.id ?? '',
           },
           select: {
             id: true,

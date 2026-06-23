@@ -44,7 +44,9 @@ export async function createRedemption(app: FastifyInstance) {
         }
 
         if (student.school.slug !== schoolSlug) {
-          throw new BadRequestError('A escola informada é inválida para este estudante.')
+          throw new BadRequestError(
+            'A escola informada é inválida para este estudante.',
+          )
         }
 
         // Verify active season
@@ -58,6 +60,20 @@ export async function createRedemption(app: FastifyInstance) {
         if (!activeSeason) {
           throw new BadRequestError(
             'Não há nenhuma temporada de trocas ativa no momento nesta escola.',
+          )
+        }
+
+        // Verify active school points season
+        const activeSchoolSeason = await prisma.schoolSeason.findFirst({
+          where: {
+            schoolId: student.schoolId,
+            status: 'ACTIVE',
+          },
+        })
+
+        if (!activeSchoolSeason) {
+          throw new BadRequestError(
+            'Não há nenhum ciclo de pontuação ativo nesta escola no momento.',
           )
         }
 
@@ -76,7 +92,7 @@ export async function createRedemption(app: FastifyInstance) {
         // Execute dynamic balance check and creation within a transaction
         const redemption = await prisma.$transaction(async (tx) => {
           const totalPointsAgg = await tx.point.aggregate({
-            where: { studentId },
+            where: { studentId, seasonId: activeSchoolSeason.id },
             _sum: { amount: true },
           })
           const totalPoints = totalPointsAgg._sum.amount ?? 0
@@ -85,6 +101,7 @@ export async function createRedemption(app: FastifyInstance) {
             where: {
               studentId,
               status: 'PENDING',
+              schoolSeasonId: activeSchoolSeason.id,
             },
             _sum: { pointsCost: true },
           })
@@ -94,6 +111,7 @@ export async function createRedemption(app: FastifyInstance) {
             where: {
               studentId,
               status: { in: ['APPROVED', 'DELIVERED'] },
+              schoolSeasonId: activeSchoolSeason.id,
             },
             _sum: { pointsCost: true },
           })
@@ -115,6 +133,7 @@ export async function createRedemption(app: FastifyInstance) {
               awardId,
               schoolId: student.schoolId,
               seasonId: activeSeason.id,
+              schoolSeasonId: activeSchoolSeason.id,
             },
           })
         })

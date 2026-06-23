@@ -31,6 +31,14 @@ export async function getSchoolRanking(app: FastifyInstance) {
         const { schoolId } = request.params
         const { classId } = request.query
 
+        // Find active school season
+        const activeSchoolSeason = await prisma.schoolSeason.findFirst({
+          where: {
+            schoolId,
+            status: 'ACTIVE',
+          },
+        })
+
         const students = await prisma.student.findMany({
           where: {
             schoolId,
@@ -40,6 +48,9 @@ export async function getSchoolRanking(app: FastifyInstance) {
             id: true,
             name: true,
             points: {
+              where: {
+                seasonId: activeSchoolSeason?.id ?? '',
+              },
               select: {
                 amount: true,
               },

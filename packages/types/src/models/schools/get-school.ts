@@ -26,6 +26,13 @@ export const getSchoolResponseSchema = z.object({
     domain: z.string().nullable(),
     ownerId: z.string().uuid(),
   }),
+  activeSchoolSeason: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+    })
+    .nullable()
+    .optional(),
 })
 
 export type GetSchoolResponse = z.infer<typeof getSchoolResponseSchema>

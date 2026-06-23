@@ -112,6 +112,7 @@ model School {
   items    Item[]
   seasons     ExchangeSeason[]
   redemptions RewardRedemption[]
+  schoolSeasons SchoolSeason[]
 
   @@map("schools")
 }
@@ -176,6 +177,9 @@ model Point {
   studentId String  @map("student_id")
 
   score_items ScoreItems[]
+
+  seasonId String       @map("season_id")
+  season   SchoolSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
 
   @@map("points")
 }
@@ -280,5 +284,30 @@ model RewardRedemption {
   season   ExchangeSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
   seasonId String         @map("season_id")
 
+  schoolSeasonId String       @map("school_season_id")
+  schoolSeason   SchoolSeason @relation(fields: [schoolSeasonId], references: [id], onDelete: Cascade)
+
   @@map("reward_redemptions")
+}
+
+enum SchoolSeasonStatus {
+  ACTIVE
+  FINISHED
+}
+
+model SchoolSeason {
+  id        String             @id @default(uuid())
+  name      String
+  status    SchoolSeasonStatus @default(ACTIVE)
+  startedAt DateTime           @default(now()) @map("started_at")
+  endedAt   DateTime?          @map("ended_at")
+  createdAt DateTime           @default(now()) @map("created_at")
+
+  schoolId  String             @map("school_id")
+  school    School             @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  points      Point[]
+  redemptions RewardRedemption[]
+
+  @@map("school_seasons")
 }

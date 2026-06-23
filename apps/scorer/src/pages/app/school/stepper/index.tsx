@@ -1,5 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, ArrowRight, Loader2, RefreshCw, X } from 'lucide-react'
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  Loader2,
+  RefreshCw,
+  X,
+} from 'lucide-react'
 import { type JSX } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -57,6 +64,28 @@ export function Stepper() {
         <Link to="/">
           <Button variant="link" className="cursor-pointer">
             <ArrowLeft />
+            Voltar para o menu
+          </Button>
+        </Link>
+      </div>
+    )
+  }
+
+  if (!data?.activeSchoolSeason) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center space-y-4 px-4 text-center">
+        <div className="flex max-w-md flex-col items-center rounded-lg border border-amber-500/20 bg-amber-500/5 p-6 text-amber-600">
+          <AlertTriangle className="mb-3 size-12" />
+          <h2 className="mb-2 text-lg font-semibold">Sem Ciclo Ativo</h2>
+          <p className="text-sm text-amber-500">
+            A escola <strong>{data?.school.name}</strong> não possui nenhum
+            ciclo de pontuação ativo no momento. Não é possível registrar
+            materiais sem um ciclo de pontuação ativo.
+          </p>
+        </div>
+
+        <Link to="/">
+          <Button className="cursor-pointer bg-emerald-500 hover:bg-emerald-600">
             Voltar para o menu
           </Button>
         </Link>

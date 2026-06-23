@@ -17,12 +17,14 @@ import { cn } from '@/lib/utils'
 
 import { SchoolForm } from '../school-form'
 import LogoForm from './logo-form'
+import { SchoolSeasonForm } from './school-season-form'
 import { SeasonForm } from './season-form'
 import { ShutdownSchool } from './shutdown-school'
 
 const tabs = [
   { id: 'details', title: 'Detalhes' },
   { id: 'logo', title: 'Logo' },
+  { id: 'school-season', title: 'Ciclos de pontuação' },
   { id: 'season', title: 'Temporada de trocas' },
   { id: 'shutdown', title: 'Desligar escola' },
 ] as const
@@ -47,12 +49,16 @@ export function SettingsTabs() {
       return data
     },
     placeholderData: keepPreviousData,
+    enabled: !!schoolSlug,
   })
 
   const canShutdownSchool = permissions?.can('delete', 'School')
   const canManageSeason =
     permissions?.can('create', 'ExchangeSeason') ||
     permissions?.can('update', 'ExchangeSeason')
+  const canManageSchoolSeason =
+    permissions?.can('create', 'SchoolSeason') ||
+    permissions?.can('update', 'SchoolSeason')
 
   if (!data?.school) return null
 
@@ -62,6 +68,7 @@ export function SettingsTabs() {
         {tabs.map((tab) => {
           if (tab.id === 'shutdown' && !canShutdownSchool) return null
           if (tab.id === 'season' && !canManageSeason) return null
+          if (tab.id === 'school-season' && !canManageSchoolSeason) return null
 
           return (
             <Button
@@ -122,6 +129,22 @@ export function SettingsTabs() {
 
             <CardContent>
               <SeasonForm />
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === 'school-season' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Ciclos de pontuação</CardTitle>
+              <CardDescription>
+                Gerencie os ciclos em que os alunos acumulam pontos e a
+                classificação é computada.
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <SchoolSeasonForm />
             </CardContent>
           </Card>
         )}
