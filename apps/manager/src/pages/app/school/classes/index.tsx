@@ -24,11 +24,16 @@ export function Classes() {
   const canCreateClass = permissions?.can('create', 'Class')
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-6">
       <Tabs />
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-medium">Turmas</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold tracking-tight">Turmas</h1>
+          <p className="text-muted-foreground text-sm font-light">
+            Gerencie as turmas e salas de aula cadastradas na escola.
+          </p>
+        </div>
 
         {canCreateClass && (
           <Button

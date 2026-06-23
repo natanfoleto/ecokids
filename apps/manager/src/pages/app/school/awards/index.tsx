@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import { useMetadataSchool } from '@/hooks/use-metadata'
 import { usePermissions } from '@/hooks/use-permissions'
 
 import { CreateAward } from '../../@dialog/awards/create-award'
@@ -9,6 +10,7 @@ import { Tabs } from '../tabs'
 import { AwardList } from './award-list'
 
 export function Awards() {
+  useMetadataSchool('Prêmios')
   const { permissions } = usePermissions()
 
   const [createAward, setCreateAward] = useState(false)
@@ -21,11 +23,16 @@ export function Awards() {
   const canGetAward = permissions?.can('get', 'Award')
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-6">
       <Tabs />
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-medium">Prêmios</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold tracking-tight">Prêmios</h1>
+          <p className="text-muted-foreground text-sm font-light">
+            Cadastre as recompensas disponíveis para resgate na loja dos alunos.
+          </p>
+        </div>
 
         {canCreateAward && (
           <Button

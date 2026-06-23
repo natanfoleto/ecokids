@@ -10,7 +10,7 @@ import { Tabs } from '../tabs'
 import { ItemList } from './item-list'
 
 export function Items() {
-  useMetadataSchool('Prêmios')
+  useMetadataSchool('Itens')
 
   const { permissions } = usePermissions()
 
@@ -24,11 +24,17 @@ export function Items() {
   const canGetItem = permissions?.can('get', 'Item')
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-6">
       <Tabs />
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-medium">Itens</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold tracking-tight">Itens</h1>
+          <p className="text-muted-foreground text-sm font-light">
+            Configure os materiais recicláveis aceitos e seus respectivos
+            valores em pontos.
+          </p>
+        </div>
 
         {canCreateItem && (
           <Button

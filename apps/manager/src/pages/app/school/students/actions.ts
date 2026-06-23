@@ -14,7 +14,7 @@ import { updateStudent } from '@/http/students/update-student'
 
 export async function createStudentAction({
   params: { schoolSlug },
-  body: { code, name, cpf, email, password, confirmPassword, classId },
+  body: { name, cpf, email, password, confirmPassword, classId },
 }: {
   params: CreateStudentParams
   body: CreateStudentBody
@@ -25,7 +25,6 @@ export async function createStudentAction({
         schoolSlug: schoolSlug!,
       },
       body: {
-        code,
         name,
         cpf,
         email,
@@ -61,7 +60,7 @@ export async function createStudentAction({
 
 export async function updateStudentAction({
   params: { schoolSlug, studentId },
-  body: { code, name, cpf, email, password, confirmPassword, classId },
+  body: { name, cpf, email, password, confirmPassword, classId },
 }: {
   body: UpdateStudentBody
   params: UpdateStudentParams
@@ -70,7 +69,6 @@ export async function updateStudentAction({
     await updateStudent({
       params: { schoolSlug, studentId },
       body: {
-        code,
         name,
         cpf,
         email,

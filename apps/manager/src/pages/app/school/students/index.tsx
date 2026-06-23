@@ -24,11 +24,16 @@ export function Students() {
   const canCreateStudent = permissions?.can('create', 'Student')
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-6">
       <Tabs />
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-medium">Alunos</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold tracking-tight">Alunos</h1>
+          <p className="text-muted-foreground text-sm font-light">
+            Gerencie os alunos cadastrados e acompanhe seus saldos de pontos.
+          </p>
+        </div>
 
         {canCreateStudent && (
           <Button
