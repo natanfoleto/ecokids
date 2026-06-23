@@ -105,7 +105,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
               </span>
               <p className="text-muted-foreground text-sm">
                 Isso convidará automaticamente todos os membros com o mesmo
-                domínio de e-mail para esta imobiliária.
+                domínio de e-mail para esta escola.
               </p>
             </label>
           </div>

@@ -197,9 +197,9 @@ export function Redemptions() {
           <TabsTrigger
             value="pending"
             className={cn(
-              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:shadow-md',
               activeTab === 'pending'
-                ? 'border-amber-500/50 bg-amber-500/5 text-amber-600 ring-[1px] ring-amber-500/50 dark:bg-amber-950/20 dark:text-amber-400'
+                ? 'border-amber-500/50 bg-amber-500/5 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400'
                 : 'text-muted-foreground hover:bg-muted/40',
             )}
           >
@@ -238,9 +238,9 @@ export function Redemptions() {
           <TabsTrigger
             value="approved"
             className={cn(
-              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:shadow-md',
               activeTab === 'approved'
-                ? 'border-blue-500/50 bg-blue-500/5 text-blue-600 ring-[1px] ring-blue-500/50 dark:bg-blue-950/20 dark:text-blue-400'
+                ? 'border-blue-500/50 bg-blue-500/5 text-blue-600 dark:bg-blue-950/20 dark:text-blue-400'
                 : 'text-muted-foreground hover:bg-muted/40',
             )}
           >
@@ -279,9 +279,9 @@ export function Redemptions() {
           <TabsTrigger
             value="delivered"
             className={cn(
-              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:shadow-md',
               activeTab === 'delivered'
-                ? 'border-emerald-500/50 bg-emerald-500/5 text-emerald-600 ring-[1px] ring-emerald-500/50 dark:bg-emerald-950/20 dark:text-emerald-400'
+                ? 'border-emerald-500/50 bg-emerald-500/5 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400'
                 : 'text-muted-foreground hover:bg-muted/40',
             )}
           >
@@ -320,9 +320,9 @@ export function Redemptions() {
           <TabsTrigger
             value="other"
             className={cn(
-              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md',
+              'border-border bg-card flex h-auto w-full cursor-pointer select-none flex-col items-start gap-2 rounded-xl border p-4 text-left shadow-sm transition-all duration-300 hover:shadow-md',
               activeTab === 'other'
-                ? 'border-red-500/50 bg-red-500/5 text-red-600 ring-[1px] ring-red-500/50 dark:bg-red-950/20 dark:text-red-400'
+                ? 'border-red-500/50 bg-red-500/5 text-red-600 dark:bg-red-950/20 dark:text-red-400'
                 : 'text-muted-foreground hover:bg-muted/40',
             )}
           >

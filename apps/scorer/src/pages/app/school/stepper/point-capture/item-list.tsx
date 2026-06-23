@@ -1,6 +1,6 @@
 import type { CreatePointBody } from '@ecokids/types'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { AlertTriangle, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import type { UseFormSetValue } from 'react-hook-form'
 
@@ -46,11 +46,28 @@ export function ItemList({ setValue }: ItemListProps) {
       </div>
     )
 
+  const itemsList = data?.items ?? []
+
+  if (itemsList.length === 0) {
+    return (
+      <div className="h-76 flex items-center justify-center gap-4">
+        <div className="flex max-w-md flex-col items-center rounded-lg border border-amber-500/20 bg-amber-500/5 p-6 text-center text-amber-600">
+          <AlertTriangle className="mb-3 size-12" />
+          <h3 className="mb-2 text-lg font-semibold">Nenhum item cadastrado</h3>
+          <p className="text-sm text-amber-500">
+            Não existe nenhum item reciclável cadastrado nesta escola ainda.
+            Entre em contato com a administração para cadastrá-los.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full min-w-96">
       <div className="flex flex-col items-center justify-center gap-2">
         <div ref={scrollRef} className="w-full overflow-x-scroll pb-2">
-          <div className="flex gap-4">
+          <div className="flex min-w-full justify-center gap-4">
             {data?.items.map((item) => {
               const amount =
                 items.find((i) => i.itemId === item.id)?.amount || 0

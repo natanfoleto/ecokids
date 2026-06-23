@@ -90,7 +90,7 @@ export function School() {
         <div className="animate-in fade-in space-y-8 duration-500">
           {/* Top Level KPIs */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
                   Pontos Gerados
@@ -110,7 +110,7 @@ export function School() {
               </CardContent>
             </Card>
 
-            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
                   Itens Reciclados
@@ -130,7 +130,7 @@ export function School() {
               </CardContent>
             </Card>
 
-            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
                   Taxa de Participação
@@ -150,7 +150,7 @@ export function School() {
               </CardContent>
             </Card>
 
-            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md">
+            <Card className="border-[1px] shadow-sm transition-all duration-300 hover:shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">
                   Engajamento Pendente

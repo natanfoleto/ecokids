@@ -28,6 +28,13 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
     })
   }
 
+  if (error.code === 'FST_REQ_FILE_TOO_LARGE') {
+    return reply.status(413).send({
+      message:
+        'A imagem enviada é muito pesada. O limite máximo permitido é de 1MB.',
+    })
+  }
+
   console.error(error)
 
   // send error to some abservability platform

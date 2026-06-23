@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, School } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -29,6 +29,8 @@ export function SchoolList() {
     )
   }
 
+  const schools = data?.schools ?? []
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {isLoading ? (
@@ -36,8 +38,19 @@ export function SchoolList() {
           <Skeleton className="h-36 w-full rounded-b-lg" />
           <Skeleton className="h-36 w-full rounded-b-lg" />
         </>
+      ) : schools.length === 0 ? (
+        <div className="border-border bg-card/30 col-span-full flex h-60 w-full flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+          <div className="mb-4 rounded-full border border-emerald-500/20 bg-emerald-500/10 p-4 text-emerald-600 dark:text-emerald-400">
+            <School className="size-8" />
+          </div>
+          <h3 className="text-lg font-semibold">Nenhuma escola encontrada</h3>
+          <p className="text-muted-foreground mt-1 max-w-sm text-sm font-light">
+            {`Você não possui nenhuma escola vinculada. Crie uma nova escola
+            clicando no botão "Criar escola" acima. `}
+          </p>
+        </div>
       ) : (
-        data?.schools.map((school) => {
+        schools.map((school) => {
           return (
             <Card key={school.id} className="flex flex-col justify-between">
               <CardHeader>
@@ -60,8 +73,11 @@ export function SchoolList() {
                 </span>
 
                 <Button className="ml-auto" size="sm" variant="outline" asChild>
-                  <Link to={`/school/${school.slug}`}>
-                    Ver <ArrowRight className="ml-2 size-3" />
+                  <Link
+                    to={`/school/${school.slug}`}
+                    className="flex items-center gap-1.5"
+                  >
+                    Ver <ArrowRight className="size-3" />
                   </Link>
                 </Button>
               </CardFooter>
