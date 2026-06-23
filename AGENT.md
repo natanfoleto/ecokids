@@ -523,12 +523,44 @@ The project **MUST NEVER** have:
 
 ---
 
+## Prisma Database Migration Policy
+
+Database schema history is critical and must always be preserved. Direct schema synchronization is strictly forbidden.
+
+### Forbidden Commands
+The following commands must **NEVER** be used unless explicitly requested by the repository owner:
+- `prisma db push`
+- `prisma db reset`
+- Manually deleting migration files
+
+### Mandatory Database Workflow
+Whenever database changes are necessary:
+1. **Modify**: Update the `schema.prisma` file.
+2. **Generate Migration**: Run `pnpm db:migrate` (runs `prisma migrate dev` internally). If the script is unavailable, run `npx prisma migrate dev`.
+3. **Verify**: Ensure the migration SQL files are generated successfully under the `prisma/migrations` folder.
+4. **Commit**: Preserve and commit the migration history folder as part of the repository.
+
+---
+
 ## Validation Rules
 
 1. **Frontend forms**: React Hook Form + `zodResolver` + Zod schemas from `@ecokids/types`
 2. **Backend endpoints**: Fastify Zod type provider + schemas from `@ecokids/types`
 3. **Environment variables**: Zod schemas via `@t3-oss/env-nextjs` in `packages/env`
 4. **Single source of truth**: The Zod schema in `@ecokids/types` validates on both client AND server
+
+---
+
+## Mandatory Final Validation Workflow
+
+Before declaring any implementation task as completed, the following verification pipeline must be executed in order:
+
+1. **Run Lint**: Run `pnpm lint`.
+2. **Check Lint Result**: ESLint errors, warnings, formatting issues, unused imports, or unused variables are treated as blocker errors (Zero Warnings Policy).
+3. **Automatic Fix**: If any warnings/errors are returned, run `pnpm lint:fix` (or equivalent automatic fixers like `eslint --fix`).
+4. **Re-run Lint**: Verify `pnpm lint` outputs zero errors and zero warnings.
+5. **Run Build**: Run `pnpm build`.
+6. **Validate Build**: Build must compile with zero errors and zero warnings.
 
 ---
 
@@ -552,13 +584,16 @@ The project **MUST NEVER** have:
 
 ## Before Every Commit Checklist
 
+- [ ] All database changes implemented via migrations and history preserved
+- [ ] Direct schema synchronization (`db push`) avoided completely
+- [ ] Lint command (`pnpm lint`) executed and passes with zero warnings or errors
+- [ ] Automatic fix (`pnpm lint:fix`) executed if lint issues were found
+- [ ] Build command (`pnpm build`) compiles and outputs zero warnings/errors
 - [ ] All TypeScript files compile without errors (`tsc -b`)
-- [ ] ESLint passes with **zero errors AND zero warnings** (`pnpm lint`)
 - [ ] Prettier formatting applied (no unformatted code)
-- [ ] No unused imports or variables
+- [ ] No unused imports, variables, or dead code remains
 - [ ] No `console.log` left in new code
 - [ ] No TODO/FIXME comments left unresolved
-- [ ] No dead code or commented-out code
 - [ ] All new Zod schemas placed in `@ecokids/types`
 - [ ] All new authorization rules placed in `@ecokids/auth`
 - [ ] Import ordering follows `simple-import-sort` rules
@@ -566,5 +601,4 @@ The project **MUST NEVER** have:
 - [ ] New hooks follow `use-` prefix naming
 - [ ] New HTTP functions follow the established `{ params, body }` pattern
 - [ ] New actions follow the `try/catch HTTPError` pattern with toast notifications
-- [ ] Build succeeds (`pnpm build`)
 - [ ] No new patterns introduced without explicit approval

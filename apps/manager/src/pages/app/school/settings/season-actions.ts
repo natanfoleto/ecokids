@@ -2,8 +2,8 @@ import { type CreateSeasonBody } from '@ecokids/types'
 import { HTTPError } from 'ky'
 import { toast } from 'sonner'
 
-import { createSeason } from '@/http/seasons/create-season'
 import { closeSeason } from '@/http/seasons/close-season'
+import { createSeason } from '@/http/seasons/create-season'
 
 export async function openSeasonAction({
   schoolSlug,

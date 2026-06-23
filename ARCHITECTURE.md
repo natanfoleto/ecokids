@@ -295,6 +295,10 @@ The authorization check happens at two levels:
 
 - **ORM**: Prisma with `@prisma/client`
 - **Migrations**: `prisma/migrations/` managed via `prisma migrate dev`
+- **Database Migration Policy**:
+  - Direct schema synchronization (e.g. `prisma db push`, `prisma db reset`, or manually deleting migration files) is **forbidden**.
+  - All database changes must go through migration files generated via `pnpm db:migrate` (internally running `prisma migrate dev`).
+  - Migration history must be strictly preserved and committed.
 - **Connection**: Single `PrismaClient` instance in `src/lib/prisma.ts`
 - **Docker**: `bitnami/postgresql:latest` on port 5432
 
@@ -323,6 +327,12 @@ The authorization check happens at two levels:
 - `build` is topologically ordered — packages build before apps
 - `dev` is non-cacheable and persistent (long-running dev servers)
 - `lint` respects dependency order
+
+### Mandatory Final Validation Workflow
+
+Before completing any task, the following validation checklist is mandatory:
+1. **Linter Validation**: Run `pnpm lint`. The repository enforces a **Zero Warnings Policy**. If any lint issue is found, run `pnpm lint:fix` (or `eslint --fix`) and verify it runs cleanly.
+2. **Build Validation**: Run `pnpm build`. It must compile and bundle cleanly with 0 build errors and 0 build warnings.
 
 ### Per-App Build Tools
 

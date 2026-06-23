@@ -2,8 +2,8 @@ import { HTTPError } from 'ky'
 import { toast } from 'sonner'
 
 import { approveRedemption } from '@/http/redemptions/approve-redemption'
-import { rejectRedemption } from '@/http/redemptions/reject-redemption'
 import { deliverRedemption } from '@/http/redemptions/deliver-redemption'
+import { rejectRedemption } from '@/http/redemptions/reject-redemption'
 
 export async function approveRedemptionAction({
   schoolSlug,

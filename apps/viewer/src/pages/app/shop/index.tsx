@@ -36,12 +36,14 @@ export function Shop() {
   return (
     <div className="flex min-h-screen flex-col items-center gap-4 p-4">
       {isSeasonClosed && (
-        <div className="flex w-full items-center gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-destructive">
+        <div className="border-destructive/20 bg-destructive/5 text-destructive flex w-full items-center gap-3 rounded-xl border p-4">
           <AlertCircle className="size-5 shrink-0" />
           <div className="text-sm">
             <h4 className="font-semibold">Temporada de trocas fechada</h4>
             <p className="opacity-90">
-              A administração da escola fechou a temporada de trocas. Você pode visualizar os prêmios, mas não pode solicitar novos resgates no momento.
+              A administração da escola fechou a temporada de trocas. Você pode
+              visualizar os prêmios, mas não pode solicitar novos resgates no
+              momento.
             </p>
           </div>
         </div>
@@ -50,18 +52,30 @@ export function Shop() {
       <div className="bg-muted flex w-full flex-col gap-4 rounded-xl border-t-4 border-emerald-400 p-4">
         <h1 className="font-semibold">Prêmios para resgate</h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm pt-2 border-t border-border">
+        <div className="border-border grid grid-cols-1 gap-4 border-t pt-2 text-sm sm:grid-cols-3">
           <div className="flex flex-col gap-1">
-            <span className="text-muted-foreground text-xs">Total Acumulado</span>
-            <span className="font-semibold text-base">{student?.totalPoints}</span>
+            <span className="text-muted-foreground text-xs">
+              Total Acumulado
+            </span>
+            <span className="text-base font-semibold">
+              {student?.totalPoints}
+            </span>
           </div>
-          <div className="flex flex-col gap-1 border-y sm:border-y-0 sm:border-x border-border py-2 sm:py-0 sm:px-4">
-            <span className="text-muted-foreground text-xs">Pontos Reservados</span>
-            <span className="font-semibold text-base text-amber-500">{student?.reservedPoints}</span>
+          <div className="border-border flex flex-col gap-1 border-y py-2 sm:border-x sm:border-y-0 sm:px-4 sm:py-0">
+            <span className="text-muted-foreground text-xs">
+              Pontos Reservados
+            </span>
+            <span className="text-base font-semibold text-amber-500">
+              {student?.reservedPoints}
+            </span>
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-muted-foreground text-xs">Disponível para Resgate</span>
-            <span className="font-semibold text-base text-emerald-500">{student?.availablePoints}</span>
+            <span className="text-muted-foreground text-xs">
+              Disponível para Resgate
+            </span>
+            <span className="text-base font-semibold text-emerald-500">
+              {student?.availablePoints}
+            </span>
           </div>
         </div>
       </div>
