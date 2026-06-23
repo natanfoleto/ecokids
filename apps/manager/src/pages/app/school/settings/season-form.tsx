@@ -1,7 +1,7 @@
 import { type CreateSeasonBody, createSeasonBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { Calendar, Loader2, Plus } from 'lucide-react'
+import { Calendar, Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { FormError } from '@/components/form/form-error'
@@ -125,7 +125,7 @@ export function SeasonForm() {
               className="cursor-pointer"
             >
               {isClosePending ? (
-                <Loader2 className="mr-1 size-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
                 'Fechar Temporada'
               )}
@@ -178,12 +178,9 @@ export function SeasonForm() {
               className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
             >
               {isOpenPending ? (
-                <Loader2 className="mr-1 size-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <>
-                  <Plus className="mr-1 size-4" />
-                  Abrir Temporada
-                </>
+                'Abrir Temporada'
               )}
             </Button>
           </form>
@@ -198,7 +195,7 @@ export function SeasonForm() {
         </h4>
 
         {previousSeasons.length === 0 ? (
-          <p className="text-muted-foreground text-sm italic">
+          <p className="text-muted-foreground text-sm">
             Nenhuma temporada encerrada anteriormente.
           </p>
         ) : (

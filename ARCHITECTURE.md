@@ -331,8 +331,19 @@ The authorization check happens at two levels:
 ### Mandatory Final Validation Workflow
 
 Before completing any task, the following validation checklist is mandatory:
-1. **Linter Validation**: Run `pnpm lint`. The repository enforces a **Zero Warnings Policy**. If any lint issue is found, run `pnpm lint:fix` (or `eslint --fix`) and verify it runs cleanly.
-2. **Build Validation**: Run `pnpm build`. It must compile and bundle cleanly with 0 build errors and 0 build warnings.
+1. **Linter Validation**: Run lint once (`pnpm lint`).
+2. **Linter Fix**: If issues are found, run lint fix once (`pnpm lint:fix` or `eslint --fix`).
+3. **Re-run Lint**: Run lint once again to ensure zero errors/warnings.
+4. **Build Validation**: Run build once (`pnpm build`).
+5. **UI Validation**: Verify that no new or modified buttons contain manual margin utility classes on icons (`mr-*`/`ml-*`) and no text elements use italic styling (`italic`, `font-style: italic`, or `<em>` tags).
+
+### Command Execution Rules
+When running terminal validation commands:
+- Never wait indefinitely for command completion.
+- Never create scheduled timers.
+- Never poll command status repeatedly in loops.
+- Never retry commands automatically in loops.
+- If any command hangs, stalls, does not return output, or the execution environment becomes blocked: Stop execution immediately, report the failure/limitation, and do not retry automatically.
 
 ### Per-App Build Tools
 
@@ -342,6 +353,15 @@ Before completing any task, the following validation checklist is mandatory:
 | Manager | vite build | vite | SPA bundle |
 | Scorer | vite build | vite | SPA bundle |
 | Viewer | vite build | vite | SPA bundle |
+
+---
+
+## Permanent UI Consistency Rules
+
+This repository enforces strict UI design consistency to maintain professional aesthetics.
+
+1. **Button Icon Spacing Policy**: Do NOT use `mr-*` or `ml-*` margin utility classes on icons placed inside buttons. Spacing must be handled internally by the Button layout or the design system.
+2. **Typography Policy**: The project's visual language does NOT include italic text. The `italic` class, `font-style: italic` CSS property, and `<em>` HTML tags are strictly forbidden.
 
 ---
 

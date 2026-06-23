@@ -121,7 +121,7 @@ export function Tabs() {
                 size="sm"
                 className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
               >
-                <Gift className="mr-0.5 size-4" />
+                <Gift className="size-4" />
                 Resgates
               </Button>
             )}

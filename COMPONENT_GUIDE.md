@@ -349,6 +349,7 @@ All destructive actions use AlertDialog:
 - Section spacing: `space-y-4` or `space-y-10`
 - Form field spacing: `space-y-1.5` (label → input), `space-y-4` (between fields)
 - Button gap: `gap-2` or `gap-3`
+- **Button Icons**: Do **NOT** use manual margin classes (`mr-*`, `ml-*`) on icons inside buttons. Spacing is handled by the Button component/layout.
 
 ### Typography
 
@@ -357,6 +358,7 @@ All destructive actions use AlertDialog:
 - Body text: default (`text-sm` in most contexts via shadcn/ui)
 - Error text: `text-xs font-medium` (in FormError)
 - Muted text: `text-sm text-muted-foreground`
+- **No Italic Text**: Italic text styling (via `italic` class, `font-style: italic` CSS, or `<em>` tag) is strictly forbidden in this repository.
 
 ### Responsive Design
 
@@ -383,3 +385,5 @@ All destructive actions use AlertDialog:
 7. Follow kebab-case file naming
 8. Include loading skeleton if the component fetches data
 9. Include empty state for list components
+10. **Button Icon Spacing**: Do not use manual margin utility classes (`mr-*`, `ml-*`) on icons inside buttons.
+11. **No Italic Text**: Do not use italic styling (`italic`, `font-style: italic`, or `<em>` tag) anywhere in the UI.

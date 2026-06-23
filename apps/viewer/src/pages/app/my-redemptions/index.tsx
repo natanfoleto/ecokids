@@ -192,9 +192,9 @@ export function MyRedemptions() {
                       className="text-destructive border-destructive/20 hover:bg-destructive/10 hover:text-destructive shrink-0 cursor-pointer text-xs"
                     >
                       {cancellingId === redemption.id ? (
-                        <Loader2 className="mr-1 size-3.5 animate-spin" />
+                        <Loader2 className="size-3.5 animate-spin" />
                       ) : (
-                        <Undo2 className="mr-1 size-3.5" />
+                        <Undo2 className="size-3.5" />
                       )}
                       Cancelar
                     </Button>

@@ -23,10 +23,26 @@ We enforce a strict database migration flow. Schema synchronization commands lik
 **Date**: June 2026
 
 **Decision**:
-To maintain high code quality and prevent regressions, all features must be verified programmatically before task completion.
+To maintain high code quality and prevent regressions, all features must be verified programmatically. However, to avoid system blockage and infinite loops, we enforce strict bounds on execution checks.
 
 **Enforced Rules**:
-- Every task must pass `pnpm lint` and `pnpm build` cleanly.
-- ESLint warnings are treated as blocker errors (Zero Warnings Policy).
-- If lint issues are found, the developer/agent must automatically run `pnpm lint:fix` (or `eslint --fix`) and recheck until clean.
-- The build must compile with 0 warnings and 0 errors.
+- The validation workflow is: Run lint once, run lint fix once if needed, re-run lint once again, and run build once.
+- NEVER wait indefinitely for command completion.
+- NEVER create scheduled timers to poll or repeatedly check commands.
+- NEVER retry commands automatically in loops or enter infinite waiting loops.
+- If any command hangs, stalls, does not return output, or execution is blocked: Stop execution immediately, report the failure/limitation, and do not retry automatically.
+- ESLint warnings are treated as blocker errors (Zero Warnings Policy) unless the environment is blocked/limited.
+- If validation cannot complete due to system limitations, report the limitation instead of retrying.
+
+---
+
+## Decision 3: Permanent UI Consistency Rules
+
+**Date**: June 2026
+
+**Decision**:
+To maintain professional UI design standards and avoid custom formatting styling that compromises typography cohesion, we enforce strict visual layout rules.
+
+**Enforced Rules**:
+- **Button Icon Spacing**: NEVER use manual spacing utility classes (`mr-*` or `ml-*`) on icons inside buttons. All spacing must be handled natively by the Button's own layout/styles.
+- **No Italic Typography**: Italic text is NOT part of the design system. Do not use the `italic` Tailwind class, `font-style: italic` styling, or `<em>` HTML tags anywhere in the codebase. All texts must be standard/normal styles or predefined weights (medium, semibold, bold).

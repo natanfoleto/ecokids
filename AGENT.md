@@ -542,6 +542,24 @@ Whenever database changes are necessary:
 
 ---
 
+## Permanent UI Consistency Rules
+
+This repository follows strict UI consistency standards. All future implementations must follow these rules.
+
+### Rule 1 — Button Icon Spacing Policy
+When rendering icons inside buttons, **NEVER** manually add margin utility classes (such as `mr-*` or `ml-*`) to the icons. 
+- **Forbidden**: `<Button><Plus className="mr-2 h-4 w-4" /> Create</Button>`
+- **Forbidden classes**: `mr-1`, `mr-2`, `mr-3`, `ml-1`, `ml-2`, `ml-3`, etc.
+- **Mandatory**: Render icons without spacing utilities: `<Button><Plus className="h-4 w-4" /> Create</Button>`. Spacing behavior must come from the Button component, design system, or internal button layout.
+
+### Rule 2 — Typography Policy (No Italic Text)
+Italic text is **NOT** part of the project's visual language.
+- **Forbidden**: NEVER use italic text styling anywhere in the application.
+- **Forbidden elements**: `italic` class, `font-style: italic`, `em` tags, or any other typography styling that creates italic text.
+- **Mandatory**: All text must use standard typography patterns (normal, font-medium, font-semibold, font-bold).
+
+---
+
 ## Validation Rules
 
 1. **Frontend forms**: React Hook Form + `zodResolver` + Zod schemas from `@ecokids/types`
@@ -555,12 +573,18 @@ Whenever database changes are necessary:
 
 Before declaring any implementation task as completed, the following verification pipeline must be executed in order:
 
-1. **Run Lint**: Run `pnpm lint`.
-2. **Check Lint Result**: ESLint errors, warnings, formatting issues, unused imports, or unused variables are treated as blocker errors (Zero Warnings Policy).
-3. **Automatic Fix**: If any warnings/errors are returned, run `pnpm lint:fix` (or equivalent automatic fixers like `eslint --fix`).
-4. **Re-run Lint**: Verify `pnpm lint` outputs zero errors and zero warnings.
-5. **Run Build**: Run `pnpm build`.
-6. **Validate Build**: Build must compile with zero errors and zero warnings.
+1. **Run Lint**: Run lint once (`pnpm lint`).
+2. **If Lint Returns Issues**: Run lint fix once (`pnpm lint:fix` or equivalent automatic fixers like `eslint --fix`).
+3. **Re-run Lint**: Run lint once again to verify clean output.
+4. **Run Build**: Run build once (`pnpm build`).
+
+### Command Execution Rules
+When running terminal validation commands:
+- **Never wait indefinitely** for command completion.
+- **Never create scheduled timers** to monitor commands.
+- **Never poll command status repeatedly** in loops.
+- **Never retry commands automatically** in loops.
+- **If any command hangs, stalls, does not return output, or the execution environment becomes blocked**: Stop execution immediately, report the command failure/limitation, and do not retry automatically. Never enter infinite waiting loops or monitor command execution continuously. If validation cannot complete, report the limitation instead of retrying.
 
 ---
 
@@ -586,6 +610,8 @@ Before declaring any implementation task as completed, the following verificatio
 
 - [ ] All database changes implemented via migrations and history preserved
 - [ ] Direct schema synchronization (`db push`) avoided completely
+- [ ] UI Components check: No manual margin utility classes (`mr-*`, `ml-*`) on icons inside buttons
+- [ ] UI Components check: No italic text styling (`italic`, `font-style: italic`, `<em>` tag) anywhere
 - [ ] Lint command (`pnpm lint`) executed and passes with zero warnings or errors
 - [ ] Automatic fix (`pnpm lint:fix`) executed if lint issues were found
 - [ ] Build command (`pnpm build`) compiles and outputs zero warnings/errors

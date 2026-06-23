@@ -243,7 +243,7 @@ export function Redemptions() {
                           onClick={() => setApproveRedemptionId(redemption.id)}
                           className="cursor-pointer border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-500"
                         >
-                          <Check className="mr-1 size-4" />
+                          <Check className="size-4" />
                           Aprovar
                         </Button>
                         <Button
@@ -255,7 +255,7 @@ export function Redemptions() {
                           }}
                           className="border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
                         >
-                          <X className="mr-1 size-4" />
+                          <X className="size-4" />
                           Rejeitar
                         </Button>
                       </TableCell>
@@ -323,7 +323,7 @@ export function Redemptions() {
                           disabled={isDeliverPending}
                           className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
                         >
-                          <ClipboardCheck className="mr-1 size-4" />
+                          <ClipboardCheck className="size-4" />
                           Entregar
                         </Button>
                       </TableCell>
