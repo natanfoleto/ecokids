@@ -1,5 +1,6 @@
 import { type CreatePointBody, createPointBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Leaf, Star } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -29,8 +30,6 @@ export function PointCapture() {
   async function onSubmit(data: CreatePointBody) {
     if (!student) return
 
-    console.log({ data })
-
     handleAction(
       () =>
         createPointAction({
@@ -58,45 +57,55 @@ export function PointCapture() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
-      <div className="flex w-full items-end justify-between">
-        <div className="flex w-full items-center gap-2">
-          <Avatar className="size-14">
+    <div className="flex h-full w-full flex-col items-center gap-5 py-2">
+      {/* Student card */}
+      <div className="flex w-full max-w-2xl items-center justify-between rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 shadow-lg shadow-emerald-200">
+        <div className="flex items-center gap-4">
+          <Avatar className="size-16 ring-4 ring-white/40">
             {student.name && (
-              <AvatarFallback className="text-muted-foreground">
+              <AvatarFallback className="bg-white/20 text-lg font-bold text-white">
                 {getInitialsName(student.name)}
               </AvatarFallback>
             )}
           </Avatar>
 
           <div>
-            <h1 className="text-sm">{student.name}</h1>
-            <p className="text-muted-foreground text-xs">
-              {student.class.name} - {student.class.year}
+            <h2 className="text-lg font-bold text-white">{student.name}</h2>
+            <p className="text-sm font-medium text-emerald-100">
+              {student.class.name} — {student.class.year}
             </p>
           </div>
         </div>
 
-        <p className="text-muted-foreground w-full text-end">
-          Total de <span className="font-semibold">{totalPoints}</span> pontos
-        </p>
+        {/* Points badge */}
+        <div className="flex flex-col items-center gap-1 rounded-2xl bg-white/20 px-5 py-3 backdrop-blur-sm">
+          <div className="flex items-center gap-1.5">
+            <Star className="size-4 fill-yellow-300 text-yellow-300" />
+            <span className="text-2xl font-bold text-white">{totalPoints}</span>
+          </div>
+          <span className="text-xs font-medium text-emerald-100">pontos</span>
+        </div>
       </div>
 
+      {/* Items form */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex w-full flex-col items-center gap-8"
+        className="flex w-full flex-1 flex-col items-center gap-5"
       >
-        <ItemList setValue={setValue} />
+        <div className="flex w-full flex-1 items-center justify-center">
+          <ItemList setValue={setValue} />
+        </div>
 
         <Button
           type="submit"
-          className="h-12 cursor-pointer bg-emerald-400 text-lg hover:bg-emerald-600"
-          disabled={isLoading}
+          disabled={isLoading || totalPoints === 0}
+          className="h-16 w-full max-w-2xl cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-xl font-semibold text-white shadow-lg shadow-emerald-200 transition-all hover:from-emerald-600 hover:to-teal-600 hover:shadow-emerald-300 active:scale-95 disabled:opacity-60"
         >
-          <p>
-            Pontuar <span className="text-yellow-300">{student.name}</span> com{' '}
-            <span className="text-yellow-300">{totalPoints}</span> pontos
-          </p>
+          <Leaf className="size-5" />
+          Pontuar <span className="text-yellow-300">
+            {student.name}
+          </span> com <span className="text-yellow-300">{totalPoints}</span>{' '}
+          pontos
         </Button>
       </form>
     </div>

@@ -77,7 +77,7 @@ export function Invites() {
       )}
 
       <Tabs defaultValue="membros">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="membros" className="cursor-pointer">
             Membros
           </TabsTrigger>

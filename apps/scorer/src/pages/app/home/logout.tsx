@@ -10,7 +10,8 @@ export function Logout() {
   return (
     <Button
       size="lg"
-      className="min-w-min cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+      variant="outline"
+      className="min-w-min cursor-pointer border-white/40 bg-white/15 text-white backdrop-blur-sm hover:bg-white/25 hover:text-white"
       onClick={() => signOut(navigate)}
     >
       <LogOut className="size-5" />
