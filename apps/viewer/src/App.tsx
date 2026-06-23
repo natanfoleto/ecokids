@@ -10,7 +10,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <Toaster position="bottom-right" theme="light" richColors />
+      <Toaster position="top-right" theme="light" richColors />
     </QueryClientProvider>
   )
 }
