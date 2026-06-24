@@ -15,7 +15,7 @@ node_modules
 .env.production.local
 
 # Lock file from pnpm
-pnpm-lock.yaml
+# pnpm-lock.yaml
 
 # Testing
 coverage
