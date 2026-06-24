@@ -287,7 +287,6 @@ export function SchoolSeasonForm() {
       {/* Histórico de Temporadas */}
       <div className="space-y-4">
         <h4 className="text-foreground flex items-center gap-2 text-base font-semibold">
-          <Calendar className="text-muted-foreground size-5" />
           Histórico de Ciclos
         </h4>
 
@@ -296,52 +295,75 @@ export function SchoolSeasonForm() {
             Nenhum ciclo encerrado anteriormente.
           </p>
         ) : (
-          <div className="border-border rounded-md border">
-            <div className="divide-border divide-y">
-              {previousSeasons.map((season) => (
-                <div
-                  key={season.id}
-                  className="flex items-center justify-between p-4 text-sm"
-                >
-                  <div className="space-y-1">
-                    <p className="text-foreground font-medium">{season.name}</p>
-                    <p className="text-muted-foreground text-[11px] font-light">
-                      Iniciado em:{' '}
-                      {new Date(season.startedAt).toLocaleDateString('pt-BR')} |
-                      Encerrado em:{' '}
-                      {season.endedAt
-                        ? new Date(season.endedAt).toLocaleDateString('pt-BR')
-                        : '-'}
-                    </p>
-                  </div>
-                  <div className="flex gap-4 text-right">
-                    <div className="text-xs">
-                      <p className="text-muted-foreground">Pontos Totais</p>
-                      <p className="text-foreground font-semibold">
-                        {season.totalPoints}
-                      </p>
-                    </div>
-                    <div className="text-xs">
-                      <p className="text-muted-foreground">Alunos Ativos</p>
-                      <p className="text-foreground font-semibold">
-                        {season.uniqueStudentsCount}
-                      </p>
-                    </div>
-                    <div className="text-xs">
-                      <p className="text-muted-foreground">
-                        Prêmios Resgatados
-                      </p>
-                      <p className="text-foreground font-semibold">
-                        {season.totalRedemptions}
-                      </p>
-                    </div>
-                    <span className="bg-muted text-muted-foreground border-border inline-flex h-fit items-center self-center rounded-full border px-2 py-0.5 text-xs font-medium">
+          <div className="flex flex-col gap-4">
+            {previousSeasons.map((season) => (
+              <div
+                key={season.id}
+                className="border-border bg-card/45 hover:bg-card group relative flex flex-col justify-between gap-6 rounded-xl border p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-sm lg:flex-row lg:items-center dark:hover:border-zinc-700"
+              >
+                <div className="flex-1 space-y-2.5 pl-2">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <h5 className="text-foreground text-base font-semibold tracking-tight">
+                      {season.name}
+                    </h5>
+                    <span className="inline-flex select-none items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
                       Encerrado
                     </span>
                   </div>
+
+                  <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                    <Calendar className="text-muted-foreground/75 size-3.5" />
+                    <span>
+                      {new Date(season.startedAt).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}{' '}
+                      a{' '}
+                      {season.endedAt
+                        ? new Date(season.endedAt).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })
+                        : '-'}
+                    </span>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                <div className="border-border flex w-full flex-col gap-4 border-t pt-4 sm:flex-row sm:items-center sm:gap-6 lg:w-auto lg:border-t-0 lg:pt-0">
+                  {/* Primary metrics */}
+                  <div className="sm:border-border/60 flex gap-6 sm:mr-2 sm:border-r sm:pr-6">
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] font-semibold uppercase tracking-wider">
+                        Pontos Totais
+                      </span>
+                      <span className="text-foreground text-xl font-bold">
+                        {season.totalPoints.toLocaleString('pt-BR')}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] font-semibold uppercase tracking-wider">
+                        Alunos Ativos
+                      </span>
+                      <span className="text-foreground text-xl font-bold">
+                        {season.uniqueStudentsCount}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Status breakdown indicator list */}
+                  <div className="flex flex-wrap gap-2">
+                    <div className="flex items-center gap-1.5 rounded-lg border border-emerald-500/10 bg-emerald-500/5 px-2.5 py-1">
+                      <span className="size-1.5 rounded-full bg-emerald-500" />
+                      <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                        {season.totalRedemptions} Prêmios Resgatados
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

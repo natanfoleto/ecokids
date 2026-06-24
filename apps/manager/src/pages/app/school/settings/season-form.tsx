@@ -149,7 +149,7 @@ export function SeasonForm() {
       {activeSeason ? (
         <div className="space-y-4 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-6">
           <div className="flex items-start justify-between gap-4">
-            <div className="space-y-1">
+            <div className="w-full space-y-1">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-500">
                 <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
                 Temporada Ativa
@@ -173,40 +173,53 @@ export function SeasonForm() {
                 })}
               </p>
 
-              <div className="text-muted-foreground mt-4 grid grid-cols-2 gap-2 border-t border-emerald-500/10 pt-2 text-xs sm:grid-cols-6">
-                <div>
-                  Solicitações:{' '}
-                  <span className="text-foreground font-semibold">
+              {/* Tinted cardlets stats for Active Season */}
+              <div className="mt-6 grid grid-cols-2 gap-3 border-t border-emerald-500/10 pt-4 sm:grid-cols-6">
+                <div className="bg-muted/40 border-border/20 rounded-lg border p-3 text-center">
+                  <span className="text-muted-foreground block text-xs font-normal">
+                    Solicitações
+                  </span>
+                  <span className="text-foreground text-lg font-bold">
                     {activeSeason.stats.totalRedemptions}
                   </span>
                 </div>
-                <div>
-                  Aprovados:{' '}
-                  <span className="font-semibold text-emerald-600">
+                <div className="rounded-lg border border-emerald-500/10 bg-emerald-500/5 p-3 text-center">
+                  <span className="block text-xs font-medium text-emerald-500/70">
+                    Aprovados
+                  </span>
+                  <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
                     {activeSeason.stats.approvedCount}
                   </span>
                 </div>
-                <div>
-                  Rejeitados:{' '}
-                  <span className="font-semibold text-rose-600">
+                <div className="rounded-lg border border-rose-500/10 bg-rose-500/5 p-3 text-center">
+                  <span className="block text-xs font-medium text-rose-500/70">
+                    Rejeitados
+                  </span>
+                  <span className="text-lg font-bold text-rose-600 dark:text-rose-400">
                     {activeSeason.stats.rejectedCount}
                   </span>
                 </div>
-                <div>
-                  Cancelados:{' '}
-                  <span className="font-semibold text-amber-600">
+                <div className="rounded-lg border border-amber-500/10 bg-amber-500/5 p-3 text-center">
+                  <span className="block text-xs font-medium text-amber-500/70">
+                    Cancelados
+                  </span>
+                  <span className="text-lg font-bold text-amber-600 dark:text-amber-400">
                     {activeSeason.stats.cancelledCount}
                   </span>
                 </div>
-                <div>
-                  Entregues:{' '}
-                  <span className="font-semibold text-blue-600">
+                <div className="rounded-lg border border-blue-500/10 bg-blue-500/5 p-3 text-center">
+                  <span className="block text-xs font-medium text-blue-500/70">
+                    Entregues
+                  </span>
+                  <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
                     {activeSeason.stats.deliveredCount}
                   </span>
                 </div>
-                <div>
-                  Pontos utilizados:{' '}
-                  <span className="text-foreground font-semibold">
+                <div className="rounded-lg border border-violet-500/10 bg-violet-500/5 p-3 text-center">
+                  <span className="block text-xs font-medium text-violet-500/70">
+                    Pontos Utilizados
+                  </span>
+                  <span className="block truncate text-lg font-bold text-violet-600 dark:text-violet-400">
                     {activeSeason.stats.totalPointsCost.toLocaleString('pt-BR')}
                   </span>
                 </div>
@@ -292,7 +305,6 @@ export function SeasonForm() {
       {/* Histórico de Temporadas */}
       <div className="space-y-4">
         <h4 className="text-foreground flex items-center gap-2 text-base font-semibold">
-          <Calendar className="text-muted-foreground size-5" />
           Histórico de Temporadas
         </h4>
 
@@ -301,101 +313,126 @@ export function SeasonForm() {
             Nenhuma temporada encerrada anteriormente.
           </p>
         ) : (
-          <div className="border-border rounded-md border">
-            <div className="divide-border divide-y">
-              {previousSeasons.map((season, index) => (
-                <div
-                  key={season.id}
-                  className="flex items-center justify-between gap-4 p-4 text-sm"
-                >
-                  <div className="w-full space-y-1">
-                    <div className="flex items-center gap-2">
-                      <p className="text-foreground font-medium">
-                        {season.title}
-                      </p>
-                      <span className="bg-muted text-muted-foreground border-border inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium">
-                        Encerrada
-                      </span>
-                    </div>
-                    {season.description && (
-                      <p className="text-muted-foreground text-xs">
-                        {season.description}
-                      </p>
-                    )}
-                    <p className="text-muted-foreground text-[11px] font-light">
-                      Aberta em:{' '}
-                      {new Date(season.openedAt).toLocaleDateString('pt-BR')} |
-                      Fechada em:{' '}
-                      {season.closedAt
-                        ? new Date(season.closedAt).toLocaleDateString('pt-BR')
-                        : '-'}
-                    </p>
-
-                    <div className="text-muted-foreground border-border mt-2 grid grid-cols-2 gap-2 border-t pt-2 text-[11px] sm:grid-cols-6">
-                      <div>
-                        Solicitações:{' '}
-                        <span className="text-foreground font-semibold">
-                          {season.stats.totalRedemptions}
-                        </span>
-                      </div>
-                      <div>
-                        Aprovados:{' '}
-                        <span className="font-semibold text-emerald-600">
-                          {season.stats.approvedCount}
-                        </span>
-                      </div>
-                      <div>
-                        Rejeitados:{' '}
-                        <span className="font-semibold text-rose-600">
-                          {season.stats.rejectedCount}
-                        </span>
-                      </div>
-                      <div>
-                        Cancelados:{' '}
-                        <span className="font-semibold text-amber-600">
-                          {season.stats.cancelledCount}
-                        </span>
-                      </div>
-                      <div>
-                        Entregues:{' '}
-                        <span className="font-semibold text-blue-600">
-                          {season.stats.deliveredCount}
-                        </span>
-                      </div>
-                      <div>
-                        Pontos:{' '}
-                        <span className="text-foreground font-semibold">
-                          {season.stats.totalPointsCost.toLocaleString('pt-BR')}
-                        </span>
-                      </div>
-                    </div>
+          <div className="flex flex-col gap-4">
+            {previousSeasons.map((season, index) => (
+              <div
+                key={season.id}
+                className="border-border bg-card/45 hover:bg-card group relative flex flex-col justify-between gap-6 rounded-xl border p-6 transition-all duration-300 hover:border-zinc-300 hover:shadow-sm lg:flex-row lg:items-center dark:hover:border-zinc-700"
+              >
+                <div className="flex-1 space-y-2.5 pl-2">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <h5 className="text-foreground text-base font-semibold tracking-tight">
+                      {season.title}
+                    </h5>
+                    <span className="inline-flex select-none items-center rounded-full border border-zinc-200 bg-zinc-100 px-2.5 py-0.5 text-[10px] font-medium text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+                      Encerrada
+                    </span>
                   </div>
 
-                  <div className="flex shrink-0 items-center gap-2">
-                    {season.stats.totalRedemptions === 0 && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setSelectedSeasonToDelete(season.id)}
-                        className="cursor-pointer hover:bg-rose-500/10 hover:text-rose-500"
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    )}
-                    {!activeSeason && index === 0 && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedSeasonToReopen(season.id)}
-                        className="cursor-pointer text-xs"
-                      >
-                        Reabrir
-                      </Button>
-                    )}
+                  {season.description && (
+                    <p className="text-muted-foreground max-w-xl text-sm leading-relaxed">
+                      {season.description}
+                    </p>
+                  )}
+
+                  <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                    <Calendar className="text-muted-foreground/75 size-3.5" />
+                    <span>
+                      {new Date(season.openedAt).toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}{' '}
+                      a{' '}
+                      {season.closedAt
+                        ? new Date(season.closedAt).toLocaleDateString(
+                            'pt-BR',
+                            {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            },
+                          )
+                        : '-'}
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                <div className="border-border flex w-full flex-col gap-4 border-t pt-4 sm:flex-row sm:items-center sm:gap-6 lg:w-auto lg:border-t-0 lg:pt-0">
+                  {/* Primary metrics */}
+                  <div className="sm:border-border/60 flex gap-6 sm:mr-2 sm:border-r sm:pr-6">
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] font-semibold uppercase tracking-wider">
+                        Solicitações
+                      </span>
+                      <span className="text-foreground text-xl font-bold">
+                        {season.stats.totalRedemptions}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block text-[10px] font-semibold uppercase tracking-wider">
+                        Pontos
+                      </span>
+                      <span className="text-foreground text-xl font-bold">
+                        {season.stats.totalPointsCost.toLocaleString('pt-BR')}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Status breakdown indicator list */}
+                  <div className="flex flex-wrap gap-2">
+                    <div className="flex items-center gap-1.5 rounded-lg border border-emerald-500/10 bg-emerald-500/5 px-2.5 py-1">
+                      <span className="size-1.5 rounded-full bg-emerald-500" />
+                      <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                        {season.stats.approvedCount} Aprovados
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-lg border border-blue-500/10 bg-blue-500/5 px-2.5 py-1">
+                      <span className="size-1.5 rounded-full bg-blue-500" />
+                      <span className="text-xs font-medium text-blue-700 dark:text-blue-300">
+                        {season.stats.deliveredCount} Entregues
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-lg border border-rose-500/10 bg-rose-500/5 px-2.5 py-1">
+                      <span className="size-1.5 rounded-full bg-rose-500" />
+                      <span className="text-xs font-medium text-rose-700 dark:text-rose-300">
+                        {season.stats.rejectedCount} Rejeitados
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 rounded-lg border border-amber-500/10 bg-amber-500/5 px-2.5 py-1">
+                      <span className="size-1.5 rounded-full bg-amber-500" />
+                      <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                        {season.stats.cancelledCount} Cancelados
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-border flex items-center justify-end gap-2 border-t pt-4 lg:border-t-0 lg:pl-4 lg:pt-0">
+                  {season.stats.totalRedemptions === 0 && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSelectedSeasonToDelete(season.id)}
+                      className="text-muted-foreground h-9 w-9 cursor-pointer transition-colors hover:bg-rose-500/10 hover:text-rose-500"
+                      title="Excluir temporada"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  )}
+                  {!activeSeason && index === 0 && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedSeasonToReopen(season.id)}
+                      className="h-9 cursor-pointer px-4 text-xs transition-all hover:border-emerald-500 hover:bg-emerald-500 hover:text-white"
+                    >
+                      Reabrir
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
