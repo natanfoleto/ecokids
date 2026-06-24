@@ -24,6 +24,7 @@ services:
       - traefik-public
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik-public"
       - "traefik.http.routers.ecokids.rule=Host(`api.ecokids.site`)"
       - "traefik.http.routers.ecokids.entrypoints=websecure"
       - "traefik.http.routers.ecokids.tls.certresolver=letsencrypt"
