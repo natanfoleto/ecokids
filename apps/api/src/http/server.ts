@@ -14,6 +14,7 @@ import {
 
 import { errorHandler } from '@/http/error-handler'
 import routes from '@/http/routes'
+import { healthCheck } from '@/http/routes/health-check'
 import S3ClientWrapper from '@/lib/aws'
 
 config()
@@ -68,6 +69,8 @@ app.register(fastifyCors, {
   },
   credentials: true,
 })
+
+app.register(healthCheck)
 
 app.register(async function (app) {
   try {
