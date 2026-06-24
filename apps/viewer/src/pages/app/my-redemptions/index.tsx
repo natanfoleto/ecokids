@@ -57,7 +57,7 @@ export function MyRedemptions() {
   const redemptions = data?.redemptions ?? []
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 p-4">
+    <div className="flex min-h-screen w-full flex-col gap-6 p-4">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h1 className="text-foreground text-xl font-bold tracking-tight">

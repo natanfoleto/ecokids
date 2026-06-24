@@ -24,13 +24,15 @@ export function Points() {
   const points = data?.points
   const totalPoints = data?.totalPoints
 
-  const highestPoint = points?.reduce((max, point) =>
-    point.amount > max.amount ? point : max,
-  )
+  const highestPoint =
+    points && points.length > 0
+      ? points.reduce((max, point) => (point.amount > max.amount ? point : max))
+      : null
 
-  const lowestPoint = points?.reduce((min, point) =>
-    point.amount < min.amount ? point : min,
-  )
+  const lowestPoint =
+    points && points.length > 0
+      ? points.reduce((min, point) => (point.amount < min.amount ? point : min))
+      : null
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-4 p-4">
