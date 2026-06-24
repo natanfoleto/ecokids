@@ -8,8 +8,15 @@ export type GetSchoolMetricsParams = z.infer<
   typeof getSchoolMetricsParamsSchema
 >
 
+export const getSchoolMetricsQuerySchema = z.object({
+  seasonId: z.string().uuid().optional(),
+})
+
+export type GetSchoolMetricsQuery = z.infer<typeof getSchoolMetricsQuerySchema>
+
 export const getSchoolMetricsRequestSchema = z.object({
   params: getSchoolMetricsParamsSchema,
+  query: getSchoolMetricsQuerySchema.optional(),
 })
 
 export type GetSchoolMetricsRequest = z.infer<

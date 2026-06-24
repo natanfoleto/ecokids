@@ -1,11 +1,13 @@
 import {
   getSchoolMetricsParamsSchema,
+  getSchoolMetricsQuerySchema,
   getSchoolMetricsResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { auth } from '@/http/middlewares/auth'
+import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { prisma } from '@/lib/prisma'
 
 export async function getSchoolMetrics(app: FastifyInstance) {
@@ -20,6 +22,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
           summary: 'Buscar métricas de engajamento de uma escola',
           security: [{ bearerAuth: [] }],
           params: getSchoolMetricsParamsSchema,
+          querystring: getSchoolMetricsQuerySchema,
           response: {
             200: getSchoolMetricsResponseSchema,
           },
@@ -27,16 +30,31 @@ export async function getSchoolMetrics(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
+        const { seasonId } = request.query
 
         const { school } = await request.getUserMembership(schoolSlug)
 
-        // Find active school season
-        const activeSchoolSeason = await prisma.schoolSeason.findFirst({
-          where: {
-            schoolId: school.id,
-            status: 'ACTIVE',
-          },
-        })
+        // Find target school season
+        let targetSeason = null
+        if (seasonId) {
+          targetSeason = await prisma.schoolSeason.findFirst({
+            where: {
+              id: seasonId,
+              schoolId: school.id,
+            },
+          })
+
+          if (!targetSeason) {
+            throw new BadRequestError('Ciclo de pontuação não encontrado.')
+          }
+        } else {
+          targetSeason = await prisma.schoolSeason.findFirst({
+            where: {
+              schoolId: school.id,
+              status: 'ACTIVE',
+            },
+          })
+        }
 
         // 1. Total active students
         const totalStudents = await prisma.student.count({
@@ -50,7 +68,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
             active: true,
             points: {
               none: {
-                seasonId: activeSchoolSeason?.id ?? '',
+                seasonId: targetSeason?.id ?? '',
               },
             },
           },
@@ -63,7 +81,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
             active: true,
             points: {
               some: {
-                seasonId: activeSchoolSeason?.id ?? '',
+                seasonId: targetSeason?.id ?? '',
               },
             },
           },
@@ -78,7 +96,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
         const pointsSum = await prisma.point.aggregate({
           where: {
             student: { schoolId: school.id },
-            seasonId: activeSchoolSeason?.id ?? '',
+            seasonId: targetSeason?.id ?? '',
           },
           _sum: {
             amount: true,
@@ -91,7 +109,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
           where: {
             point: {
               student: { schoolId: school.id },
-              seasonId: activeSchoolSeason?.id ?? '',
+              seasonId: targetSeason?.id ?? '',
             },
           },
           _sum: {
@@ -112,7 +130,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
                 id: true,
                 points: {
                   where: {
-                    seasonId: activeSchoolSeason?.id ?? '',
+                    seasonId: targetSeason?.id ?? '',
                   },
                   select: {
                     amount: true,
@@ -156,7 +174,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
           where: {
             point: {
               student: { schoolId: school.id },
-              seasonId: activeSchoolSeason?.id ?? '',
+              seasonId: targetSeason?.id ?? '',
             },
           },
           _sum: {
@@ -189,7 +207,7 @@ export async function getSchoolMetrics(app: FastifyInstance) {
         const recentPoints = await prisma.point.findMany({
           where: {
             student: { schoolId: school.id },
-            seasonId: activeSchoolSeason?.id ?? '',
+            seasonId: targetSeason?.id ?? '',
           },
           orderBy: { createdAt: 'desc' },
           take: 5,

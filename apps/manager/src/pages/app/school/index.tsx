@@ -5,12 +5,17 @@ import {
   BarChart3,
   Calendar,
   Clock,
+  Download,
   Leaf,
+  Loader2,
   Percent,
   TrendingUp,
   Users,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -18,9 +23,25 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useMetadataSchool } from '@/hooks/use-metadata'
 import { useCurrentSchoolSlug } from '@/hooks/use-school'
+import { api } from '@/http/api'
+import { getSchoolSeasons } from '@/http/school-seasons/get-school-seasons'
 import { getSchoolMetrics } from '@/http/schools/get-school-metrics'
 
 import { Tabs } from './tabs'
@@ -28,13 +49,38 @@ import { Tabs } from './tabs'
 export function School() {
   useMetadataSchool('Dashboard')
   const schoolSlug = useCurrentSchoolSlug()
+  const [selectedSeasonId, setSelectedSeasonId] = useState<string>('')
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+
+  const { data: seasonsData } = useQuery({
+    queryKey: ['school-seasons', schoolSlug],
+    queryFn: () =>
+      getSchoolSeasons({
+        params: { schoolSlug: schoolSlug! },
+      }),
+    enabled: !!schoolSlug,
+  })
+
+  const activeSeason = seasonsData?.seasons.find((s) => s.status === 'ACTIVE')
+
+  useEffect(() => {
+    if (activeSeason && !selectedSeasonId) {
+      setSelectedSeasonId(activeSeason.id)
+    } else if (seasonsData?.seasons.length && !selectedSeasonId) {
+      setSelectedSeasonId(seasonsData.seasons[0].id)
+    }
+  }, [seasonsData, activeSeason, selectedSeasonId])
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['schools', schoolSlug, 'metrics'],
+    queryKey: ['schools', schoolSlug, 'metrics', selectedSeasonId],
     queryFn: async () => {
       const response = await getSchoolMetrics({
         params: {
           schoolSlug: schoolSlug!,
+        },
+        query: {
+          seasonId: selectedSeasonId || undefined,
         },
       })
       return response
@@ -42,6 +88,54 @@ export function School() {
     enabled: !!schoolSlug,
     placeholderData: keepPreviousData,
   })
+
+  async function handleDownloadReport(type: 'simple' | 'complete') {
+    if (!schoolSlug || !selectedSeasonId) return
+
+    try {
+      setIsDownloading(true)
+      const response = await api.get(
+        `schools/${schoolSlug}/school-seasons/${selectedSeasonId}/report`,
+        {
+          searchParams: {
+            type,
+          },
+        },
+      )
+      const blob = await response.blob()
+
+      const currentSeason = seasonsData?.seasons.find(
+        (s) => s.id === selectedSeasonId,
+      )
+      const seasonSlugName = currentSeason
+        ? currentSeason.name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '')
+        : selectedSeasonId
+      const prefix =
+        type === 'complete'
+          ? 'relatorio-completo-ciclo'
+          : 'relatorio-simples-ciclo'
+      const filename = `${prefix}-${seasonSlugName}.pdf`
+
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      setIsReportModalOpen(false)
+    } catch (error) {
+      toast.error('Erro ao baixar o relatório em PDF.')
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   if (isError) {
     return (
@@ -65,12 +159,46 @@ export function School() {
     <div className="w-full space-y-6">
       <Tabs />
 
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight">Painel da Escola</h1>
-        <p className="text-muted-foreground text-sm font-light">
-          Acompanhe o engajamento estudantil e o impacto ambiental do programa
-          de reciclagem em tempo real.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-bold tracking-tight">
+            Painel da Escola
+          </h1>
+          <p className="text-muted-foreground text-sm font-light">
+            Acompanhe o engajamento estudantil e o impacto ambiental do programa
+            de reciclagem em tempo real.
+          </p>
+        </div>
+
+        {seasonsData?.seasons && seasonsData.seasons.length > 0 && (
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Select
+              value={selectedSeasonId}
+              onValueChange={setSelectedSeasonId}
+            >
+              <SelectTrigger className="w-[200px]">
+                <SelectValue placeholder="Selecione um ciclo" />
+              </SelectTrigger>
+              <SelectContent>
+                {seasonsData.seasons.map((season) => (
+                  <SelectItem key={season.id} value={season.id}>
+                    {season.name} {season.status === 'ACTIVE' ? '(Ativo)' : ''}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Button
+              variant="outline"
+              onClick={() => setIsReportModalOpen(true)}
+              disabled={!selectedSeasonId}
+              className="cursor-pointer"
+            >
+              <Download className="size-4" />
+              Baixar Relatório PDF
+            </Button>
+          </div>
+        )}
       </div>
 
       {isLoading ? (
@@ -349,6 +477,63 @@ export function School() {
           </Card>
         </div>
       )}
+
+      <Dialog open={isReportModalOpen} onOpenChange={setIsReportModalOpen}>
+        <DialogContent className="sm:max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle>Baixar Relatório</DialogTitle>
+            <DialogDescription>
+              Escolha a opção de relatório que melhor atende às suas
+              necessidades.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-3 py-4">
+            <button
+              type="button"
+              disabled={isDownloading}
+              onClick={() => handleDownloadReport('simple')}
+              className="border-border hover:bg-muted/50 flex w-full cursor-pointer items-start gap-4 rounded-lg border p-4 text-left transition-colors disabled:pointer-events-none disabled:opacity-50"
+            >
+              <div className="rounded-md border border-emerald-500/20 bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
+                <Leaf className="size-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="text-sm font-semibold">Relatório Simples</div>
+                <div className="text-muted-foreground text-xs font-light leading-relaxed">
+                  Contém dados consolidados, ranking de classes e materiais mais
+                  entregues. Ideal para uma visão geral rápida.
+                </div>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              disabled={isDownloading}
+              onClick={() => handleDownloadReport('complete')}
+              className="border-border hover:bg-muted/50 flex w-full cursor-pointer items-start gap-4 rounded-lg border p-4 text-left transition-colors disabled:pointer-events-none disabled:opacity-50"
+            >
+              <div className="rounded-md border border-amber-500/20 bg-amber-500/10 p-2 text-amber-600 dark:text-amber-400">
+                <Award className="size-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="text-sm font-semibold">Relatório Completo</div>
+                <div className="text-muted-foreground text-xs font-light leading-relaxed">
+                  Inclui todas as métricas do relatório simples e adiciona o
+                  histórico detalhado de entregas de cada aluno.
+                </div>
+              </div>
+            </button>
+          </div>
+
+          {isDownloading && (
+            <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs font-light">
+              <Loader2 className="size-4 animate-spin text-emerald-500" />
+              Gerando PDF, por favor aguarde...
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

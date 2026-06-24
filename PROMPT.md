@@ -1,17 +1,20 @@
-# Sempre rodar nos prompts
+# Leia todos os arquivos de documentação antes de cada tarefa.
 
-Leia todos os arquivos de documentação antes de cada tarefa.
+## Arquivos obrigatórios:
 
-Arquivos obrigatórios:
+- .ai/AGENT.md
+- .ai/API_GUIDE.md
+- .ai/ARCHITECTURE.md
+- .ai/COMPONENT_GUIDE.md
+- .ai/DOMAIN.md
+- .ai/HUMAN_DECISIONS.md
+- .ai/PAGINATION_GUIDE.md
+- .ai/DECISIONS.md
+- .ai/TECH_DEBT.md
 
-AGENT.md
-ARCHITECTURE.md
-DOMAIN.md
-PAGINATION_GUIDE.md
-DECISIONS.md
-TECH_DEBT.md
+* Modificações futuras devem seguir estes documentos.
 
-Modificações futuras devem seguir estes documentos.
+____________________________________________________________________________________________
 
 # Próximos passos
 

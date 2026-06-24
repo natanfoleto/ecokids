@@ -28,6 +28,7 @@
     "fastify": "^4.27.0",
     "fastify-plugin": "^4.5.1",
     "fastify-type-provider-zod": "^1.2.0",
+    "pdfkit": "^0.19.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@ecokids/types": "workspace:*",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.12.12",
+    "@types/pdfkit": "^0.17.6",
     "dotenv-cli": "^7.4.2",
     "prisma": "^5.14.0",
     "tsup": "^8.3.0",

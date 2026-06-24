@@ -30,11 +30,15 @@ import { queryClient } from '@/lib/react-query'
 import {
   createSchoolSeasonAction,
   finishSchoolSeasonAction,
+  reopenSchoolSeasonAction,
+  resetSchoolSeasonAction,
 } from './school-season-actions'
 
 export function SchoolSeasonForm() {
   const schoolSlug = useCurrentSchoolSlug()
   const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false)
+  const [isReopenDialogOpen, setIsReopenDialogOpen] = useState(false)
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
 
   const { data: seasonsData, isLoading: isLoadingSeasons } = useQuery({
     queryKey: ['school-seasons', schoolSlug],
@@ -77,6 +81,8 @@ export function SchoolSeasonForm() {
 
   const [, handleCreateAction, isCreatePending] = useAction()
   const [, handleFinishAction, isFinishPending] = useAction()
+  const [, handleReopenAction, isReopenPending] = useAction()
+  const [, handleResetAction, isResetPending] = useAction()
 
   async function handleStartInitialSeason(body: CreateSchoolSeasonBody) {
     if (!schoolSlug) return
@@ -106,6 +112,44 @@ export function SchoolSeasonForm() {
         if (data.success) {
           resetFinish()
           setIsFinishDialogOpen(false)
+          queryClient.invalidateQueries({
+            queryKey: ['school-seasons', schoolSlug],
+          })
+          queryClient.invalidateQueries({
+            queryKey: ['schools', schoolSlug],
+          })
+        }
+      },
+    )
+  }
+
+  async function handleReopenSeason() {
+    if (!schoolSlug) return
+
+    handleReopenAction(
+      () => reopenSchoolSeasonAction({ schoolSlug }),
+      (data) => {
+        if (data.success) {
+          setIsReopenDialogOpen(false)
+          queryClient.invalidateQueries({
+            queryKey: ['school-seasons', schoolSlug],
+          })
+          queryClient.invalidateQueries({
+            queryKey: ['schools', schoolSlug],
+          })
+        }
+      },
+    )
+  }
+
+  async function handleResetSeason() {
+    if (!schoolSlug) return
+
+    handleResetAction(
+      () => resetSchoolSeasonAction({ schoolSlug }),
+      (data) => {
+        if (data.success) {
+          setIsResetDialogOpen(false)
           queryClient.invalidateQueries({
             queryKey: ['school-seasons', schoolSlug],
           })
@@ -156,13 +200,47 @@ export function SchoolSeasonForm() {
               </p>
             </div>
 
-            <Button
-              variant="destructive"
-              onClick={() => setIsFinishDialogOpen(true)}
-              className="cursor-pointer"
-            >
-              Encerrar Ciclo Atual
-            </Button>
+            <div className="flex gap-2">
+              {previousSeasons.length > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={() => setIsReopenDialogOpen(true)}
+                  disabled={
+                    activeSeason.totalPoints > 0 ||
+                    activeSeason.totalRedemptions > 0
+                  }
+                  className="cursor-pointer"
+                  title={
+                    activeSeason.totalPoints > 0 ||
+                    activeSeason.totalRedemptions > 0
+                      ? 'Não é possível reabrir o ciclo anterior pois o ciclo atual já possui pontuações ou resgates registrados.'
+                      : 'Reabrir o ciclo de pontuação encerrado anterior.'
+                  }
+                >
+                  Reabrir Ciclo Anterior
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                onClick={() => setIsResetDialogOpen(true)}
+                disabled={activeSeason.totalRedemptions > 0}
+                className="cursor-pointer border-red-200 text-red-600 hover:bg-red-50"
+                title={
+                  activeSeason.totalRedemptions > 0
+                    ? 'Não é possível resetar o ciclo pois existem resgates vinculados.'
+                    : 'Apagar todas as pontuações do ciclo ativo atual.'
+                }
+              >
+                Resetar Ciclo
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => setIsFinishDialogOpen(true)}
+                className="cursor-pointer"
+              >
+                Encerrar Ciclo Atual
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
@@ -318,6 +396,78 @@ export function SchoolSeasonForm() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation Dialog to Reopen Season */}
+      <Dialog open={isReopenDialogOpen} onOpenChange={setIsReopenDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reabrir Ciclo Anterior</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja reabrir o último ciclo finalizado? O ciclo
+              ativo atual será permanentemente deletado. Esta operação não pode
+              ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsReopenDialogOpen(false)}
+              className="cursor-pointer"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              disabled={isReopenPending}
+              onClick={handleReopenSeason}
+              className="cursor-pointer bg-red-500 text-white hover:bg-red-600"
+            >
+              {isReopenPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                'Confirmar Reabertura'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation Dialog to Reset Season */}
+      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Resetar Ciclo de Pontuação</DialogTitle>
+            <DialogDescription>
+              Esta ação apagará permanentemente todas as pontuações e itens de
+              reciclagem registrados neste ciclo ativo. Os alunos perderão os
+              pontos correspondentes a este ciclo. Esta operação é irreversível.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsResetDialogOpen(false)}
+              className="cursor-pointer"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              disabled={isResetPending}
+              onClick={handleResetSeason}
+              className="cursor-pointer bg-red-500 text-white hover:bg-red-600"
+            >
+              {isResetPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                'Confirmar Reset'
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
