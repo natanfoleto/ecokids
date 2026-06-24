@@ -49,31 +49,33 @@ export function Shop() {
         </div>
       )}
 
-      <div className="bg-muted flex w-full flex-col gap-4 rounded-xl border-t-4 border-emerald-400 p-4">
-        <h1 className="font-semibold">Prêmios para resgate</h1>
+      <div className="flex w-full flex-col gap-4 rounded-3xl border-2 border-emerald-100 bg-white p-5 shadow-sm shadow-emerald-50">
+        <h1 className="text-lg font-bold text-gray-800">
+          Prêmios para Resgate
+        </h1>
 
-        <div className="border-border grid grid-cols-1 gap-4 border-t pt-2 text-sm sm:grid-cols-3">
-          <div className="flex flex-col gap-1">
-            <span className="text-muted-foreground text-xs">
-              Total Acumulado
+        <div className="grid grid-cols-3 gap-2 pt-1 text-center text-xs">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-gray-100 bg-gray-50 p-2.5">
+            <span className="mb-0.5 block font-medium text-gray-500">
+              Acumulado
             </span>
-            <span className="text-base font-semibold">
+            <span className="text-sm font-bold text-gray-700">
               {student?.totalPoints}
             </span>
           </div>
-          <div className="border-border flex flex-col gap-1 border-y py-2 sm:border-x sm:border-y-0 sm:px-4 sm:py-0">
-            <span className="text-muted-foreground text-xs">
-              Pontos Reservados
+          <div className="flex flex-col items-center justify-center rounded-xl border border-amber-100 bg-amber-50/50 p-2.5">
+            <span className="mb-0.5 block font-medium text-amber-600">
+              Reservados
             </span>
-            <span className="text-base font-semibold text-amber-500">
+            <span className="text-sm font-bold text-amber-500">
               {student?.reservedPoints}
             </span>
           </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-muted-foreground text-xs">
-              Disponível para Resgate
+          <div className="flex flex-col items-center justify-center rounded-xl border border-emerald-50 bg-emerald-50/50 p-2.5">
+            <span className="mb-0.5 block font-medium text-emerald-600">
+              Disponível
             </span>
-            <span className="text-base font-semibold text-emerald-500">
+            <span className="text-sm font-bold text-emerald-600">
               {student?.availablePoints}
             </span>
           </div>

@@ -3,14 +3,20 @@ import { NavLink } from 'react-router-dom'
 
 export function BottomNavigation() {
   return (
-    <div className="bg-muted fixed bottom-0 left-0 right-0 z-50 flex h-16 justify-evenly gap-8 border-t px-2 sm:justify-center">
+    <div className="fixed bottom-4 left-4 right-4 z-50 flex h-16 max-w-md items-center justify-around rounded-2xl border border-emerald-100 bg-white/95 px-2 shadow-lg shadow-emerald-100/50 backdrop-blur-md sm:mx-auto">
       <NavLink to="/ranking" end>
         {({ isActive }) => (
           <button
-            className={`flex h-full cursor-pointer flex-col items-center justify-between gap-1 border border-none py-2 text-xs ${isActive ? 'text-emerald-500' : 'text-muted-foreground'}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl px-3 py-1.5 transition-all duration-200 active:scale-95 ${
+              isActive
+                ? 'bg-emerald-50 font-bold text-emerald-600'
+                : 'font-medium text-gray-500 hover:text-gray-700'
+            }`}
           >
-            <Trophy className="size-6" />
-            Ranking
+            <Trophy
+              className={`size-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}
+            />
+            <span className="text-[10px] tracking-tight">Ranking</span>
           </button>
         )}
       </NavLink>
@@ -18,10 +24,16 @@ export function BottomNavigation() {
       <NavLink to="/shop" end>
         {({ isActive }) => (
           <button
-            className={`flex h-full cursor-pointer flex-col items-center justify-between gap-1 border border-none py-2 text-xs ${isActive ? 'text-emerald-500' : 'text-muted-foreground'}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl px-3 py-1.5 transition-all duration-200 active:scale-95 ${
+              isActive
+                ? 'bg-emerald-50 font-bold text-emerald-600'
+                : 'font-medium text-gray-500 hover:text-gray-700'
+            }`}
           >
-            <Volleyball className="size-6" />
-            Shop
+            <Volleyball
+              className={`size-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}
+            />
+            <span className="text-[10px] tracking-tight">Loja</span>
           </button>
         )}
       </NavLink>
@@ -29,10 +41,16 @@ export function BottomNavigation() {
       <NavLink to="/my-redemptions" end>
         {({ isActive }) => (
           <button
-            className={`flex h-full cursor-pointer flex-col items-center justify-between gap-1 border border-none py-2 text-xs ${isActive ? 'text-emerald-500' : 'text-muted-foreground'}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl px-3 py-1.5 transition-all duration-200 active:scale-95 ${
+              isActive
+                ? 'bg-emerald-50 font-bold text-emerald-600'
+                : 'font-medium text-gray-500 hover:text-gray-700'
+            }`}
           >
-            <Gift className="size-6" />
-            Resgates
+            <Gift
+              className={`size-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}
+            />
+            <span className="text-[10px] tracking-tight">Resgates</span>
           </button>
         )}
       </NavLink>
@@ -40,10 +58,16 @@ export function BottomNavigation() {
       <NavLink to="/points" end>
         {({ isActive }) => (
           <button
-            className={`flex h-full cursor-pointer flex-col items-center justify-between gap-1 border border-none py-2 text-xs ${isActive ? 'text-emerald-500' : 'text-muted-foreground'}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl px-3 py-1.5 transition-all duration-200 active:scale-95 ${
+              isActive
+                ? 'bg-emerald-50 font-bold text-emerald-600'
+                : 'font-medium text-gray-500 hover:text-gray-700'
+            }`}
           >
-            <Hand className="size-6" />
-            Meus pontos
+            <Hand
+              className={`size-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}
+            />
+            <span className="text-[10px] tracking-tight">Pontos</span>
           </button>
         )}
       </NavLink>
@@ -51,10 +75,16 @@ export function BottomNavigation() {
       <NavLink to="/profile" end>
         {({ isActive }) => (
           <button
-            className={`flex h-full cursor-pointer flex-col items-center justify-between gap-1 border border-none py-2 text-xs ${isActive ? 'text-emerald-500' : 'text-muted-foreground'}`}
+            className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl px-3 py-1.5 transition-all duration-200 active:scale-95 ${
+              isActive
+                ? 'bg-emerald-50 font-bold text-emerald-600'
+                : 'font-medium text-gray-500 hover:text-gray-700'
+            }`}
           >
-            <CircleUser className="size-6" />
-            Perfil
+            <CircleUser
+              className={`size-5 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`}
+            />
+            <span className="text-[10px] tracking-tight">Perfil</span>
           </button>
         )}
       </NavLink>

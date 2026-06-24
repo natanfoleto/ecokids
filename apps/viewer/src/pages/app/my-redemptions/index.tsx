@@ -74,20 +74,20 @@ export function MyRedemptions() {
       </div>
 
       {redemptions.length === 0 ? (
-        <div className="border-border space-y-4 rounded-xl border border-dashed p-12 text-center">
-          <Gift className="text-muted-foreground mx-auto size-12 opacity-40" />
+        <div className="space-y-4 rounded-3xl border-2 border-dashed border-emerald-200 bg-emerald-50/20 p-12 text-center shadow-sm">
+          <Gift className="mx-auto size-12 text-emerald-400 opacity-70" />
           <div className="space-y-1">
-            <p className="text-muted-foreground text-sm font-medium">
+            <p className="text-sm font-bold text-gray-700">
               Você ainda não solicitou nenhum prêmio.
             </p>
-            <p className="text-muted-foreground text-xs">
+            <p className="text-xs font-medium text-gray-500">
               Vá até a loja do app e use seus pontos acumulados!
             </p>
           </div>
           <Button
             size="sm"
             asChild
-            className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+            className="h-11 cursor-pointer rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 font-semibold text-white shadow-md shadow-emerald-100 transition-all hover:from-emerald-600 hover:to-teal-600 active:scale-95"
           >
             <Link to="/shop">Ver prêmios</Link>
           </Button>
@@ -104,17 +104,17 @@ export function MyRedemptions() {
             return (
               <div
                 key={redemption.id}
-                className="border-border bg-muted flex flex-col gap-3 rounded-xl border p-4"
+                className="flex flex-col gap-3 rounded-2xl border-2 border-emerald-100 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1">
-                    <h3 className="text-foreground text-sm font-semibold">
+                  <div className="space-y-1 text-left">
+                    <h3 className="text-sm font-bold leading-snug text-gray-800">
                       {redemption.award.name}
                     </h3>
-                    <p className="text-xs font-semibold text-emerald-500">
+                    <p className="text-xs font-bold text-emerald-500">
                       {redemption.pointsCost} pontos
                     </p>
-                    <p className="text-muted-foreground text-[10px]">
+                    <p className="text-[10px] font-medium text-gray-400">
                       Solicitado em:{' '}
                       {new Date(redemption.createdAt).toLocaleDateString(
                         'pt-BR',
@@ -123,64 +123,62 @@ export function MyRedemptions() {
                   </div>
 
                   {isPending && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-600">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold text-amber-700">
                       <Clock className="size-3" />
                       Pendente
                     </span>
                   )}
 
                   {isApproved && (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
                       <CheckCircle2 className="size-3" />
                       Aprovado
                     </span>
                   )}
 
                   {isDelivered && (
-                    <span className="bg-muted text-muted-foreground border-border inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-[10px] font-bold text-gray-500">
                       Entregue
                     </span>
                   )}
 
                   {isRejected && (
-                    <span className="bg-destructive/10 text-destructive border-destructive/20 inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-[10px] font-bold text-red-700">
                       <Ban className="size-3" />
                       Rejeitado
                     </span>
                   )}
 
                   {isCancelled && (
-                    <span className="bg-muted text-muted-foreground border-border inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-[10px] font-bold text-gray-500">
                       Cancelado
                     </span>
                   )}
                 </div>
 
                 {isApproved && redemption.pickupInstructions && (
-                  <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-emerald-700">
-                    <p className="mb-0.5 font-semibold">
-                      Instruções de Retirada:
-                    </p>
-                    <p className="leading-relaxed opacity-95">
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50/30 p-3 text-left text-xs text-emerald-800">
+                    <p className="mb-0.5 font-bold">Instruções de Retirada:</p>
+                    <p className="font-medium leading-relaxed">
                       {redemption.pickupInstructions}
                     </p>
                   </div>
                 )}
 
                 {isRejected && redemption.rejectionReason && (
-                  <div className="border-destructive/20 bg-destructive/5 text-destructive rounded-lg border p-3 text-xs">
-                    <p className="mb-0.5 font-semibold">
+                  <div className="rounded-xl border border-red-200 bg-red-50/30 p-3 text-left text-xs text-red-800">
+                    <p className="mb-0.5 font-bold">
                       Justificativa da Rejeição:
                     </p>
-                    <p className="leading-relaxed opacity-95">
+                    <p className="font-medium leading-relaxed">
                       {redemption.rejectionReason}
                     </p>
                   </div>
                 )}
 
                 {isPending && (
-                  <div className="border-border/50 flex items-center justify-between gap-4 border-t pt-3">
-                    <p className="text-muted-foreground max-w-sm text-[10px] leading-normal">
+                  <div className="flex items-center justify-between gap-4 border-t border-emerald-50 pt-3">
+                    <p className="text-left text-[10px] font-medium leading-normal text-gray-400">
                       Você pode cancelar esta solicitação pendente para
                       recuperar seus pontos reservados.
                     </p>
@@ -189,7 +187,7 @@ export function MyRedemptions() {
                       variant="outline"
                       disabled={cancellingId === redemption.id}
                       onClick={() => handleCancel(redemption.id)}
-                      className="text-destructive border-destructive/20 hover:bg-destructive/10 hover:text-destructive shrink-0 cursor-pointer text-xs"
+                      className="flex h-10 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border-2 border-red-100 px-4 text-xs font-semibold text-red-600 transition-all hover:bg-red-50 hover:text-red-700 active:scale-95"
                     >
                       {cancellingId === redemption.id ? (
                         <Loader2 className="size-3.5 animate-spin" />

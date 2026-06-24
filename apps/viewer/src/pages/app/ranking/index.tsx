@@ -8,7 +8,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
@@ -58,25 +57,28 @@ export function Ranking() {
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-4 p-4">
-      <div className="bg-muted flex w-full flex-col justify-between gap-4 rounded-xl border-t-4 border-emerald-400 p-4">
-        <h1 className="font-semibold">Ranking de reciclagem dos alunos</h1>
+      <div className="flex w-full flex-col gap-4 rounded-3xl border-2 border-emerald-100 bg-white p-5 shadow-sm shadow-emerald-50">
+        <h1 className="text-lg font-bold text-gray-800">
+          Ranking de Reciclagem
+        </h1>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Label
             htmlFor="classes"
-            className="text-muted-foreground font-normal"
+            className="text-xs font-semibold text-gray-500"
           >
             Filtrar por turma
           </Label>
 
           <Select onValueChange={(value) => setClassId(value)} value={classId}>
-            <SelectTrigger id="classes" className="w-full">
-              <SelectValue placeholder="Turmas" />
+            <SelectTrigger
+              id="classes"
+              className="w-full rounded-xl border-emerald-200 focus:ring-emerald-500"
+            >
+              <SelectValue placeholder="Todas as turmas" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectGroup>
-                <SelectLabel>Turmas</SelectLabel>
-
                 <SelectItem value="all">Todas as turmas</SelectItem>
 
                 {classes?.map((cls) => (
@@ -90,20 +92,56 @@ export function Ranking() {
         </div>
       </div>
 
-      <div className="bg-muted flex w-full flex-col justify-between gap-4 rounded-xl border-t-4 border-emerald-400 p-4">
-        <div className="grid grid-cols-12 font-semibold">
-          <span className="col-span-1">#</span>
-          <span className="col-span-9">Nome</span>
-          <span className="col-span-2">Pontos</span>
+      <div className="flex w-full flex-col gap-3 rounded-3xl border-2 border-emerald-100 bg-white p-5 shadow-sm shadow-emerald-50">
+        <div className="flex items-center justify-between border-b border-emerald-50 pb-2 text-xs font-bold text-gray-400">
+          <span>Posição / Aluno</span>
+          <span>Pontuação</span>
         </div>
 
-        {ranking?.map((pos, index) => (
-          <div key={pos.id} className="grid grid-cols-12 gap-2 text-sm">
-            <span className="col-span-1">{++index}</span>
-            <span className="col-span-9">{pos.name}</span>
-            <span className="col-span-2">{pos.totalPoints}</span>
-          </div>
-        ))}
+        <div className="flex flex-col">
+          {ranking?.map((pos, index) => {
+            const rank = index + 1
+            const isTop1 = rank === 1
+            const isTop2 = rank === 2
+            const isTop3 = rank === 3
+
+            let rankBadgeClass =
+              'text-gray-500 font-bold text-sm size-8 flex items-center justify-center'
+            if (isTop1)
+              rankBadgeClass =
+                'bg-yellow-100 text-yellow-800 border border-yellow-200 font-bold rounded-full size-8 flex items-center justify-center text-sm shadow-sm'
+            if (isTop2)
+              rankBadgeClass =
+                'bg-slate-100 text-slate-800 border border-slate-200 font-bold rounded-full size-8 flex items-center justify-center text-sm shadow-sm'
+            if (isTop3)
+              rankBadgeClass =
+                'bg-orange-100 text-orange-800 border border-orange-200 font-bold rounded-full size-8 flex items-center justify-center text-sm shadow-sm'
+
+            return (
+              <div
+                key={pos.id}
+                className="flex items-center justify-between border-b border-gray-50 py-3 last:border-0"
+              >
+                <div className="flex items-center gap-3">
+                  <span className={rankBadgeClass}>
+                    {isTop1 ? '🥇' : isTop2 ? '🥈' : isTop3 ? '🥉' : rank}
+                  </span>
+                  <span
+                    className={`text-sm font-semibold ${isTop1 ? 'font-bold text-gray-900' : 'text-gray-700'}`}
+                  >
+                    {pos.name}
+                  </span>
+                </div>
+                <span className="text-sm font-bold text-emerald-600">
+                  {pos.totalPoints}{' '}
+                  <span className="text-[10px] font-medium text-emerald-400">
+                    pts
+                  </span>
+                </span>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

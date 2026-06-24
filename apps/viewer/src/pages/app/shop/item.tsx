@@ -75,34 +75,40 @@ export function Item({
 
   return (
     <>
-      <div className="bg-muted col-span-1 flex flex-col gap-4 rounded-xl border-t-4 border-emerald-400 p-4">
+      <div className="col-span-1 flex flex-col gap-4 rounded-2xl border-2 border-emerald-100 bg-white p-4 shadow-sm transition-all duration-200 hover:border-emerald-300 hover:shadow-md">
         {photoUrl ? (
           <img
             src={photoUrl || undefined}
             alt={name}
-            className="bg-background h-48 rounded-md border object-contain"
+            className="h-44 w-full rounded-xl border border-emerald-100 bg-emerald-50/30 object-contain"
           />
         ) : (
-          <div className="bg-background flex h-48 items-center justify-center rounded-md border">
-            <Award className="text-muted-foreground size-20 stroke-[0.25]" />
+          <div className="flex h-44 w-full items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50/50">
+            <Award className="size-16 stroke-[1] text-emerald-400" />
           </div>
         )}
 
-        <div className="flex flex-1 flex-col items-center gap-3 text-center">
+        <div className="flex flex-1 flex-col items-center gap-2 text-center">
           <div>
-            <h2 className="text-foreground text-sm font-semibold">{name}</h2>
-            <span className="text-xs font-semibold text-emerald-500">
+            <h2 className="text-sm font-bold leading-tight text-gray-800">
+              {name}
+            </h2>
+            <span className="mt-1.5 inline-block rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-600">
               {value} pontos
             </span>
           </div>
 
-          <p className="text-muted-foreground w-full truncate text-xs">
+          <p className="line-clamp-2 w-full text-xs text-gray-500">
             {description}
           </p>
         </div>
 
         <Button
-          className="disabled:bg-muted-foreground/20 cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+          className={`h-11 w-full cursor-pointer rounded-xl text-xs font-semibold transition-all active:scale-95 ${
+            isRedeemDisabled
+              ? 'cursor-not-allowed bg-gray-100 text-gray-400 hover:bg-gray-100'
+              : 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md shadow-emerald-100 hover:from-emerald-600 hover:to-teal-600 hover:shadow-emerald-200'
+          }`}
           disabled={isRedeemDisabled}
           onClick={() => setIsOpen(true)}
         >

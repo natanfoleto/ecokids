@@ -4,11 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import mascoteSvg from '@/assets/mascote.svg'
 import { signOut } from '@/auth'
 import { LoadingPage } from '@/components/loading-page'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth'
 import { useMetadata } from '@/hooks/use-metadata'
-import { getInitialsName } from '@/utils/get-initials-name'
 
 export function Profile() {
   useMetadata('Ecokids - Perfil')
@@ -21,56 +19,61 @@ export function Profile() {
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-6 p-4">
-      <div className="bg-muted flex w-full items-center gap-3 space-y-2 rounded-xl border-t-4 border-emerald-400 p-3">
-        <Avatar className="size-20 rounded-lg">
-          <AvatarImage
+      <div className="flex w-full flex-col items-center gap-4 rounded-3xl border-2 border-emerald-100 bg-white p-6 text-center shadow-sm shadow-emerald-50">
+        <div className="flex size-24 items-center justify-center rounded-full border-4 border-emerald-100 bg-emerald-50 p-1 shadow-sm">
+          <img
             src={mascoteSvg}
             alt="Mascote"
-            className="bg-background"
+            className="size-full object-contain"
           />
-          <AvatarFallback>{getInitialsName(student.name)}</AvatarFallback>
-        </Avatar>
+        </div>
 
         <div>
-          <h1 className="font-medium">{student.name}</h1>
-          <p className="text-muted-foreground text-sm">{student.email}</p>
+          <h1 className="text-xl font-bold text-gray-800">{student.name}</h1>
+          <p className="text-xs font-medium text-gray-400">
+            {student.email || 'Estudante Ecokids'}
+          </p>
         </div>
       </div>
 
-      <div className="w-full space-y-3">
-        <div className="bg-muted space-y-2 rounded-xl border-t-4 border-emerald-400 p-3 text-xs">
-          <div className="space-y-0.5">
-            <p className="text-muted-foreground">Seu código</p>
-            <p className="text-sm">#{student.code}</p>
+      <div className="w-full space-y-4">
+        <div className="w-full space-y-4 rounded-3xl border-2 border-emerald-100 bg-white p-5 text-xs font-semibold text-gray-700 shadow-sm shadow-emerald-50">
+          <div className="flex items-center justify-between border-b border-gray-50 pb-2">
+            <span className="text-gray-400">Código do Aluno</span>
+            <span className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-0.5 text-sm font-bold text-emerald-700">
+              #{student.code}
+            </span>
           </div>
 
           {student.cpf && (
-            <div className="space-y-0.5">
-              <p className="text-muted-foreground">CPF</p>
-              <p className="text-sm">{student.cpf}</p>
+            <div className="flex items-center justify-between border-b border-gray-50 pb-2">
+              <span className="text-gray-400">CPF</span>
+              <span className="text-sm text-gray-700">{student.cpf}</span>
             </div>
           )}
 
-          <div className="space-y-0.5">
-            <p className="text-muted-foreground">Escola</p>
-            <p className="text-sm">{student.school.name}</p>
+          <div className="flex items-center justify-between border-b border-gray-50 pb-2">
+            <span className="text-gray-400">Escola</span>
+            <span className="max-w-[200px] truncate text-right text-sm text-gray-700">
+              {student.school.name}
+            </span>
           </div>
 
-          <div className="space-y-0.5">
-            <p className="text-muted-foreground">Classe</p>
-            <p className="text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-gray-400">Turma</span>
+            <span className="text-sm text-gray-700">
               {student.class.name} - {student.class.year}
-            </p>
+            </span>
           </div>
         </div>
 
         <Button
           onClick={() => signOut(navigate)}
-          variant="secondary"
-          size="lg"
-          className="w-full rounded-xl border-t-4 border-emerald-400"
+          variant="outline"
+          className="flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-red-100 font-bold text-red-600 transition-all hover:bg-red-50 hover:text-red-700 active:scale-95"
         >
           <Power className="size-5" />
+          Sair do Aplicativo
         </Button>
       </div>
     </div>
