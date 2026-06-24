@@ -17,8 +17,6 @@ export const permissions: Record<Role, PermissionsByRole> = {
     })
   },
   MEMBER(_, { can }) {
-    can('get', 'Member')
-    can('get', 'Invite')
     can('get', 'SchoolSeason')
   },
 }

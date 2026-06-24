@@ -296,9 +296,10 @@ All hooks are prefixed with `use-` in filenames (kebab-case) and `use` in functi
 
 4. **Authentication**: The `auth` middleware is registered per-route via `.register(auth)`. It provides `request.getCurrentEntityId()` and `request.getUserMembership(schoolSlug)`.
 
-5. **Authorization**: CASL permissions via `getUserPermissions(userId, role)` from `@/utils/get-user-permissions`.
+5. **Authorization**: CASL permissions via `getUserPermissions(userId, role)` from `@/utils/get-user-permissions`. Toda nova funcionalidade deve obrigatoriamente considerar permissões. Nenhuma rota nova deve ser criada sem avaliar regras de autorização.
 
-6. **Error handling**: Throw `BadRequestError` or `UnauthorizedError` from `_errors/`. The centralized `errorHandler` maps these to proper HTTP status codes.
+6. **Error handling**: Throw `BadRequestError`, `UnauthorizedError` or `ForbiddenError` from `_errors/`. The centralized `errorHandler` maps these to proper HTTP status codes.
+
 
 7. **Database access**: Direct Prisma calls within route handlers. No separate service or repository layer.
 

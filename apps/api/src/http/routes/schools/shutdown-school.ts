@@ -41,7 +41,7 @@ export async function shutdownSchool(app: FastifyInstance) {
         const { cannot } = getUserPermissions(userId, membership.role)
 
         if (cannot('delete', authSchool)) {
-          throw new UnauthorizedError(
+          throw new ForbiddenError(
             'Você não tem permissão para encerrar esta escola.',
           )
         }

@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit'
 
-interface PdfData {
+export interface PdfData {
   school: {
     name: string
   }

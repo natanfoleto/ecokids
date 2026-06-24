@@ -7,8 +7,13 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { auth } from '@/http/middlewares/auth'
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
+import { ForbiddenError } from '@/http/routes/_errors/forbidden-error'
 import { prisma } from '@/lib/prisma'
-import { generateSchoolSeasonPdf } from '@/utils/generate-school-season-pdf'
+import {
+  generateSchoolSeasonPdf,
+  type PdfData,
+} from '@/utils/generate-school-season-pdf'
+import { getUserPermissions } from '@/utils/get-user-permissions'
 
 export async function getSchoolSeasonReport(app: FastifyInstance) {
   app
@@ -28,7 +33,17 @@ export async function getSchoolSeasonReport(app: FastifyInstance) {
       async (request, reply) => {
         const { schoolSlug, seasonId } = request.params
         const { type } = request.query
-        const { school } = await request.getUserMembership(schoolSlug)
+        const { school, membership } =
+          await request.getUserMembership(schoolSlug)
+
+        const userId = await request.getCurrentEntityId()
+        const { cannot } = getUserPermissions(userId, membership.role)
+
+        if (cannot('download_report', 'SchoolSeason')) {
+          throw new ForbiddenError(
+            'Você não tem permissão para baixar o relatório desse ciclo.',
+          )
+        }
 
         // Find the school season
         const season = await prisma.schoolSeason.findFirst({
@@ -196,7 +211,7 @@ export async function getSchoolSeasonReport(app: FastifyInstance) {
           .sort((a, b) => b.totalPoints - a.totalPoints)
 
         // 3. Detailed History per Student (only loaded if report type is complete)
-        let studentsHistory: any[] = []
+        let studentsHistory: PdfData['studentsHistory'] = []
 
         if (type !== 'simple') {
           const studentsHistoryData = await prisma.student.findMany({

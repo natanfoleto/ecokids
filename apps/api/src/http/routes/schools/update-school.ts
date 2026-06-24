@@ -9,7 +9,7 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { auth } from '@/http/middlewares/auth'
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
-import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
+import { ForbiddenError } from '@/http/routes/_errors/forbidden-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
@@ -45,7 +45,7 @@ export async function updateSchool(app: FastifyInstance) {
         const { cannot } = getUserPermissions(userId, membership.role)
 
         if (cannot('update', authSchool)) {
-          throw new UnauthorizedError(
+          throw new ForbiddenError(
             'Você não tem permissão para atualizar esta escola.',
           )
         }

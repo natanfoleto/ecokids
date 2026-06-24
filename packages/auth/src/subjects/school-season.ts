@@ -7,6 +7,7 @@ export const schoolSeasonSubject = z.tuple([
     z.literal('create'),
     z.literal('update'),
     z.literal('delete'),
+    z.literal('download_report'),
   ]),
   z.literal('SchoolSeason'),
 ])

@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
+import { PermissionGuard } from '@/components/permission-guard'
+
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
 import { GlobalLayout } from './pages/_layouts/global'
@@ -29,13 +31,62 @@ export const router = createBrowserRouter([
         children: [
           { path: '/', element: <Home /> },
           { path: '/school/:slug', element: <School /> },
-          { path: '/school/:slug/members', element: <Members /> },
-          { path: '/school/:slug/classes', element: <Classes /> },
-          { path: '/school/:slug/students', element: <Students /> },
-          { path: '/school/:slug/items', element: <Items /> },
-          { path: '/school/:slug/awards', element: <Awards /> },
-          { path: '/school/:slug/redemptions', element: <Redemptions /> },
-          { path: '/school/:slug/settings', element: <Settings /> },
+          {
+            path: '/school/:slug/members',
+            element: (
+              <PermissionGuard action="get" subject="Member">
+                <Members />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/classes',
+            element: (
+              <PermissionGuard action="get" subject="Class">
+                <Classes />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/students',
+            element: (
+              <PermissionGuard action="get" subject="Student">
+                <Students />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/items',
+            element: (
+              <PermissionGuard action="get" subject="Item">
+                <Items />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/awards',
+            element: (
+              <PermissionGuard action="get" subject="Award">
+                <Awards />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/redemptions',
+            element: (
+              <PermissionGuard action="get" subject="RewardRedemption">
+                <Redemptions />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/settings',
+            element: (
+              <PermissionGuard action="update" subject="School">
+                <Settings />
+              </PermissionGuard>
+            ),
+          },
           { path: '/profile', element: <Profile /> },
         ],
       },
