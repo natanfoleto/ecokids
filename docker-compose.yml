@@ -23,10 +23,10 @@ services:
       - ecokids-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`api.ecokids.site`)"
-      - "traefik.http.routers.api.entrypoints=websecure"
-      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
-      - "traefik.http.services.api.loadbalancer.server.port=3333"
+      - "traefik.http.routers.ecokids.rule=Host(`api.ecokids.site`)"
+      - "traefik.http.routers.ecokids.entrypoints=websecure"
+      - "traefik.http.routers.ecokids.tls.certresolver=letsencrypt"
+      - "traefik.http.services.ecokids.loadbalancer.server.port=3333"
     deploy:
       resources:
         limits:
