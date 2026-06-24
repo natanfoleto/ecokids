@@ -59,7 +59,7 @@ export async function createRedemption(app: FastifyInstance) {
 
         if (!activeSeason) {
           throw new BadRequestError(
-            'Não há nenhuma temporada de trocas ativa no momento nesta escola.',
+            'A temporada de troca está fechada. Não é possível solicitar novos prêmios.',
           )
         }
 

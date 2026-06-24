@@ -1,3 +1,5 @@
 export * from './create-season'
 export * from './close-season'
 export * from './get-seasons'
+export * from './reopen-season'
+export * from './delete-season'

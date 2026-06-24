@@ -21,6 +21,14 @@ export const getSeasonsResponseSchema = z.object({
       status: z.enum(['OPEN', 'CLOSED']),
       openedAt: z.date(),
       closedAt: z.date().nullable(),
+      stats: z.object({
+        totalRedemptions: z.number(),
+        approvedCount: z.number(),
+        rejectedCount: z.number(),
+        cancelledCount: z.number(),
+        deliveredCount: z.number(),
+        totalPointsCost: z.number(),
+      }),
     }),
   ),
 })

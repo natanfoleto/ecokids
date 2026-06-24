@@ -39,7 +39,62 @@ export async function getSeasons(app: FastifyInstance) {
           },
         })
 
-        return reply.send({ seasons })
+        const redemptionStats = await prisma.rewardRedemption.groupBy({
+          by: ['seasonId', 'status'],
+          where: {
+            schoolId: school.id,
+          },
+          _count: {
+            _all: true,
+          },
+          _sum: {
+            pointsCost: true,
+          },
+        })
+
+        const seasonsWithStats = seasons.map((season) => {
+          const statsForSeason = redemptionStats.filter(
+            (stat) => stat.seasonId === season.id,
+          )
+
+          let totalRedemptions = 0
+          let approvedCount = 0
+          let rejectedCount = 0
+          let cancelledCount = 0
+          let deliveredCount = 0
+          let totalPointsCost = 0
+
+          for (const stat of statsForSeason) {
+            const count = stat._count._all ?? 0
+            totalRedemptions += count
+
+            if (stat.status === 'APPROVED') {
+              approvedCount = count
+            } else if (stat.status === 'REJECTED') {
+              rejectedCount = count
+            } else if (stat.status === 'CANCELLED') {
+              cancelledCount = count
+            } else if (stat.status === 'DELIVERED') {
+              deliveredCount = count
+            }
+
+            totalPointsCost += stat._sum.pointsCost ?? 0
+          }
+
+          return {
+            ...season,
+            stats: {
+              totalRedemptions,
+              approvedCount,
+              rejectedCount,
+              cancelledCount,
+              deliveredCount,
+              totalPointsCost,
+            },
+          }
+        })
+
+        return reply.send({ seasons: seasonsWithStats })
       },
     )
 }
