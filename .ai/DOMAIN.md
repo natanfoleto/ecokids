@@ -120,9 +120,15 @@ Junction entity linking Users to Schools with a role.
 **Unique constraint**: `[schoolId, userId]` — a user can only be a member of a school once.
 
 **Business rules**:
-- Two roles: `ADMIN` (full management) and `MEMBER` (read-only on members/invites).
+- Two roles: `ADMIN` (full management) and `MEMBER` (limited operational access).
 - The school owner is always an `ADMIN`.
 - Role can be changed via the members management page.
+- **MEMBER permissions**:
+  - `get Member`, `get Invite` — read access to membership/invites (Manager app)
+  - `get SchoolSeason` — check active scoring season
+  - `get Student` — identify students by code or search by name (Scorer app)
+  - `get Item` — view recyclable items available for scoring (Scorer app)
+  - `create Point` — register a scoring session (Scorer app)
 
 ---
 

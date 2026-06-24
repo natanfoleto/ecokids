@@ -99,9 +99,9 @@ export function PointCapture() {
         <Button
           type="submit"
           disabled={isLoading || totalPoints === 0}
-          className="h-16 w-full max-w-2xl cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-xl font-semibold text-white shadow-lg shadow-emerald-200 transition-all hover:from-emerald-600 hover:to-teal-600 hover:shadow-emerald-300 active:scale-95 disabled:opacity-60"
+          className="min-h-[4rem] w-full max-w-2xl cursor-pointer whitespace-normal rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-xl font-semibold text-white shadow-lg shadow-emerald-200 transition-all hover:from-emerald-600 hover:to-teal-600 hover:shadow-emerald-300 active:scale-95 disabled:opacity-60"
         >
-          <Leaf className="size-5" />
+          <Leaf className="size-5 shrink-0" />
           Pontuar <span className="text-yellow-300">
             {student.name}
           </span> com <span className="text-yellow-300">{totalPoints}</span>{' '}

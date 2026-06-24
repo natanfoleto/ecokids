@@ -18,7 +18,9 @@ const StepperProvider = ({ children }: StepperProviderProps) => {
     setItems((prev) =>
       prev.some((item) => item.itemId === itemId)
         ? prev.map((item) =>
-            item.itemId === itemId ? { ...item, amount: item.amount++ } : item,
+            item.itemId === itemId
+              ? { ...item, amount: item.amount + 1 }
+              : item,
           )
         : [...prev, { itemId, value, amount: 1 }],
     )

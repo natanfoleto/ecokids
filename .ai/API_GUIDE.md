@@ -204,10 +204,11 @@ if (cannot('create', 'Student')) {
 | Member | manage | get |
 | Invite | manage | get |
 | Class | manage | — |
-| Student | manage | — |
-| Point | manage | — |
+| Student | manage | **get** (required for Scorer: identify student by code + search by name) |
+| Point | manage | **create** (required for Scorer: register a scoring session) |
 | Award | manage | — |
-| Item | manage | — |
+| Item | manage | **get** (required for Scorer: load recyclable items list) |
+| SchoolSeason | manage | get |
 
 ---
 

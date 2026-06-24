@@ -18,5 +18,10 @@ export const permissions: Record<Role, PermissionsByRole> = {
   },
   MEMBER(_, { can }) {
     can('get', 'SchoolSeason')
+
+    // Permissions required for Scorer app
+    can('get', 'Student') // identify student by code and search by name
+    can('get', 'Item') // load the list of recyclable items
+    can('create', 'Point') // register a scoring session
   },
 }

@@ -6,16 +6,74 @@ import type { UseFormSetValue } from 'react-hook-form'
 
 import { useStepper } from '@/contexts/stepper'
 import { useCurrentSchoolSlug } from '@/hooks/use-current-school'
+import { useHoldButton } from '@/hooks/use-hold-button'
 import { getItems } from '@/http/items/get-items'
 
 interface ItemListProps {
   setValue: UseFormSetValue<CreatePointBody>
 }
 
+interface ItemCounterProps {
+  itemId: string
+  value: number
+  amount: number
+}
+
+function ItemCounter({ itemId, value, amount }: ItemCounterProps) {
+  const { manual, increment, decrement } = useStepper()
+  const isSelected = amount > 0
+
+  const decrementHold = useHoldButton({
+    onSingleClick: () => decrement(itemId),
+    onHoldTick: () => {
+      for (let i = 0; i < 5; i++) decrement(itemId)
+    },
+  })
+
+  const incrementHold = useHoldButton({
+    onSingleClick: () => increment(itemId, value),
+    onHoldTick: () => {
+      for (let i = 0; i < 5; i++) increment(itemId, value)
+    },
+  })
+
+  return (
+    <div className="flex w-full items-center justify-center gap-2">
+      <button
+        type="button"
+        disabled={amount === 0}
+        className="flex size-12 flex-shrink-0 items-center justify-center rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+        {...decrementHold}
+      >
+        <Minus className="size-5" />
+      </button>
+
+      <input
+        type="number"
+        value={amount}
+        onChange={(e) => manual(itemId, value, Number(e.target.value))}
+        className={`h-11 w-16 flex-shrink-0 rounded-xl border-2 text-center text-lg font-bold transition-colors focus:outline-none ${
+          isSelected
+            ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
+            : 'border-gray-200 bg-gray-50 text-gray-700'
+        }`}
+      />
+
+      <button
+        type="button"
+        className="flex size-12 flex-shrink-0 items-center justify-center rounded-xl border-2 border-emerald-300 bg-emerald-50 text-emerald-600 transition-all hover:border-emerald-500 hover:bg-emerald-500 hover:text-white active:scale-95"
+        {...incrementHold}
+      >
+        <Plus className="size-5" />
+      </button>
+    </div>
+  )
+}
+
 export function ItemList({ setValue }: ItemListProps) {
   const currentSchool = useCurrentSchoolSlug()
 
-  const { items, manual, increment, decrement } = useStepper()
+  const { items } = useStepper()
 
   useEffect(() => {
     setValue('items', items)
@@ -109,38 +167,12 @@ export function ItemList({ setValue }: ItemListProps) {
                 )}
               </div>
 
-              {/* Counter */}
-              <div className="flex w-full items-center justify-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => decrement(item.id)}
-                  disabled={amount === 0}
-                  className="flex size-12 flex-shrink-0 items-center justify-center rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  <Minus className="size-5" />
-                </button>
-
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) =>
-                    manual(item.id, item.value, Number(e.target.value))
-                  }
-                  className={`h-11 w-16 flex-shrink-0 rounded-xl border-2 text-center text-lg font-bold transition-colors focus:outline-none ${
-                    isSelected
-                      ? 'border-emerald-400 bg-emerald-50 text-emerald-700'
-                      : 'border-gray-200 bg-gray-50 text-gray-700'
-                  }`}
-                />
-
-                <button
-                  type="button"
-                  onClick={() => increment(item.id, item.value)}
-                  className="flex size-12 flex-shrink-0 items-center justify-center rounded-xl border-2 border-emerald-300 bg-emerald-50 text-emerald-600 transition-all hover:border-emerald-500 hover:bg-emerald-500 hover:text-white active:scale-95"
-                >
-                  <Plus className="size-5" />
-                </button>
-              </div>
+              {/* Counter with hold support */}
+              <ItemCounter
+                itemId={item.id}
+                value={item.value}
+                amount={amount}
+              />
             </div>
           )
         })}

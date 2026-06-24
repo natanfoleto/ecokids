@@ -82,9 +82,9 @@ export function Success() {
           <button
             type="button"
             onClick={handleScoreSameStudent}
-            className="flex h-16 w-full items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-xl font-semibold text-white shadow-lg shadow-emerald-200 transition-all hover:from-emerald-600 hover:to-teal-600 active:scale-95"
+            className="flex min-h-[4rem] w-full items-center justify-center gap-1.5 whitespace-normal rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-xl font-semibold text-white shadow-lg shadow-emerald-200 transition-all hover:from-emerald-600 hover:to-teal-600 active:scale-95"
           >
-            <RefreshCw className="size-5" />
+            <RefreshCw className="size-5 shrink-0" />
             Pontuar <span className="text-yellow-300">{student.name}</span>
             novamente
           </button>
