@@ -57,11 +57,14 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
         },
       )
 
+      const cookieDomain = process.env.COOKIE_DOMAIN || undefined
+
       reply.setCookie('token', token, {
         path: '/',
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7, // 7 dias
+        ...(cookieDomain && { domain: cookieDomain }),
       })
 
       return reply.status(201).send({ token })

@@ -19,7 +19,13 @@ export function ability({ membership }: GetMembershipResponse) {
 }
 
 export async function signOut(navigate: ReturnType<typeof useNavigate>) {
-  Cookies.remove('token')
+  const hostname = window.location.hostname
+  const isLocal = hostname === 'localhost' || hostname.includes('127.0.0.1')
+  const domain = isLocal
+    ? undefined
+    : `.${hostname.split('.').slice(-2).join('.')}`
+
+  Cookies.remove('token', { path: '/', domain })
 
   return navigate('/sign-in')
 }

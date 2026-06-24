@@ -23,7 +23,13 @@ const afterResponse: AfterResponseHook = async (
   response,
 ) => {
   if (response.status === 401) {
-    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    const hostname = window.location.hostname
+    const isLocal = hostname === 'localhost' || hostname.includes('127.0.0.1')
+    const domainSuffix = isLocal
+      ? ''
+      : `; domain=.${hostname.split('.').slice(-2).join('.')}`
+
+    document.cookie = `token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainSuffix}`
     window.location.href = '/sign-in'
   }
 }
