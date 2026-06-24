@@ -1,38 +1,32 @@
-# Stage 1 – Build
-FROM node:22-alpine AS builder
+FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json ./apps/api/package.json
-COPY packages/auth/package.json ./packages/auth/package.json
-COPY packages/env/package.json ./packages/env/package.json
-COPY packages/types/package.json ./packages/types/package.json
-
-RUN npm install -g pnpm@9.15.1
-RUN pnpm install --frozen-lockfile
-
-COPY . .
-
-RUN pnpm --filter @ecokids/api prisma generate
-RUN pnpm --filter @ecokids/api build
-
-# Stage 2 – Runtime
-FROM node:22-alpine AS runtime
-
+# dependências do prisma
 RUN apk add --no-cache openssl
 
-WORKDIR /app
-ENV NODE_ENV=production
+# pnpm
+RUN npm install -g pnpm@9.15.1
 
-COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/api/package.json ./package.json
-COPY --from=builder /app/apps/api/prisma ./prisma
+# copia o monorepo inteiro
+COPY . .
 
-COPY docker-entrypoint.sh /app/
-RUN chmod +x /app/docker-entrypoint.sh
+# instala dependências workspace
+RUN pnpm install --frozen-lockfile
+
+# gera prisma client
+RUN pnpm --filter @ecokids/api prisma generate
+
+# build somente da api
+RUN pnpm --filter @ecokids/api build
+
+# entrar na api
+WORKDIR /app/apps/api
+
+# entrypoint
+COPY apps/api/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 
 EXPOSE 3333
 
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
