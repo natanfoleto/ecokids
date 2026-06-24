@@ -19,7 +19,9 @@ import S3ClientWrapper from '@/lib/aws'
 
 config()
 
-const app = fastify().withTypeProvider<ZodTypeProvider>()
+const app = fastify({
+  logger: true,
+}).withTypeProvider<ZodTypeProvider>()
 
 const s3Client = new S3ClientWrapper()
 
@@ -76,11 +78,11 @@ app.register(async function (app) {
   try {
     app.decorate('s3Client', s3Client)
 
-    console.log('🚀 S3 inicializado com sucesso!')
+    app.log.info('🚀 S3 inicializado com sucesso!')
 
     app.register(routes)
   } catch (error) {
-    console.error('❌ Falha ao inicializar S3 Client:', error)
+    app.log.error(error, '❌ Falha ao inicializar S3 Client:')
     process.exit(1)
   }
 })
@@ -88,9 +90,9 @@ app.register(async function (app) {
 app
   .listen({ port: process.env.SERVER_PORT, host: '0.0.0.0' })
   .then(() => {
-    console.log('🚀 HTTP server está rodando!')
+    app.log.info('🚀 HTTP server está rodando!')
   })
   .catch((error) => {
-    console.error('❌ Erro ao iniciarlizar HTTP server:', error)
+    app.log.error(error, '❌ Erro ao inicializar HTTP server:')
     process.exit(1)
   })

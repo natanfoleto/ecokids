@@ -12,7 +12,7 @@ export const auth = fastifyPlugin(async (app: FastifyInstance) => {
 
         return sub
       } catch (err) {
-        console.log(err)
+        request.log.warn(err)
         throw new UnauthorizedError('Token de autenticação inválido.')
       }
     }
