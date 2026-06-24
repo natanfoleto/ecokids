@@ -24,7 +24,7 @@ RUN pnpm --filter @ecokids/api build
 WORKDIR /app/apps/api
 
 # entrypoint
-COPY apps/api/docker-entrypoint.sh ./docker-entrypoint.sh
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 
 EXPOSE 3333
