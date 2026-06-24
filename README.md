@@ -1,27 +1,4 @@
-# Recicle Bem
-
-## Levantamento de requisitos
-
-### Entidades
-
-- Users (id, name, email, cpf, password, created_at, updated_at)
-- Schools (id, name, city, state, created_at, updated_at)
-- Classes (id, name, year, school_id, created_at, updated_at)
-- Students (
-    id, 
-    name, 
-    code, 
-    cpf, 
-    email, 
-    password, 
-    active, 
-    school_id, 
-    class_id, 
-    created_at, 
-    updated_at
-  )
-- Points (id, student_id, amount, created_at)
-- Awards (id, name, description, value, school_id, created_at, updated_at)
+# Ecokids
 
 ### Techs
 
