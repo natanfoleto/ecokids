@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom'
 
 import mascoteSvg from '@/assets/mascote.svg'
 import { signOut } from '@/auth'
-import { LoadingPage } from '@/components/loading-page'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth'
 import { useMetadata } from '@/hooks/use-metadata'
+
+import { ProfileLoading } from './loading'
 
 export function Profile() {
   useMetadata('Ecokids - Perfil')
@@ -15,7 +16,7 @@ export function Profile() {
 
   const navigate = useNavigate()
 
-  if (!student) return <LoadingPage message="Carregando dados do estudante" />
+  if (!student) return <ProfileLoading />
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-6 p-4">

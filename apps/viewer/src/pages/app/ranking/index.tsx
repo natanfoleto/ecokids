@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
-import { LoadingPage } from '@/components/loading-page'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -15,6 +14,8 @@ import { useAuth } from '@/contexts/auth'
 import { useMetadata } from '@/hooks/use-metadata'
 import { getSchoolClasses } from '@/http/viewers/get-school-classes'
 import { getSchoolRanking } from '@/http/viewers/get-school-ranking'
+
+import { RankingLoading } from './loading'
 
 export function Ranking() {
   useMetadata('Ecokids - Ranking')
@@ -49,8 +50,7 @@ export function Ranking() {
     enabled: !!schoolId,
   })
 
-  if (isLoadingClasses || isLoadingRanking)
-    return <LoadingPage message="Carregando ranking de reciclagem" />
+  if (isLoadingClasses || isLoadingRanking) return <RankingLoading />
 
   const classes = responseClasses?.classes
   const ranking = responseRanking?.ranking

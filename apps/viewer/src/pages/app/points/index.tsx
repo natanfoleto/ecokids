@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 
-import { LoadingPage } from '@/components/loading-page'
 import {
   Accordion,
   AccordionContent,
@@ -11,6 +10,8 @@ import {
 import { useMetadata } from '@/hooks/use-metadata'
 import { getStudentPoints } from '@/http/viewers/get-student-points'
 
+import { PointsLoading } from './loading'
+
 export function Points() {
   useMetadata('Ecokids - Pontos')
 
@@ -19,7 +20,7 @@ export function Points() {
     queryFn: getStudentPoints,
   })
 
-  if (isLoading) return <LoadingPage message="Carregando pontos do estudante" />
+  if (isLoading) return <PointsLoading />
 
   const points = data?.points
   const totalPoints = data?.totalPoints

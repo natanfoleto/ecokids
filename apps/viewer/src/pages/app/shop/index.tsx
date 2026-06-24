@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { AlertCircle } from 'lucide-react'
 
-import { LoadingPage } from '@/components/loading-page'
 import { useAuth } from '@/contexts/auth'
 import { useMetadata } from '@/hooks/use-metadata'
 import { getSchoolShop } from '@/http/viewers/get-school-shop'
 
 import { Item } from './item'
+import { ShopLoading } from './loading'
 
 export function Shop() {
   useMetadata('Ecokids - Shop')
@@ -26,7 +26,7 @@ export function Shop() {
     enabled: !!schoolId,
   })
 
-  if (isLoading) return <LoadingPage message="Carregando recompensas da loja" />
+  if (isLoading) return <ShopLoading />
 
   const itens = data?.itens
   const activeSeason = data?.activeSeason

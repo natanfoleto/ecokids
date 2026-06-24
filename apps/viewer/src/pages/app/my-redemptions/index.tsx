@@ -11,6 +11,8 @@ import { cancelRedemption } from '@/http/viewers/cancel-redemption'
 import { getStudentRedemptions } from '@/http/viewers/get-student-redemptions'
 import { queryClient } from '@/lib/react-query'
 
+import { MyRedemptionsLoading } from './loading'
+
 export function MyRedemptions() {
   useMetadata('Ecokids - Meus Resgates')
   const { student } = useAuth()
@@ -46,13 +48,7 @@ export function MyRedemptions() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="text-muted-foreground size-8 animate-spin" />
-      </div>
-    )
-  }
+  if (isLoading) return <MyRedemptionsLoading />
 
   const redemptions = data?.redemptions ?? []
 
