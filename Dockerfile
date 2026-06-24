@@ -26,7 +26,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/apps/api/node_modules ./node_modules
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/api/package.json ./package.json
 COPY --from=builder /app/apps/api/prisma ./prisma
