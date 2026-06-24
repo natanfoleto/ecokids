@@ -3,7 +3,7 @@ version: '3.8'
 services:
   api:
     build:
-      context: ..
+      context: .
       dockerfile: apps/api/Dockerfile
     container_name: api-ecokids
     restart: always
