@@ -1,5 +1,6 @@
 import {
   getStudentsParamsSchema,
+  getStudentsRequestSchema,
   getStudentsResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
@@ -22,6 +23,7 @@ export async function getStudents(app: FastifyInstance) {
           summary: 'Buscar todos os estudantes de uma escola',
           security: [{ bearerAuth: [] }],
           params: getStudentsParamsSchema,
+          querystring: getStudentsRequestSchema.shape.query,
           response: {
             200: getStudentsResponseSchema,
           },
@@ -29,6 +31,7 @@ export async function getStudents(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
+        const { page, limit, search } = request.query
 
         const userId = await request.getCurrentEntityId()
 
@@ -43,10 +46,28 @@ export async function getStudents(app: FastifyInstance) {
           )
         }
 
+        const where = {
+          schoolId: school.id,
+          ...(search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: 'insensitive' } as const },
+                  { email: { contains: search, mode: 'insensitive' } as const },
+                  { cpf: { contains: search, mode: 'insensitive' } as const },
+                ],
+              }
+            : {}),
+        }
+
+        const totalCount = await prisma.student.count({ where })
+
+        const limitVal = limit ? Number(limit) : totalCount
+        const pageVal = page ? Number(page) : 1
+        const take = limit ? Number(limit) : undefined
+        const skip = page && limit ? (Number(page) - 1) * Number(limit) : undefined
+
         const students = await prisma.student.findMany({
-          where: {
-            schoolId: school.id,
-          },
+          where,
           select: {
             id: true,
             code: true,
@@ -70,6 +91,11 @@ export async function getStudents(app: FastifyInstance) {
               },
             },
           },
+          orderBy: {
+            name: 'asc',
+          },
+          take,
+          skip,
         })
 
         const studentsWithPointsAdded = students.map((student) => {
@@ -83,8 +109,18 @@ export async function getStudents(app: FastifyInstance) {
           }
         })
 
+        const pageCount = limitVal > 0 ? Math.ceil(totalCount / limitVal) : 1
+
+        const meta = {
+          page: pageVal,
+          limit: limitVal,
+          totalCount,
+          pageCount,
+        }
+
         return reply.send({
           students: studentsWithPointsAdded,
+          meta,
         })
       },
     )

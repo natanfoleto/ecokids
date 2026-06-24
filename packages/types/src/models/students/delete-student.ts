@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const deleteStudentParamsSchema = z.object({
   schoolSlug: z.string(),
-  studentId: z.string().uuid(),
+  studentId: z.string(),
 })
 
 export type DeleteStudentParams = z.infer<typeof deleteStudentParamsSchema>

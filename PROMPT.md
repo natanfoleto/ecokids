@@ -7,6 +7,7 @@ Arquivos obrigatórios:
 AGENT.md
 ARCHITECTURE.md
 DOMAIN.md
+PAGINATION_GUIDE.md
 DECISIONS.md
 TECH_DEBT.md
 

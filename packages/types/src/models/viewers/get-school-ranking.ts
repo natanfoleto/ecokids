@@ -26,7 +26,7 @@ export type GetSchoolRankingRequest = z.infer<
 export const getSchoolRankingResponseSchema = z.object({
   ranking: z.array(
     z.object({
-      id: z.string().uuid(),
+      id: z.string(),
       name: z.string(),
       totalPoints: z.number(),
     }),

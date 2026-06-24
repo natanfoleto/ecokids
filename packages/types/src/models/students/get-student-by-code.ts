@@ -19,7 +19,7 @@ export type GetStudentByCodeRequest = z.infer<
 
 export const getStudentByCodeResponseSchema = z.object({
   student: z.object({
-    id: z.string().uuid(),
+    id: z.string(),
     code: z.number(),
     name: z.string(),
     cpf: z.string().nullable(),

@@ -1,4 +1,4 @@
-import { getItemsParamsSchema, getItemsResponseSchema } from '@ecokids/types'
+import { getItemsParamsSchema, getItemsRequestSchema, getItemsResponseSchema } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -18,6 +18,7 @@ export async function getItems(app: FastifyInstance) {
           tags: ['Itens'],
           summary: 'Buscar os itens de uma escola',
           params: getItemsParamsSchema,
+          querystring: getItemsRequestSchema.shape.query,
           response: {
             200: getItemsResponseSchema,
           },
@@ -25,6 +26,7 @@ export async function getItems(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
+        const { page, limit, search } = request.query
 
         const userId = await request.getCurrentEntityId()
 
@@ -39,13 +41,44 @@ export async function getItems(app: FastifyInstance) {
           )
         }
 
+        const where = {
+          schoolId: school.id,
+          ...(search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: 'insensitive' } as const },
+                  { description: { contains: search, mode: 'insensitive' } as const },
+                ],
+              }
+            : {}),
+        }
+
+        const totalCount = await prisma.item.count({ where })
+
+        const limitVal = limit ? Number(limit) : totalCount
+        const pageVal = page ? Number(page) : 1
+        const take = limit ? Number(limit) : undefined
+        const skip = page && limit ? (Number(page) - 1) * Number(limit) : undefined
+
         const items = await prisma.item.findMany({
-          where: {
-            schoolId: school.id,
+          where,
+          orderBy: {
+            name: 'asc',
           },
+          take,
+          skip,
         })
 
-        return reply.status(200).send({ items })
+        const pageCount = limitVal > 0 ? Math.ceil(totalCount / limitVal) : 1
+
+        const meta = {
+          page: pageVal,
+          limit: limitVal,
+          totalCount,
+          pageCount,
+        }
+
+        return reply.status(200).send({ items, meta })
       },
     )
 }

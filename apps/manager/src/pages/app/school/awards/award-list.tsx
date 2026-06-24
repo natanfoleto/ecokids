@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Camera, Ellipsis, Filter, Search } from 'lucide-react'
 import { useState } from 'react'
 
+import { Pagination } from '@/components/pagination'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,13 +44,26 @@ export function AwardList() {
   const schoolSlug = useCurrentSchoolSlug()
 
   const [updateAward, setUpdateAward] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [appliedSearch, setAppliedSearch] = useState('')
 
   const { data, isLoading, isError } = useQuery<GetAwardsResponse>({
-    queryKey: ['schools', schoolSlug, 'awards'],
+    queryKey: [
+      'schools',
+      schoolSlug,
+      'awards',
+      { page, search: appliedSearch },
+    ],
     queryFn: async () => {
       const data = await getAwards({
         params: {
           schoolSlug: schoolSlug!,
+        },
+        query: {
+          page,
+          limit: 10,
+          search: appliedSearch || undefined,
         },
       })
 
@@ -78,6 +92,12 @@ export function AwardList() {
     )
   }
 
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    setAppliedSearch(search)
+    setPage(1)
+  }
+
   if (isError) {
     return (
       <p className="text-red-500">
@@ -88,14 +108,19 @@ export function AwardList() {
 
   return (
     <div className="space-y-4">
-      <form className="flex gap-3">
+      <form onSubmit={handleSearch} className="flex gap-3">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 size-3 -translate-y-1/2" />
-          <Input className="pl-8" placeholder="Buscar prêmios" />
+          <Input
+            className="pl-8"
+            placeholder="Buscar prêmios"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
 
         <Button type="submit" variant="outline">
-          <Filter className="mr-2 size-3" />
+          <Filter className="size-3" />
           Aplicar filtros
         </Button>
       </form>
@@ -217,6 +242,16 @@ export function AwardList() {
           </p>
         )}
       </div>
+
+      {data?.meta && data.meta.pageCount > 1 && (
+        <Pagination
+          page={page}
+          limit={data.meta.limit}
+          totalCount={data.meta.totalCount}
+          pageCount={data.meta.pageCount}
+          onPageChange={setPage}
+        />
+      )}
     </div>
   )
 }

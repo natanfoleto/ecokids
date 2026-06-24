@@ -1,5 +1,6 @@
 import {
   getClassesParamsSchema,
+  getClassesRequestSchema,
   getClassesResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
@@ -22,6 +23,7 @@ export async function getClasses(app: FastifyInstance) {
           summary: 'Buscar todas as turmas de uma escola',
           security: [{ bearerAuth: [] }],
           params: getClassesParamsSchema,
+          querystring: getClassesRequestSchema.shape.query,
           response: {
             200: getClassesResponseSchema,
           },
@@ -29,6 +31,7 @@ export async function getClasses(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
+        const { page, limit, search } = request.query
 
         const userId = await request.getCurrentEntityId()
 
@@ -43,10 +46,27 @@ export async function getClasses(app: FastifyInstance) {
           )
         }
 
+        const where = {
+          schoolId: school.id,
+          ...(search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: 'insensitive' } as const },
+                  { year: { contains: search, mode: 'insensitive' } as const },
+                ],
+              }
+            : {}),
+        }
+
+        const totalCount = await prisma.class.count({ where })
+
+        const limitVal = limit ? Number(limit) : totalCount
+        const pageVal = page ? Number(page) : 1
+        const take = limit ? Number(limit) : undefined
+        const skip = page && limit ? (Number(page) - 1) * Number(limit) : undefined
+
         const classes = await prisma.class.findMany({
-          where: {
-            schoolId: school.id,
-          },
+          where,
           select: {
             id: true,
             name: true,
@@ -54,9 +74,23 @@ export async function getClasses(app: FastifyInstance) {
             createdAt: true,
             updatedAt: true,
           },
+          orderBy: {
+            name: 'asc',
+          },
+          take,
+          skip,
         })
 
-        return reply.send({ classes })
+        const pageCount = limitVal > 0 ? Math.ceil(totalCount / limitVal) : 1
+
+        const meta = {
+          page: pageVal,
+          limit: limitVal,
+          totalCount,
+          pageCount,
+        }
+
+        return reply.send({ classes, meta })
       },
     )
 }

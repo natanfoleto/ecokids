@@ -1,5 +1,6 @@
 import {
   getRedemptionsParamsSchema,
+  getRedemptionsRequestSchema,
   getRedemptionsResponseSchema,
 } from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
@@ -22,6 +23,7 @@ export async function getRedemptions(app: FastifyInstance) {
           summary: 'Listar todas as solicitações de resgates da escola',
           security: [{ bearerAuth: [] }],
           params: getRedemptionsParamsSchema,
+          querystring: getRedemptionsRequestSchema.shape.query,
           response: {
             200: getRedemptionsResponseSchema,
           },
@@ -29,6 +31,7 @@ export async function getRedemptions(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
+        const { page, limit, search, status } = request.query
 
         const userId = await request.getCurrentEntityId()
         const { school, membership } =
@@ -42,10 +45,43 @@ export async function getRedemptions(app: FastifyInstance) {
           )
         }
 
+        const statuses = status ? status.split(',') : undefined
+
+        const where = {
+          schoolId: school.id,
+          ...(statuses
+            ? {
+                status: { in: statuses as any },
+              }
+            : {}),
+          ...(search
+            ? {
+                OR: [
+                  {
+                    student: {
+                      name: { contains: search, mode: 'insensitive' } as const,
+                    },
+                  },
+                  {
+                    award: {
+                      name: { contains: search, mode: 'insensitive' } as const,
+                    },
+                  },
+                ],
+              }
+            : {}),
+        }
+
+        const totalCount = await prisma.rewardRedemption.count({ where })
+
+        const limitVal = limit ? Number(limit) : totalCount
+        const pageVal = page ? Number(page) : 1
+        const take = limit ? Number(limit) : undefined
+        const skip =
+          page && limit ? (Number(page) - 1) * Number(limit) : undefined
+
         const redemptions = await prisma.rewardRedemption.findMany({
-          where: {
-            schoolId: school.id,
-          },
+          where,
           include: {
             student: {
               include: {
@@ -57,7 +93,18 @@ export async function getRedemptions(app: FastifyInstance) {
           orderBy: {
             createdAt: 'desc',
           },
+          take,
+          skip,
         })
+
+        const pageCount = limitVal > 0 ? Math.ceil(totalCount / limitVal) : 1
+
+        const meta = {
+          page: pageVal,
+          limit: limitVal,
+          totalCount,
+          pageCount,
+        }
 
         return reply.send({
           redemptions: redemptions.map((redemption) => ({
@@ -87,6 +134,7 @@ export async function getRedemptions(app: FastifyInstance) {
               photoUrl: redemption.award.photoUrl,
             },
           })),
+          meta,
         })
       },
     )

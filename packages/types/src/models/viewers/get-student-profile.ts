@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const getStudentProfileResponseSchema = z.object({
   student: z.object({
-    id: z.string().uuid(),
+    id: z.string(),
     code: z.number(),
     name: z.string(),
     cpf: z.string().nullable(),

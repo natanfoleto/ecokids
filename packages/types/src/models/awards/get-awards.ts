@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { paginationMetaSchema, paginationQuerySchema } from '../pagination'
+
 export const getAwardsParamsSchema = z.object({
   schoolSlug: z.string(),
 })
@@ -8,6 +10,7 @@ export type GetAwardsParams = z.infer<typeof getAwardsParamsSchema>
 
 export const getAwardsRequestSchema = z.object({
   params: getAwardsParamsSchema,
+  query: paginationQuerySchema.optional(),
 })
 
 export type GetAwardsRequest = z.infer<typeof getAwardsRequestSchema>
@@ -24,6 +27,7 @@ export const getAwardsResponseSchema = z.object({
       updatedAt: z.date(),
     }),
   ),
+  meta: paginationMetaSchema,
 })
 
 export type GetAwardsResponse = z.infer<typeof getAwardsResponseSchema>

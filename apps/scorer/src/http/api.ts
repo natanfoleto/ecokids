@@ -22,7 +22,38 @@ const afterResponse: AfterResponseHook = async (
   _options,
   response,
 ) => {
-  if (response.status === 401) {
+  let shouldSignOut = response.status === 401
+
+  if (response.status === 400) {
+    try {
+      const data = await response.clone().json()
+      if (
+        data &&
+        typeof data === 'object' &&
+        'message' in data &&
+        typeof data.message === 'string'
+      ) {
+        const message = data.message.toLowerCase()
+        const authErrorKeywords = [
+          'usuário não encontrado',
+          'estudante não encontrado',
+          'usuário não existe',
+          'estudante não existe',
+          'nenhum usuário encontrado',
+          'nenhum estudante encontrado',
+          'token de autenticação inválido',
+        ]
+
+        if (authErrorKeywords.some((keyword) => message.includes(keyword))) {
+          shouldSignOut = true
+        }
+      }
+    } catch {
+      // Ignorar erros de parse do JSON
+    }
+  }
+
+  if (shouldSignOut) {
     const hostname = window.location.hostname
     const isLocal = hostname === 'localhost' || hostname.includes('127.0.0.1')
     const domainSuffix = isLocal

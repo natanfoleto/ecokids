@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const createPointParamsSchema = z.object({
   schoolSlug: z.string(),
-  studentId: z.string().uuid(),
+  studentId: z.string(),
 })
 
 export type CreatePointParams = z.infer<typeof createPointParamsSchema>

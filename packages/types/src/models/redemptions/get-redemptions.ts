@@ -1,13 +1,20 @@
 import { z } from 'zod'
 
+import { paginationMetaSchema, paginationQuerySchema } from '../pagination'
+
 export const getRedemptionsParamsSchema = z.object({
   schoolSlug: z.string(),
 })
 
 export type GetRedemptionsParams = z.infer<typeof getRedemptionsParamsSchema>
 
+export const getRedemptionsQuerySchema = paginationQuerySchema.extend({
+  status: z.string().optional(),
+})
+
 export const getRedemptionsRequestSchema = z.object({
   params: getRedemptionsParamsSchema,
+  query: getRedemptionsQuerySchema.optional(),
 })
 
 export type GetRedemptionsRequest = z.infer<typeof getRedemptionsRequestSchema>
@@ -17,7 +24,13 @@ export const getRedemptionsResponseSchema = z.object({
     z.object({
       id: z.string().uuid(),
       pointsCost: z.number(),
-      status: z.enum(['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED', 'DELIVERED']),
+      status: z.enum([
+        'PENDING',
+        'APPROVED',
+        'REJECTED',
+        'CANCELLED',
+        'DELIVERED',
+      ]),
       createdAt: z.date(),
       approvedAt: z.date().nullable(),
       rejectedAt: z.date().nullable(),
@@ -26,7 +39,7 @@ export const getRedemptionsResponseSchema = z.object({
       rejectionReason: z.string().nullable(),
       pickupInstructions: z.string().nullable(),
       student: z.object({
-        id: z.string().uuid(),
+        id: z.string(),
         name: z.string(),
         code: z.number(),
         class: z.object({
@@ -42,6 +55,9 @@ export const getRedemptionsResponseSchema = z.object({
       }),
     }),
   ),
+  meta: paginationMetaSchema,
 })
 
-export type GetRedemptionsResponse = z.infer<typeof getRedemptionsResponseSchema>
+export type GetRedemptionsResponse = z.infer<
+  typeof getRedemptionsResponseSchema
+>
