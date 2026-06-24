@@ -29,7 +29,7 @@ const afterResponse: AfterResponseHook = async (
 }
 
 export const api = ky.create({
-  prefixUrl: 'http://localhost:3333',
+  prefixUrl: import.meta.env.VITE_API_URL || 'http://localhost:3333',
   hooks: {
     beforeRequest: [beforeRequest],
     afterResponse: [afterResponse],
