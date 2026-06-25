@@ -383,3 +383,53 @@ This repository enforces strict UI design consistency to maintain professional a
 
 - Frontend apps duplicate the `api.ts` ky client, `auth/index.ts`, and hook files identically across apps instead of sharing via a package.
 - `@ecokids/env` uses `@t3-oss/env-nextjs` despite none of the frontend apps being Next.js.
+
+---
+
+## Validation Strategy
+
+### Why Each App Must Be Validated in Isolation
+
+This is a Turborepo monorepo with 4 apps (`api`, `manager`, `scorer`, `viewer`) and 6+ shared packages (`auth`, `env`, `types`, `eslint-config`, `prettier`, `typescript-config`).
+
+Running `pnpm lint` or `turbo lint` at the root triggers lint across **all workspaces** in dependency order. Due to `"dependsOn": ["^lint"]` in `turbo.json`, Turbo must also lint all upstream package dependencies before running an app's lint. On cold runs, this takes **3–5+ minutes**.
+
+This global strategy is **never appropriate as a post-implementation validation step** when only one app was modified.
+
+### Correct Validation Commands
+
+Scoped lint commands are defined in the root `package.json` and run ESLint directly inside each app's directory, bypassing Turborepo entirely:
+
+```bash
+pnpm lint:viewer   # eslint apps/viewer/src/ --ext .ts,.tsx  (~6s)
+pnpm lint:api      # eslint apps/api/src/ --ext .ts          (~6s)
+pnpm lint:manager  # eslint apps/manager/src/ --ext .ts,.tsx (~9s)
+pnpm lint:scorer   # eslint apps/scorer/src/ --ext .ts,.tsx  (~5s)
+```
+
+These commands use `pnpm --dir apps/<name> exec eslint src/ --ext .ts[,.tsx]`, which:
+- Scopes linting to only TypeScript source files (not dist, config, JS, or node_modules)
+- Skips Turborepo orchestration entirely
+- Skips dependency workspace linting
+- Completes in **5–10 seconds**
+- Does not interfere with running dev servers
+
+### When to Use Global Lint
+
+`pnpm lint` (global, via Turbo) should only be used:
+- In CI/CD pipelines for a full pre-merge check
+- When explicitly requested by the repository owner for a cross-workspace validation
+- Never as an automatic post-implementation step by an agent
+
+### Validation Scope by Change
+
+| Changed location | Validation command |
+|---|---|
+| `apps/viewer/**` | `pnpm lint:viewer` |
+| `apps/api/**` | `pnpm lint:api` |
+| `apps/manager/**` | `pnpm lint:manager` |
+| `apps/scorer/**` | `pnpm lint:scorer` |
+| `packages/types/**` | No direct lint command (no `lint` script) |
+| `packages/auth/**` | No direct lint command (no `lint` script) |
+| `config/**` | No direct lint command |
+| Multiple apps changed | Run scoped command for each modified app |

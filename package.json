@@ -4,7 +4,11 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "lint:api": "pnpm --dir apps/api exec eslint src/ --ext .ts",
+    "lint:manager": "pnpm --dir apps/manager exec eslint src/ --ext .ts,.tsx",
+    "lint:viewer": "pnpm --dir apps/viewer exec eslint src/ --ext .ts,.tsx",
+    "lint:scorer": "pnpm --dir apps/scorer exec eslint src/ --ext .ts,.tsx"
   },
   "devDependencies": {
     "turbo": "latest"

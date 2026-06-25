@@ -8,6 +8,7 @@ import { getSchoolShop } from './get-school-shop'
 import { getStudentPoints } from './get-student-points'
 import { getStudentProfile } from './get-student-profile'
 import { getStudentRedemptions } from './get-student-redemptions'
+import { updateStudentPassword } from './update-student-password'
 
 export async function registerViewerRoutes(app: FastifyInstance) {
   app.register(getStudentProfile)
@@ -18,4 +19,5 @@ export async function registerViewerRoutes(app: FastifyInstance) {
   app.register(createRedemption)
   app.register(getStudentRedemptions)
   app.register(cancelRedemption)
+  app.register(updateStudentPassword)
 }

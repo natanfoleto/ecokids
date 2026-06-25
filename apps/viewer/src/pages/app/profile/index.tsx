@@ -1,13 +1,64 @@
-import { Power } from 'lucide-react'
+import {
+  type UpdateStudentPasswordBody,
+  updateStudentPasswordBodySchema,
+} from '@ecokids/types'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff, Loader2, Power } from 'lucide-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import mascoteSvg from '@/assets/mascote.svg'
 import { signOut } from '@/auth'
+import { FormError } from '@/components/form/form-error'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth'
+import { useAction } from '@/hooks/use-actions'
 import { useMetadata } from '@/hooks/use-metadata'
+import { cn } from '@/lib/utils'
 
+import { updateStudentPasswordAction } from './actions'
 import { ProfileLoading } from './loading'
+
+interface PasswordInputProps extends React.ComponentProps<'input'> {
+  error?: string
+}
+
+function PasswordInput({ error, className, ...rest }: PasswordInputProps) {
+  const [showPassword, setShowPassword] = useState(false)
+
+  return (
+    <div className="flex-1 space-y-1">
+      <div className="relative">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          className={cn(
+            'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input shadow-xs flex h-12 w-full min-w-0 rounded-2xl border bg-transparent px-4 py-1 text-base outline-none transition-[color,box-shadow] file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+            'focus-visible:border-emerald-300 focus-visible:ring-[3px] focus-visible:ring-emerald-100/50',
+            'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
+            error ? 'disabled:opacity-1 border-red-400' : '',
+            'pr-12',
+            className,
+          )}
+          {...rest}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-4 top-1/2 flex h-8 -translate-y-1/2 cursor-pointer items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none"
+        >
+          {showPassword ? (
+            <EyeOff className="size-5" />
+          ) : (
+            <Eye className="size-5" />
+          )}
+        </button>
+      </div>
+
+      {error && <FormError error={error} />}
+    </div>
+  )
+}
 
 export function Profile() {
   useMetadata('Ecokids - Perfil')
@@ -15,6 +66,31 @@ export function Profile() {
   const { student } = useAuth()
 
   const navigate = useNavigate()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<UpdateStudentPasswordBody>({
+    resolver: zodResolver(updateStudentPasswordBodySchema),
+    defaultValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+  })
+
+  const [, handleAction, isPending] = useAction()
+
+  async function onSubmit(data: UpdateStudentPasswordBody) {
+    await handleAction(
+      () => updateStudentPasswordAction({ body: data }),
+      () => {
+        reset()
+      },
+    )
+  }
 
   if (!student) return <ProfileLoading />
 
@@ -66,6 +142,65 @@ export function Profile() {
               {student.class.name} - {student.class.year}
             </span>
           </div>
+        </div>
+
+        <div className="w-full space-y-4 rounded-3xl border-2 border-emerald-100 bg-white p-5 shadow-sm shadow-emerald-50">
+          <h2 className="text-sm font-bold text-gray-800">Alterar senha</h2>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <span className="text-xs font-semibold text-gray-400">
+                  Senha atual
+                </span>
+                <PasswordInput
+                  id="currentPassword"
+                  {...register('currentPassword')}
+                  placeholder="Sua senha atual"
+                  className="border-emerald-100 font-semibold text-gray-800 transition-all placeholder:text-gray-300"
+                  error={errors.currentPassword?.message}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-xs font-semibold text-gray-400">
+                  Nova senha
+                </span>
+                <PasswordInput
+                  id="newPassword"
+                  {...register('newPassword')}
+                  placeholder="Sua nova senha"
+                  className="border-emerald-100 font-semibold text-gray-800 transition-all placeholder:text-gray-300"
+                  error={errors.newPassword?.message}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <span className="text-xs font-semibold text-gray-400">
+                  Confirmar nova senha
+                </span>
+                <PasswordInput
+                  id="confirmPassword"
+                  {...register('confirmPassword')}
+                  placeholder="Confirme sua nova senha"
+                  className="border-emerald-100 font-semibold text-gray-800 transition-all placeholder:text-gray-300"
+                  error={errors.confirmPassword?.message}
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="h-12 w-full cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 font-extrabold text-white shadow-md shadow-emerald-100 transition-all hover:from-emerald-600 hover:to-teal-600 active:scale-95"
+              disabled={isPending}
+            >
+              {isPending ? (
+                <Loader2 className="size-5 animate-spin" />
+              ) : (
+                'Salvar nova senha'
+              )}
+            </Button>
+          </form>
         </div>
 
         <Button

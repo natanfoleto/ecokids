@@ -10,6 +10,7 @@ export type GetSchoolRankingParams = z.infer<
 
 export const getSchoolRankingQuerySchema = z.object({
   classId: z.string().uuid().optional(),
+  limit: z.coerce.number().min(1).optional(),
 })
 
 export type GetSchoolRankingQuery = z.infer<typeof getSchoolRankingQuerySchema>
@@ -31,6 +32,15 @@ export const getSchoolRankingResponseSchema = z.object({
       totalPoints: z.number(),
     }),
   ),
+  studentStats: z
+    .object({
+      position: z.number(),
+      totalPoints: z.number(),
+      pointsToFirst: z.number(),
+      pointsToNext: z.number().nullable(),
+    })
+    .nullable()
+    .optional(),
 })
 
 export type GetSchoolRankingResponse = z.infer<

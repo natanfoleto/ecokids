@@ -507,7 +507,11 @@ The project **MUST NEVER** have:
 |---|---|---|
 | All | `pnpm build` | Turborepo parallel build |
 | All | `pnpm dev` | Turborepo parallel dev servers |
-| All | `pnpm lint` | Turborepo parallel lint |
+| All | `pnpm lint` | Turborepo parallel lint (**DO NOT use for scoped validation**) |
+| API | `pnpm lint:api` | Lint only `apps/api/src/` (direct eslint, ~6s) |
+| Manager | `pnpm lint:manager` | Lint only `apps/manager/src/` (direct eslint, ~9s) |
+| Viewer | `pnpm lint:viewer` | Lint only `apps/viewer/src/` (direct eslint, ~6s) |
+| Scorer | `pnpm lint:scorer` | Lint only `apps/scorer/src/` (direct eslint, ~5s) |
 | API | `pnpm build` → `tsup` | Bundle with tsup |
 | API | `pnpm dev` → `tsx watch` | Dev with hot reload |
 | Frontend | `pnpm build` → `tsc -b && vite build` | Type check + Vite build |
@@ -572,20 +576,72 @@ Italic text is **NOT** part of the project's visual language.
 
 ## Mandatory Final Validation Workflow
 
-Before declaring any implementation task as completed, the following verification pipeline must be executed in order:
+Before declaring any implementation task as completed, run validation **only on the package(s) that were modified**.
 
-1. **Run Lint**: Run lint once (`pnpm lint`).
-2. **If Lint Returns Issues**: Run lint fix once (`pnpm lint:fix` or equivalent automatic fixers like `eslint --fix`).
-3. **Re-run Lint**: Run lint once again to verify clean output.
-4. **Run Build**: Run build once (`pnpm build`).
+### Scoped Lint Rules (MANDATORY)
 
-### Command Execution Rules
-When running terminal validation commands:
+| Modified app | Correct lint command |
+|---|---|
+| `apps/viewer` | `pnpm lint:viewer` |
+| `apps/api` | `pnpm lint:api` |
+| `apps/manager` | `pnpm lint:manager` |
+| `apps/scorer` | `pnpm lint:scorer` |
+
+> ⚠️ **NEVER run `pnpm lint` or `turbo lint` after a scoped change.** These commands lint ALL workspaces via Turborepo and take 3–5+ minutes. They stall background task execution and cause infinite polling loops.
+
+### Validation Steps
+
+1. **Run scoped lint**: Run the scoped lint command once (e.g. `pnpm lint:viewer`).
+2. **If lint returns issues**: Fix them. Then run scoped lint once more to confirm clean.
+3. **Do NOT run global build** after every change — only when explicitly requested by the user.
+
+### Command Execution Rules (STRICT — NO EXCEPTIONS)
+
 - **Never wait indefinitely** for command completion.
 - **Never create scheduled timers** to monitor commands.
 - **Never poll command status repeatedly** in loops.
 - **Never retry commands automatically** in loops.
-- **If any command hangs, stalls, does not return output, or the execution environment becomes blocked**: Stop execution immediately, report the command failure/limitation, and do not retry automatically. Never enter infinite waiting loops or monitor command execution continuously. If validation cannot complete, report the limitation instead of retrying.
+- **Maximum 1 attempt per command.** If it stalls or fails, stop, report, and do NOT retry.
+- **If any command hangs, stalls, does not return output, or the execution environment becomes blocked**: Stop immediately. Report: _"Lint did not complete. Possible script hang or process issue. No retry attempted."_ Do not loop.
+- **Never run `pnpm lint` (global)** when only one app was changed. Always use the scoped command.
+
+---
+
+## Agent Lint & Validation Rules
+
+> These rules exist to permanently prevent the infinite lint-loop problem observed during development sessions.
+
+### Rule 1 — Always use scoped lint
+
+The root `pnpm lint` and `turbo lint` run across **all** workspaces and take 3–5+ minutes. They **must not** be used as a post-implementation validation step for a single app change.
+
+Use only the scoped commands defined in the root `package.json`:
+```bash
+pnpm lint:viewer   # apps/viewer/src/ --ext .ts,.tsx  (~6s)
+pnpm lint:api      # apps/api/src/ --ext .ts          (~6s)
+pnpm lint:manager  # apps/manager/src/ --ext .ts,.tsx (~9s)
+pnpm lint:scorer   # apps/scorer/src/ --ext .ts,.tsx  (~5s)
+```
+
+These commands run `eslint src/ --ext .ts[,.tsx]` directly inside each app directory via `pnpm --dir`, completely bypassing Turborepo orchestration. They complete in **5–10 seconds**.
+
+### Rule 2 — One attempt only
+
+Never run any lint or build command more than once in the same session without an explicit user instruction. If the first attempt stalls or fails, stop and report the issue.
+
+### Rule 3 — No background polling loops
+
+Never schedule timers or poll background tasks in a loop waiting for a lint command to finish. If the lint command does not complete within the `WaitMsBeforeAsync` window (max 30 seconds), treat it as a stall and report it immediately.
+
+### Rule 4 — Report, don't retry
+
+If lint cannot be verified (stall, process hang, environment issue), report clearly:
+```
+Lint command did not complete. Possible process hang. Recommend running manually:
+pnpm lint:viewer
+```
+
+Never enter an automatic retry loop.
 
 ---
 

@@ -29,7 +29,9 @@ export async function getSchoolRanking(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolId } = request.params
-        const { classId } = request.query
+        const { classId, limit } = request.query
+
+        const studentId = await request.getCurrentEntityId()
 
         // Find active school season
         const activeSchoolSeason = await prisma.schoolSeason.findFirst({
@@ -69,7 +71,28 @@ export async function getSchoolRanking(app: FastifyInstance) {
           }))
           .sort((a, b) => b.totalPoints - a.totalPoints)
 
-        return reply.send({ ranking })
+        let studentStats = null
+
+        const studentRankIndex = ranking.findIndex((r) => r.id === studentId)
+        if (studentRankIndex !== -1) {
+          const studentRank = ranking[studentRankIndex]
+          const firstPlace = ranking[0]
+          const nextPlace =
+            studentRankIndex > 0 ? ranking[studentRankIndex - 1] : null
+
+          studentStats = {
+            position: studentRankIndex + 1,
+            totalPoints: studentRank.totalPoints,
+            pointsToFirst: firstPlace.totalPoints - studentRank.totalPoints,
+            pointsToNext: nextPlace
+              ? nextPlace.totalPoints - studentRank.totalPoints
+              : null,
+          }
+        }
+
+        const slicedRanking = limit ? ranking.slice(0, limit) : ranking
+
+        return reply.send({ ranking: slicedRanking, studentStats })
       },
     )
 }
