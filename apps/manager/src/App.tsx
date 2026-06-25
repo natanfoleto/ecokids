@@ -1,3 +1,4 @@
+// Trigger Vercel redeployment
 import { Toaster } from '@ecokids/ui'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
