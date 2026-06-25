@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
 import { usePermissions } from '@/hooks/use-permissions'
 import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getSchool } from '@/http/schools/get-school'
@@ -60,7 +61,43 @@ export function SettingsTabs() {
     permissions?.can('create', 'SchoolSeason') ||
     permissions?.can('update', 'SchoolSeason')
 
-  if (!data?.school) return null
+  if (!data?.school) {
+    return (
+      <div className="flex animate-pulse gap-12">
+        <aside className="flex w-80 flex-col gap-2">
+          <Skeleton className="h-9 w-full rounded-md" />
+          <Skeleton className="h-9 w-full rounded-md" />
+          <Skeleton className="h-9 w-full rounded-md" />
+          <Skeleton className="h-9 w-full rounded-md" />
+        </aside>
+
+        <div className="flex w-full flex-col gap-8">
+          <Card>
+            <CardHeader className="space-y-2">
+              <Skeleton className="h-6 w-48 rounded-md" />
+              <Skeleton className="h-4 w-72 rounded-md" />
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-16 rounded-md" />
+                <Skeleton className="h-10 w-full rounded-md" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-16 rounded-md" />
+                <Skeleton className="h-10 w-full rounded-md" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-16 rounded-md" />
+                <Skeleton className="h-10 w-full rounded-md" />
+              </div>
+              <Skeleton className="h-10 w-32 rounded-md" />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex gap-12">

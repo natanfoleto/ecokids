@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -166,12 +167,6 @@ export function Redemptions() {
     enabled: !!schoolSlug,
   })
 
-  const isLoading =
-    pendingQuery.isLoading ||
-    approvedQuery.isLoading ||
-    deliveredQuery.isLoading ||
-    otherQuery.isLoading
-
   const [, handleApproveAct, isApprovePending] = useAction()
   const [, handleRejectAct, isRejectPending] = useAction()
   const [, handleDeliverAct, isDeliverPending] = useAction()
@@ -243,17 +238,6 @@ export function Redemptions() {
           })
         }
       },
-    )
-  }
-
-  if (isLoading) {
-    return (
-      <div className="w-full space-y-6">
-        <Tabs />
-        <div className="flex h-60 items-center justify-center">
-          <Loader2 className="text-muted-foreground size-8 animate-spin" />
-        </div>
-      </div>
     )
   }
 
@@ -348,7 +332,11 @@ export function Redemptions() {
             </div>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-foreground text-2xl font-bold tracking-tight">
-                {pendingMeta?.totalCount ?? 0}
+                {pendingQuery.isLoading ? (
+                  <Skeleton className="h-8 w-12" />
+                ) : (
+                  (pendingMeta?.totalCount ?? 0)
+                )}
               </span>
               <span className="text-muted-foreground text-xs font-light">
                 solicitações
@@ -389,7 +377,11 @@ export function Redemptions() {
             </div>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-foreground text-2xl font-bold tracking-tight">
-                {approvedMeta?.totalCount ?? 0}
+                {approvedQuery.isLoading ? (
+                  <Skeleton className="h-8 w-12" />
+                ) : (
+                  (approvedMeta?.totalCount ?? 0)
+                )}
               </span>
               <span className="text-muted-foreground text-xs font-light">
                 solicitações
@@ -430,7 +422,11 @@ export function Redemptions() {
             </div>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-foreground text-2xl font-bold tracking-tight">
-                {deliveredMeta?.totalCount ?? 0}
+                {deliveredQuery.isLoading ? (
+                  <Skeleton className="h-8 w-12" />
+                ) : (
+                  (deliveredMeta?.totalCount ?? 0)
+                )}
               </span>
               <span className="text-muted-foreground text-xs font-light">
                 solicitações
@@ -471,7 +467,11 @@ export function Redemptions() {
             </div>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-foreground text-2xl font-bold tracking-tight">
-                {otherMeta?.totalCount ?? 0}
+                {otherQuery.isLoading ? (
+                  <Skeleton className="h-8 w-12" />
+                ) : (
+                  (otherMeta?.totalCount ?? 0)
+                )}
               </span>
               <span className="text-muted-foreground text-xs font-light">
                 solicitações
@@ -482,7 +482,7 @@ export function Redemptions() {
 
         {/* PENDENTES TAB */}
         <TabsContent value="pending" className="space-y-4">
-          {pending.length === 0 ? (
+          {pending.length === 0 && !pendingQuery.isLoading ? (
             <div className="border-border rounded-lg border border-dashed p-12 text-center">
               <Gift className="text-muted-foreground mx-auto mb-2 size-8 opacity-50" />
               <p className="text-muted-foreground text-sm">
@@ -506,51 +506,59 @@ export function Redemptions() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {pending.map((redemption) => (
-                      <TableRow key={redemption.id}>
-                        <TableCell className="font-medium">
-                          {redemption.student.name}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.student.class.name} (
-                          {redemption.student.class.year})
-                        </TableCell>
-                        <TableCell>{redemption.award.name}</TableCell>
-                        <TableCell className="font-semibold text-emerald-500">
-                          {redemption.pointsCost}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(redemption.createdAt).toLocaleDateString(
-                            'pt-BR',
-                          )}
-                        </TableCell>
-                        <TableCell className="space-x-2 text-right">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              setApproveRedemptionId(redemption.id)
-                            }
-                            className="cursor-pointer border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-500"
-                          >
-                            <Check className="size-4" />
-                            Aprovar
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setRejectRedemptionId(redemption.id)
-                              setRejectionError('')
-                            }}
-                            className="border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
-                          >
-                            <X className="size-4" />
-                            Rejeitar
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {pendingQuery.isLoading ? (
+                      <>
+                        <RedemptionSkeleton columnsCount={6} />
+                        <RedemptionSkeleton columnsCount={6} />
+                        <RedemptionSkeleton columnsCount={6} />
+                      </>
+                    ) : (
+                      pending.map((redemption) => (
+                        <TableRow key={redemption.id}>
+                          <TableCell className="font-medium">
+                            {redemption.student.name}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.student.class.name} (
+                            {redemption.student.class.year})
+                          </TableCell>
+                          <TableCell>{redemption.award.name}</TableCell>
+                          <TableCell className="font-semibold text-emerald-500">
+                            {redemption.pointsCost}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(redemption.createdAt).toLocaleDateString(
+                              'pt-BR',
+                            )}
+                          </TableCell>
+                          <TableCell className="space-x-2 text-right">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                setApproveRedemptionId(redemption.id)
+                              }
+                              className="cursor-pointer border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-500"
+                            >
+                              <Check className="size-4" />
+                              Aprovar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setRejectRedemptionId(redemption.id)
+                                setRejectionError('')
+                              }}
+                              className="border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
+                            >
+                              <X className="size-4" />
+                              Rejeitar
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -570,7 +578,7 @@ export function Redemptions() {
 
         {/* APROVADOS TAB */}
         <TabsContent value="approved" className="space-y-4">
-          {approved.length === 0 ? (
+          {approved.length === 0 && !approvedQuery.isLoading ? (
             <div className="border-border rounded-lg border border-dashed p-12 text-center">
               <Gift className="text-muted-foreground mx-auto mb-2 size-8 opacity-50" />
               <p className="text-muted-foreground text-sm">
@@ -595,42 +603,50 @@ export function Redemptions() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {approved.map((redemption) => (
-                      <TableRow key={redemption.id}>
-                        <TableCell className="font-medium">
-                          {redemption.student.name}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.student.class.name} (
-                          {redemption.student.class.year})
-                        </TableCell>
-                        <TableCell>{redemption.award.name}</TableCell>
-                        <TableCell className="font-semibold text-emerald-500">
-                          {redemption.pointsCost}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground max-w-[250px] truncate">
-                          {redemption.pickupInstructions || '-'}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.approvedAt
-                            ? new Date(
-                                redemption.approvedAt,
-                              ).toLocaleDateString('pt-BR')
-                            : '-'}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            size="sm"
-                            onClick={() => handleDeliver(redemption.id)}
-                            disabled={isDeliverPending}
-                            className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
-                          >
-                            <ClipboardCheck className="size-4" />
-                            Entregar
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {approvedQuery.isLoading ? (
+                      <>
+                        <RedemptionSkeleton columnsCount={7} />
+                        <RedemptionSkeleton columnsCount={7} />
+                        <RedemptionSkeleton columnsCount={7} />
+                      </>
+                    ) : (
+                      approved.map((redemption) => (
+                        <TableRow key={redemption.id}>
+                          <TableCell className="font-medium">
+                            {redemption.student.name}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.student.class.name} (
+                            {redemption.student.class.year})
+                          </TableCell>
+                          <TableCell>{redemption.award.name}</TableCell>
+                          <TableCell className="font-semibold text-emerald-500">
+                            {redemption.pointsCost}
+                          </TableCell>
+                          <TableCell className="text-muted-foreground max-w-[250px] truncate">
+                            {redemption.pickupInstructions || '-'}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.approvedAt
+                              ? new Date(
+                                  redemption.approvedAt,
+                                ).toLocaleDateString('pt-BR')
+                              : '-'}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              size="sm"
+                              onClick={() => handleDeliver(redemption.id)}
+                              disabled={isDeliverPending}
+                              className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+                            >
+                              <ClipboardCheck className="size-4" />
+                              Entregar
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -650,7 +666,7 @@ export function Redemptions() {
 
         {/* ENTREGUES TAB */}
         <TabsContent value="delivered" className="space-y-4">
-          {delivered.length === 0 ? (
+          {delivered.length === 0 && !deliveredQuery.isLoading ? (
             <div className="border-border rounded-lg border border-dashed p-12 text-center">
               <Gift className="text-muted-foreground mx-auto mb-2 size-8 opacity-50" />
               <p className="text-muted-foreground text-sm">
@@ -672,33 +688,41 @@ export function Redemptions() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {delivered.map((redemption) => (
-                      <TableRow key={redemption.id}>
-                        <TableCell className="font-medium">
-                          {redemption.student.name}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.student.class.name} (
-                          {redemption.student.class.year})
-                        </TableCell>
-                        <TableCell>{redemption.award.name}</TableCell>
-                        <TableCell className="text-muted-foreground font-semibold">
-                          {redemption.pointsCost}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(redemption.createdAt).toLocaleDateString(
-                            'pt-BR',
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.deliveredAt
-                            ? new Date(
-                                redemption.deliveredAt,
-                              ).toLocaleDateString('pt-BR')
-                            : '-'}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {deliveredQuery.isLoading ? (
+                      <>
+                        <RedemptionSkeleton columnsCount={6} />
+                        <RedemptionSkeleton columnsCount={6} />
+                        <RedemptionSkeleton columnsCount={6} />
+                      </>
+                    ) : (
+                      delivered.map((redemption) => (
+                        <TableRow key={redemption.id}>
+                          <TableCell className="font-medium">
+                            {redemption.student.name}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.student.class.name} (
+                            {redemption.student.class.year})
+                          </TableCell>
+                          <TableCell>{redemption.award.name}</TableCell>
+                          <TableCell className="text-muted-foreground font-semibold">
+                            {redemption.pointsCost}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(redemption.createdAt).toLocaleDateString(
+                              'pt-BR',
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.deliveredAt
+                              ? new Date(
+                                  redemption.deliveredAt,
+                                ).toLocaleDateString('pt-BR')
+                              : '-'}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -718,7 +742,7 @@ export function Redemptions() {
 
         {/* OUTROS TAB */}
         <TabsContent value="other" className="space-y-4">
-          {other.length === 0 ? (
+          {other.length === 0 && !otherQuery.isLoading ? (
             <div className="border-border rounded-lg border border-dashed p-12 text-center">
               <Gift className="text-muted-foreground mx-auto mb-2 size-8 opacity-50" />
               <p className="text-muted-foreground text-sm">
@@ -741,46 +765,54 @@ export function Redemptions() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {other.map((redemption) => (
-                      <TableRow key={redemption.id}>
-                        <TableCell className="font-medium">
-                          {redemption.student.name}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.student.class.name} (
-                          {redemption.student.class.year})
-                        </TableCell>
-                        <TableCell>{redemption.award.name}</TableCell>
-                        <TableCell className="text-muted-foreground font-semibold">
-                          {redemption.pointsCost}
-                        </TableCell>
-                        <TableCell>
-                          {redemption.status === 'REJECTED' ? (
-                            <span className="text-destructive inline-flex items-center gap-1 text-xs font-medium">
-                              <Ban className="size-3" />
-                              Rejeitado
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground inline-flex items-center gap-1 text-xs font-medium">
-                              <X className="size-3" />
-                              Cancelado pelo Aluno
-                            </span>
-                          )}
-                        </TableCell>
-                        <TableCell className="max-w-[250px] truncate">
-                          {redemption.status === 'REJECTED'
-                            ? redemption.rejectionReason
-                            : 'Cancelado pelo próprio estudante.'}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(
-                            redemption.rejectedAt ||
-                              redemption.cancelledAt ||
-                              redemption.createdAt,
-                          ).toLocaleDateString('pt-BR')}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {otherQuery.isLoading ? (
+                      <>
+                        <RedemptionSkeleton columnsCount={7} />
+                        <RedemptionSkeleton columnsCount={7} />
+                        <RedemptionSkeleton columnsCount={7} />
+                      </>
+                    ) : (
+                      other.map((redemption) => (
+                        <TableRow key={redemption.id}>
+                          <TableCell className="font-medium">
+                            {redemption.student.name}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.student.class.name} (
+                            {redemption.student.class.year})
+                          </TableCell>
+                          <TableCell>{redemption.award.name}</TableCell>
+                          <TableCell className="text-muted-foreground font-semibold">
+                            {redemption.pointsCost}
+                          </TableCell>
+                          <TableCell>
+                            {redemption.status === 'REJECTED' ? (
+                              <span className="text-destructive inline-flex items-center gap-1 text-xs font-medium">
+                                <Ban className="size-3" />
+                                Rejeitado
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground inline-flex items-center gap-1 text-xs font-medium">
+                                <X className="size-3" />
+                                Cancelado pelo Aluno
+                              </span>
+                            )}
+                          </TableCell>
+                          <TableCell className="max-w-[250px] truncate">
+                            {redemption.status === 'REJECTED'
+                              ? redemption.rejectionReason
+                              : 'Cancelado pelo próprio estudante.'}
+                          </TableCell>
+                          <TableCell>
+                            {new Date(
+                              redemption.rejectedAt ||
+                                redemption.cancelledAt ||
+                                redemption.createdAt,
+                            ).toLocaleDateString('pt-BR')}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -904,5 +936,17 @@ export function Redemptions() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+function RedemptionSkeleton({ columnsCount }: { columnsCount: number }) {
+  return (
+    <TableRow>
+      {Array.from({ length: columnsCount }).map((_, i) => (
+        <TableCell key={i}>
+          <Skeleton className="h-6 w-full" />
+        </TableCell>
+      ))}
+    </TableRow>
   )
 }

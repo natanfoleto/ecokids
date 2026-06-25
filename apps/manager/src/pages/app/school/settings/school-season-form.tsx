@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useAction } from '@/hooks/use-actions'
 import { useCurrentSchoolSlug } from '@/hooks/use-school'
 import { getSchoolSeasons } from '@/http/school-seasons/get-school-seasons'
@@ -162,11 +163,7 @@ export function SchoolSeasonForm() {
   }
 
   if (isLoadingSeasons) {
-    return (
-      <div className="flex h-40 items-center justify-center">
-        <Loader2 className="text-muted-foreground size-8 animate-spin" />
-      </div>
-    )
+    return <SchoolSeasonFormSkeleton />
   }
 
   const activeSeason = seasonsData?.seasons.find(
@@ -492,6 +489,56 @@ export function SchoolSeasonForm() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  )
+}
+
+function SchoolSeasonFormSkeleton() {
+  return (
+    <div className="animate-pulse space-y-8">
+      {/* Active Season Skeleton Card */}
+      <div className="border-border/50 space-y-4 rounded-lg border p-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-3">
+            <Skeleton className="h-4 w-28 rounded-md" />
+            <Skeleton className="h-6 w-48 rounded-md" />
+            <Skeleton className="h-3 w-32 rounded-md" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-10 w-44 rounded-md" />
+            <Skeleton className="h-10 w-32 rounded-md" />
+            <Skeleton className="h-10 w-40 rounded-md" />
+          </div>
+        </div>
+      </div>
+
+      {/* History Skeleton */}
+      <div className="space-y-4">
+        <Skeleton className="h-5 w-40 rounded-md" />
+        <div className="flex flex-col gap-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div
+              key={i}
+              className="border-border/50 flex flex-col justify-between gap-6 rounded-xl border p-6 lg:flex-row lg:items-center"
+            >
+              <div className="space-y-2">
+                <Skeleton className="h-5 w-40 rounded-md" />
+                <Skeleton className="h-4 w-32 rounded-md" />
+              </div>
+              <div className="flex gap-6">
+                <div className="space-y-1">
+                  <Skeleton className="h-3 w-20 rounded-md" />
+                  <Skeleton className="h-6 w-16 rounded-md" />
+                </div>
+                <div className="space-y-1">
+                  <Skeleton className="h-3 w-20 rounded-md" />
+                  <Skeleton className="h-6 w-16 rounded-md" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

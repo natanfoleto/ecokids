@@ -57,7 +57,7 @@ export function SignIn() {
   }
 
   return (
-    <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-3xl border-2 border-emerald-100 bg-white p-8 text-center shadow-lg shadow-emerald-100/40">
+    <div className="flex w-[calc(100%-2rem)] max-w-[440px] flex-col items-center gap-6 rounded-3xl border-2 border-emerald-100 bg-white p-8 text-center shadow-lg shadow-emerald-100/40">
       <div className="flex size-24 items-center justify-center rounded-full border-4 border-emerald-100 bg-emerald-50 shadow-sm">
         <div className="flex size-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 shadow-md">
           <Leaf className="size-8 text-white" />
