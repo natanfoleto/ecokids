@@ -34,18 +34,24 @@ const afterResponse: AfterResponseHook = async (
         typeof data.message === 'string'
       ) {
         const message = data.message.toLowerCase()
-        const authErrorKeywords = [
-          'usuário não encontrado',
-          'estudante não encontrado',
-          'usuário não existe',
-          'estudante não existe',
-          'nenhum usuário encontrado',
-          'nenhum estudante encontrado',
-          'token de autenticação inválido',
-        ]
+        const isProfileRequest =
+          _request.url.includes('/users/profile') ||
+          _request.url.includes('/viewers/students/profile')
 
-        if (authErrorKeywords.some((keyword) => message.includes(keyword))) {
-          shouldSignOut = true
+        if (isProfileRequest) {
+          const authErrorKeywords = [
+            'usuário não encontrado',
+            'estudante não encontrado',
+            'usuário não existe',
+            'estudante não existe',
+            'nenhum usuário encontrado',
+            'nenhum estudante encontrado',
+            'token de autenticação inválido',
+          ]
+
+          if (authErrorKeywords.some((keyword) => message.includes(keyword))) {
+            shouldSignOut = true
+          }
         }
       }
     } catch {
