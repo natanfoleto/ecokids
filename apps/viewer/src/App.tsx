@@ -1,9 +1,9 @@
+import { Toaster } from '@ecokids/ui'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 
 import { queryClient } from '@/lib/react-query'
 
-import { Toaster } from './components/ui/sonner'
 import { router } from './routes'
 
 function App() {

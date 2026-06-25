@@ -5,8 +5,8 @@ import type {
   UpdateSchoolLogoParams,
   UpdateSchoolParams,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createSchool } from '@/http/schools/create-school'
 import { shutdownSchool } from '@/http/schools/shutdown-school'

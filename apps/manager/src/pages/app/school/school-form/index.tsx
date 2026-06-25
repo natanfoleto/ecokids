@@ -1,6 +1,7 @@
 import { type SaveSchoolBody, saveSchoolBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { getCurrentSchool } from '@/auth'
@@ -33,11 +34,18 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { errors, isDirty },
   } = useForm<SaveSchoolBody>({
     resolver: zodResolver(saveSchoolBodySchema),
     defaultValues,
   })
+
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData)
+    }
+  }, [initialData, reset])
 
   const [, handleAction, isPending] = useAction()
 
@@ -52,9 +60,13 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
           },
           body: data,
         }),
-      (data) => {
-        if (data.success) {
-          reset()
+      (response) => {
+        if (response.success) {
+          if (isUpdating) {
+            reset(data)
+          } else {
+            reset()
+          }
           queryClient.invalidateQueries({ queryKey: ['schools'] })
         }
       },
@@ -62,7 +74,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
   }
 
   function updateShouldAttachUsersByDomain(value: boolean) {
-    setValue('shouldAttachUsersByDomain', value)
+    setValue('shouldAttachUsersByDomain', value, { shouldDirty: true })
   }
 
   return (
@@ -92,6 +104,7 @@ export function SchoolForm({ isUpdating, initialData }: SchoolFormProps) {
         <div className="space-y-1.5">
           <div className="flex items-baseline space-x-2">
             <Checkbox
+              checked={watch('shouldAttachUsersByDomain') || false}
               onCheckedChange={updateShouldAttachUsersByDomain}
               className="translate-y-0.5 cursor-pointer"
               id="shouldAttachUsersByDomain"

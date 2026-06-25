@@ -2,8 +2,8 @@ import {
   type CreateSchoolSeasonBody,
   type FinishSchoolSeasonBody,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createSchoolSeason } from '@/http/school-seasons/create-school-season'
 import { finishSchoolSeason } from '@/http/school-seasons/finish-school-season'

@@ -1,6 +1,6 @@
 import type { UpdateUserBody, UpdateUserPasswordBody } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { updateUser } from '@/http/users/update-user'
 import { updateUserAvatar } from '@/http/users/update-user-avatar'

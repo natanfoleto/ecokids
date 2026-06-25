@@ -1,6 +1,6 @@
 import type { UpdateStudentPasswordBody } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { updateStudentPassword } from '@/http/viewers/update-student-password'
 

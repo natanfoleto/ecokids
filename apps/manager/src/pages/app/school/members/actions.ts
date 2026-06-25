@@ -6,8 +6,8 @@ import type {
   UpdateMemberBody,
   UpdateMemberParams,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createInvite } from '@/http/invites/create-invite'
 import { revokeInvite } from '@/http/invites/revoke-invite'

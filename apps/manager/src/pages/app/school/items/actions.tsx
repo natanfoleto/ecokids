@@ -6,8 +6,8 @@ import type {
   UpdateItemParams,
   UpdateItemPhotoParams,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createItem } from '@/http/items/create-item'
 import { deleteItem } from '@/http/items/delete-item'

@@ -1,7 +1,7 @@
+import { toast } from '@ecokids/ui'
 import { useMutation } from '@tanstack/react-query'
 import { Loader2, Search, UserRound } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

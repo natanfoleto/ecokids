@@ -1,8 +1,8 @@
+import { toast } from '@ecokids/ui'
 import { useQuery } from '@tanstack/react-query'
 import { Ban, CheckCircle2, Clock, Gift, Loader2, Undo2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth'

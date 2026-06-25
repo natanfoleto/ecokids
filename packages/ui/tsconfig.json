@@ -1,0 +1,6 @@
+{
+  "extends": "@ecokids/tsconfig/library.json",
+  "include": [
+    "src/**/*"
+  ]
+}

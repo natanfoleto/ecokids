@@ -2,12 +2,12 @@ import {
   type AuthenticateUserWithPasswordBody,
   authenticateUserWithPasswordBodySchema,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Building, Loader2, UserRoundX } from 'lucide-react'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
 
 import { FormInput } from '@/components/form/form-input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'

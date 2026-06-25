@@ -1,6 +1,6 @@
 import type { AuthenticateUserWithPasswordBody } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { authenticateUserWithPassword } from '@/http/auth/authenticate-user-with-password'
 

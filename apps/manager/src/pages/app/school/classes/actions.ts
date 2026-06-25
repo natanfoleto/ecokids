@@ -5,8 +5,8 @@ import type {
   UpdateClassBody,
   UpdateClassParams,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createClass } from '@/http/classes/create-class'
 import { deleteClass } from '@/http/classes/delete-class'

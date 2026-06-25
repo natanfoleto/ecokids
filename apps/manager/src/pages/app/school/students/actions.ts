@@ -5,8 +5,8 @@ import type {
   UpdateStudentBody,
   UpdateStudentParams,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createStudent } from '@/http/students/create-student'
 import { deleteStudent } from '@/http/students/delete-student'

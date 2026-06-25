@@ -13,7 +13,7 @@
 | Class Management | `cn()` (clsx + tailwind-merge) | Conditional + merged classes |
 | Variants | CVA (class-variance-authority) | Component variant definitions |
 | Icons | Lucide React | Icon library |
-| Toast | Sonner | Toast notifications |
+| Toast | Custom (@ecokids/ui) | Playful child-friendly toast notifications |
 | Theme | CSS Variables (oklch) | Light/dark mode tokens |
 | Fonts | Poppins (primary), DM Sans (secondary) | Typography |
 

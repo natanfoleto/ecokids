@@ -1,9 +1,9 @@
 import { type CreateUserBody, createUserBodySchema } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, UserRoundX } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
 
 import logo from '@/assets/logo.svg'
 import { FormInput } from '@/components/form/form-input'

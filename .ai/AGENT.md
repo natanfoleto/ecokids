@@ -350,7 +350,7 @@ All hooks are prefixed with `use-` in filenames (kebab-case) and `use` in functi
 5. **`cn()` utility**: Combines `clsx` + `tailwind-merge` for conditional/merged class names
 6. **shadcn/ui style**: New York variant, zinc base color, CSS variables enabled
 7. **Icons**: Lucide React (`lucide-react`)
-8. **Toasts**: Sonner (`sonner`)
+8. **Toasts**: Custom toast notification system (`@ecokids/ui`)
 9. **Scrollbar**: Custom styled via CSS (light/dark variants)
 
 ### Styling Conventions
@@ -376,7 +376,7 @@ All hooks are prefixed with `use-` in filenames (kebab-case) and `use` in functi
 ### Frontend
 
 1. **HTTP errors**: Catch `HTTPError` from ky, extract `message` from response body
-2. **Toast notifications**: Use `sonner` for user-facing error/success messages
+2. **Toast notifications**: Use custom toast system (`@ecokids/ui`) for user-facing error/success messages
 3. **Form validation**: Zod schemas resolved via `zodResolver` in React Hook Form
 4. **Action state**: Tracked via `useAction()` hook — `{ success, message }`
 

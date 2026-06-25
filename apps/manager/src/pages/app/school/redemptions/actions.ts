@@ -1,5 +1,5 @@
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { approveRedemption } from '@/http/redemptions/approve-redemption'
 import { deliverRedemption } from '@/http/redemptions/deliver-redemption'

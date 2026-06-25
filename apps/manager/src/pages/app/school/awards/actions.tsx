@@ -6,8 +6,8 @@ import type {
   UpdateAwardParams,
   UpdateAwardPhotoParams,
 } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
-import { toast } from 'sonner'
 
 import { createAward } from '@/http/awards/create-award'
 import { deleteAward } from '@/http/awards/delete-award'
