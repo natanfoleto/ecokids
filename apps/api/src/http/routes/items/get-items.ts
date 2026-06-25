@@ -1,4 +1,8 @@
-import { getItemsParamsSchema, getItemsRequestSchema, getItemsResponseSchema } from '@ecokids/types'
+import {
+  getItemsParamsSchema,
+  getItemsRequestSchema,
+  getItemsResponseSchema,
+} from '@ecokids/types'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -47,7 +51,12 @@ export async function getItems(app: FastifyInstance) {
             ? {
                 OR: [
                   { name: { contains: search, mode: 'insensitive' } as const },
-                  { description: { contains: search, mode: 'insensitive' } as const },
+                  {
+                    description: {
+                      contains: search,
+                      mode: 'insensitive',
+                    } as const,
+                  },
                 ],
               }
             : {}),
@@ -58,7 +67,8 @@ export async function getItems(app: FastifyInstance) {
         const limitVal = limit ? Number(limit) : totalCount
         const pageVal = page ? Number(page) : 1
         const take = limit ? Number(limit) : undefined
-        const skip = page && limit ? (Number(page) - 1) * Number(limit) : undefined
+        const skip =
+          page && limit ? (Number(page) - 1) * Number(limit) : undefined
 
         const items = await prisma.item.findMany({
           where,

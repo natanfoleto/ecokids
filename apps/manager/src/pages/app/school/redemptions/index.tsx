@@ -13,6 +13,7 @@ import {
 import { useState } from 'react'
 
 import { FormError } from '@/components/form/form-error'
+import { Pagination } from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -46,7 +47,6 @@ import { queryClient } from '@/lib/react-query'
 import { cn } from '@/lib/utils'
 
 import { Tabs } from '../tabs'
-import { Pagination } from '@/components/pagination'
 import {
   approveRedemptionAction,
   deliverRedemptionAction,
@@ -79,11 +79,21 @@ export function Redemptions() {
   const [otherPage, setOtherPage] = useState(1)
 
   const pendingQuery = useQuery({
-    queryKey: ['schools', schoolSlug, 'redemptions', { status: 'PENDING', page: pendingPage, search: appliedSearch }],
+    queryKey: [
+      'schools',
+      schoolSlug,
+      'redemptions',
+      { status: 'PENDING', page: pendingPage, search: appliedSearch },
+    ],
     queryFn: async () => {
       return getRedemptions({
         params: { schoolSlug: schoolSlug! },
-        query: { status: 'PENDING', page: pendingPage, limit: 10, search: appliedSearch || undefined },
+        query: {
+          status: 'PENDING',
+          page: pendingPage,
+          limit: 10,
+          search: appliedSearch || undefined,
+        },
       })
     },
     placeholderData: keepPreviousData,
@@ -91,11 +101,21 @@ export function Redemptions() {
   })
 
   const approvedQuery = useQuery({
-    queryKey: ['schools', schoolSlug, 'redemptions', { status: 'APPROVED', page: approvedPage, search: appliedSearch }],
+    queryKey: [
+      'schools',
+      schoolSlug,
+      'redemptions',
+      { status: 'APPROVED', page: approvedPage, search: appliedSearch },
+    ],
     queryFn: async () => {
       return getRedemptions({
         params: { schoolSlug: schoolSlug! },
-        query: { status: 'APPROVED', page: approvedPage, limit: 10, search: appliedSearch || undefined },
+        query: {
+          status: 'APPROVED',
+          page: approvedPage,
+          limit: 10,
+          search: appliedSearch || undefined,
+        },
       })
     },
     placeholderData: keepPreviousData,
@@ -103,11 +123,21 @@ export function Redemptions() {
   })
 
   const deliveredQuery = useQuery({
-    queryKey: ['schools', schoolSlug, 'redemptions', { status: 'DELIVERED', page: deliveredPage, search: appliedSearch }],
+    queryKey: [
+      'schools',
+      schoolSlug,
+      'redemptions',
+      { status: 'DELIVERED', page: deliveredPage, search: appliedSearch },
+    ],
     queryFn: async () => {
       return getRedemptions({
         params: { schoolSlug: schoolSlug! },
-        query: { status: 'DELIVERED', page: deliveredPage, limit: 10, search: appliedSearch || undefined },
+        query: {
+          status: 'DELIVERED',
+          page: deliveredPage,
+          limit: 10,
+          search: appliedSearch || undefined,
+        },
       })
     },
     placeholderData: keepPreviousData,
@@ -115,11 +145,21 @@ export function Redemptions() {
   })
 
   const otherQuery = useQuery({
-    queryKey: ['schools', schoolSlug, 'redemptions', { status: 'REJECTED,CANCELLED', page: otherPage, search: appliedSearch }],
+    queryKey: [
+      'schools',
+      schoolSlug,
+      'redemptions',
+      { status: 'REJECTED,CANCELLED', page: otherPage, search: appliedSearch },
+    ],
     queryFn: async () => {
       return getRedemptions({
         params: { schoolSlug: schoolSlug! },
-        query: { status: 'REJECTED,CANCELLED', page: otherPage, limit: 10, search: appliedSearch || undefined },
+        query: {
+          status: 'REJECTED,CANCELLED',
+          page: otherPage,
+          limit: 10,
+          search: appliedSearch || undefined,
+        },
       })
     },
     placeholderData: keepPreviousData,
@@ -488,7 +528,9 @@ export function Redemptions() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => setApproveRedemptionId(redemption.id)}
+                            onClick={() =>
+                              setApproveRedemptionId(redemption.id)
+                            }
                             className="cursor-pointer border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-500"
                           >
                             <Check className="size-4" />
@@ -571,9 +613,9 @@ export function Redemptions() {
                         </TableCell>
                         <TableCell>
                           {redemption.approvedAt
-                            ? new Date(redemption.approvedAt).toLocaleDateString(
-                                'pt-BR',
-                              )
+                            ? new Date(
+                                redemption.approvedAt,
+                              ).toLocaleDateString('pt-BR')
                             : '-'}
                         </TableCell>
                         <TableCell className="text-right">
@@ -650,9 +692,9 @@ export function Redemptions() {
                         </TableCell>
                         <TableCell>
                           {redemption.deliveredAt
-                            ? new Date(redemption.deliveredAt).toLocaleDateString(
-                                'pt-BR',
-                              )
+                            ? new Date(
+                                redemption.deliveredAt,
+                              ).toLocaleDateString('pt-BR')
                             : '-'}
                         </TableCell>
                       </TableRow>

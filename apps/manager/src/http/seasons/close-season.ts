@@ -1,4 +1,7 @@
-import { type CloseSeasonRequest, type CloseSeasonResponse } from '@ecokids/types'
+import {
+  type CloseSeasonRequest,
+  type CloseSeasonResponse,
+} from '@ecokids/types'
 
 import { api } from '../api'
 

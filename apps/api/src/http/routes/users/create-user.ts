@@ -49,10 +49,10 @@ export async function createUser(app: FastifyInstance) {
           passwordHash,
           member_on: autoJoinSchool
             ? {
-              create: {
-                schoolId: autoJoinSchool.id,
-              },
-            }
+                create: {
+                  schoolId: autoJoinSchool.id,
+                },
+              }
             : undefined,
         },
       })

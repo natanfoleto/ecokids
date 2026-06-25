@@ -63,7 +63,8 @@ export async function getClasses(app: FastifyInstance) {
         const limitVal = limit ? Number(limit) : totalCount
         const pageVal = page ? Number(page) : 1
         const take = limit ? Number(limit) : undefined
-        const skip = page && limit ? (Number(page) - 1) * Number(limit) : undefined
+        const skip =
+          page && limit ? (Number(page) - 1) * Number(limit) : undefined
 
         const classes = await prisma.class.findMany({
           where,

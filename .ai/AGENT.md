@@ -298,6 +298,8 @@ All hooks are prefixed with `use-` in filenames (kebab-case) and `use` in functi
 
 5. **Authorization**: CASL permissions via `getUserPermissions(userId, role)` from `@/utils/get-user-permissions`. Toda nova funcionalidade deve obrigatoriamente considerar permissões. Nenhuma rota nova deve ser criada sem avaliar regras de autorização.
 
+6. **Auditing**: All critical write operations are automatically logged by the Prisma Query Extension. Any new critical write operations or entities must be added to `AUDITED_MODELS` in `apps/api/src/lib/prisma.ts` and their action mappings added to `apps/api/src/lib/audit-service.ts`. Non-CRUD critical events must be logged explicitly using `recordAuditLog`.
+
 6. **Error handling**: Throw `BadRequestError`, `UnauthorizedError` or `ForbiddenError` from `_errors/`. The centralized `errorHandler` maps these to proper HTTP status codes.
 
 
@@ -685,3 +687,4 @@ Never enter an automatic retry loop.
 - [ ] New HTTP functions follow the established `{ params, body }` pattern
 - [ ] New actions follow the `try/catch HTTPError` pattern with toast notifications
 - [ ] No new patterns introduced without explicit approval
+- [ ] No critical data changes are made without evaluating the audit logging system (new entities added to `AUDITED_MODELS`, text translations added, or explicit logs implemented)

@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 
+import { registerAuditLogsRoutes } from './audit-logs'
 import { registerAuthRoutes } from './auth'
 import { registerAwardRoutes } from './awards'
 import { registerClassRoutes } from './classes'
@@ -30,4 +31,5 @@ export default async function (app: FastifyInstance) {
   await registerSeasonRoutes(app)
   await registerRedemptionRoutes(app)
   await registerSchoolSeasonRoutes(app)
+  await registerAuditLogsRoutes(app)
 }

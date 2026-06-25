@@ -300,6 +300,7 @@ The authorization check happens at two levels:
   - All database changes must go through migration files generated via `pnpm db:migrate` (internally running `prisma migrate dev`).
   - Migration history must be strictly preserved and committed.
 - **Connection**: Single `PrismaClient` instance in `src/lib/prisma.ts`
+- **Audit Logging**: Implemented via Prisma Query Extension. Database mutation queries on audited models are automatically logged to `audit_logs` using a separate `basePrisma` connection to prevent recursive loops. IP, User Agent, active User/Student, and active School are passed from Fastify request context using `AsyncLocalStorage`.
 - **Docker**: `bitnami/postgresql:latest` on port 5432
 
 ### File Storage (Cloudflare R2)

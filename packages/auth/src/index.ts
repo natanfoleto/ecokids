@@ -8,6 +8,7 @@ import { z } from 'zod'
 
 import { Member } from './models/member'
 import { permissions } from './permissions'
+import { auditLogSubject } from './subjects/audit-log'
 import { awardSubject } from './subjects/award'
 import { classSubject } from './subjects/class'
 import { exchangeSeasonSubject } from './subjects/exchange-season'
@@ -30,6 +31,7 @@ export * from './roles'
 export * from './subjects/exchange-season'
 export * from './subjects/reward-redemption'
 export * from './subjects/school-season'
+export * from './subjects/audit-log'
 
 const appAbilitiesSchema = z.union([
   memberSubject,
@@ -43,6 +45,7 @@ const appAbilitiesSchema = z.union([
   exchangeSeasonSubject,
   rewardRedemptionSubject,
   schoolSeasonSubject,
+  auditLogSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

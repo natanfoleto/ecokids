@@ -113,6 +113,7 @@ model School {
   seasons     ExchangeSeason[]
   redemptions RewardRedemption[]
   schoolSeasons SchoolSeason[]
+  auditLogs     AuditLog[]
 
   @@map("schools")
 }
@@ -310,4 +311,30 @@ model SchoolSeason {
   redemptions RewardRedemption[]
 
   @@map("school_seasons")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  schoolId    String?  @map("school_id")
+  actorId     String?  @map("actor_id")
+  actorType   String   @map("actor_type")
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id")
+  action      String
+  description String
+  oldData     Json?    @map("old_data")
+  newData     Json?    @map("new_data")
+  metadata    Json?
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  school      School?  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([schoolId])
+  @@index([actorId])
+  @@index([action])
+  @@index([entityType])
+  @@map("audit_logs")
 }

@@ -7,6 +7,7 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
+import { recordAuditLog } from '@/lib/audit-service'
 import { prisma } from '@/lib/prisma'
 
 export async function authenticateStudentWithPassword(app: FastifyInstance) {
@@ -30,10 +31,27 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
       })
 
       if (!studentFromEmail) {
+        await recordAuditLog({
+          actorType: 'STUDENT',
+          entityType: 'Student',
+          action: 'AUTH_FAILURE',
+          description: `Tentativa inválida de login de estudante com o e-mail: ${email}`,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || null,
+        })
         throw new BadRequestError('Credenciais inválidas.')
       }
 
       if (studentFromEmail.passwordHash === null) {
+        await recordAuditLog({
+          schoolId: studentFromEmail.schoolId,
+          actorType: 'STUDENT',
+          entityType: 'Student',
+          action: 'AUTH_FAILURE',
+          description: `Tentativa inválida de login de estudante (sem senha cadastrada) com o e-mail: ${email}`,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || null,
+        })
         throw new BadRequestError('Usuário não contém uma senha.')
       }
 
@@ -43,6 +61,15 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
       )
 
       if (!isPasswordValid) {
+        await recordAuditLog({
+          schoolId: studentFromEmail.schoolId,
+          actorType: 'STUDENT',
+          entityType: 'Student',
+          action: 'AUTH_FAILURE',
+          description: `Tentativa inválida de login de estudante com o e-mail: ${email}`,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || null,
+        })
         throw new BadRequestError('Credenciais inválidas.')
       }
 
@@ -65,6 +92,18 @@ export async function authenticateStudentWithPassword(app: FastifyInstance) {
         sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7, // 7 dias
         ...(cookieDomain && { domain: cookieDomain }),
+      })
+
+      await recordAuditLog({
+        schoolId: studentFromEmail.schoolId,
+        actorId: studentFromEmail.id,
+        actorType: 'STUDENT',
+        entityType: 'Student',
+        entityId: studentFromEmail.id,
+        action: 'LOGIN',
+        description: `Estudante ${studentFromEmail.name} (código: ${studentFromEmail.code}) realizou login.`,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'] || null,
       })
 
       return reply.status(201).send({ token })

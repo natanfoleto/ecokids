@@ -4,6 +4,8 @@ import { ZodError } from 'zod'
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
 import { ForbiddenError } from '@/http/routes/_errors/forbidden-error'
 import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
+import { recordAuditLog } from '@/lib/audit-service'
+import { requestContextStorage } from '@/lib/request-context'
 
 type FastifyErrorHandler = FastifyInstance['errorHandler']
 
@@ -30,6 +32,22 @@ export const errorHandler: FastifyErrorHandler = (error, request, reply) => {
   }
 
   if (error instanceof ForbiddenError) {
+    const store = requestContextStorage.getStore()
+    const actorId = store?.actorId || null
+    const actorType = store?.actorType || 'USER'
+    const schoolId = store?.schoolId || null
+
+    recordAuditLog({
+      schoolId,
+      actorId,
+      actorType,
+      entityType: 'Security',
+      action: 'SECURITY_VIOLATION',
+      description: `Acesso negado: ${error.message} Rota: ${request.method} ${request.url}`,
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'] || null,
+    })
+
     return reply.status(403).send({
       message: error.message,
     })

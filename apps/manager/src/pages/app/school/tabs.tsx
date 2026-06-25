@@ -4,6 +4,7 @@ import {
   GraduationCap,
   Paperclip,
   Settings,
+  ShieldAlert,
   SquarePen,
   Users,
   Volleyball,
@@ -27,6 +28,7 @@ export function Tabs() {
   const canGetRedemptions = permissions?.can('get', 'RewardRedemption')
   const canGetMembers = permissions?.can('get', 'Member')
   const canUpdateSchool = permissions?.can('update', 'School')
+  const canGetAuditLogs = permissions?.can('get', 'AuditLog')
 
   return (
     <nav className="flex items-center gap-2">
@@ -155,6 +157,25 @@ export function Tabs() {
               >
                 <Users className="size-4" />
                 Membros
+              </Button>
+            )}
+          </NavLink>
+        )
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        canGetAuditLogs && (
+          <NavLink to={`/school/${schoolSlug}/audit-logs`} end>
+            {({ isActive }) => (
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
+              >
+                <ShieldAlert className="size-4" />
+                Auditoria
               </Button>
             )}
           </NavLink>

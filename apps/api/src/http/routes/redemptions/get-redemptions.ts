@@ -3,6 +3,7 @@ import {
   getRedemptionsRequestSchema,
   getRedemptionsResponseSchema,
 } from '@ecokids/types'
+import { RedemptionStatus } from '@prisma/client'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
@@ -31,7 +32,7 @@ export async function getRedemptions(app: FastifyInstance) {
       },
       async (request, reply) => {
         const { schoolSlug } = request.params
-        const { page, limit, search, status } = request.query
+        const { page, limit, search, status } = request.query || {}
 
         const userId = await request.getCurrentEntityId()
         const { school, membership } =
@@ -51,7 +52,7 @@ export async function getRedemptions(app: FastifyInstance) {
           schoolId: school.id,
           ...(statuses
             ? {
-                status: { in: statuses as any },
+                status: { in: statuses as RedemptionStatus[] },
               }
             : {}),
           ...(search

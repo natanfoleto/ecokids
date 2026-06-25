@@ -8,6 +8,7 @@ import { GlobalLayout } from './pages/_layouts/global'
 import { Home } from './pages/app/home'
 import { Profile } from './pages/app/profile'
 import { School } from './pages/app/school'
+import { AuditLogs } from './pages/app/school/audit-logs'
 import { Awards } from './pages/app/school/awards'
 import { Classes } from './pages/app/school/classes'
 import { Items } from './pages/app/school/items'
@@ -84,6 +85,14 @@ export const router = createBrowserRouter([
             element: (
               <PermissionGuard action="update" subject="School">
                 <Settings />
+              </PermissionGuard>
+            ),
+          },
+          {
+            path: '/school/:slug/audit-logs',
+            element: (
+              <PermissionGuard action="get" subject="AuditLog">
+                <AuditLogs />
               </PermissionGuard>
             ),
           },

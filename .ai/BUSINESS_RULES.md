@@ -22,3 +22,20 @@
   - Configurações da Escola (`SchoolSettings`)
   - Geração/Download de Relatórios do Ciclo de Pontuação (`SchoolSeason`)
 - **Enforcement**: Qualquer requisição HTTP executada por um `MEMBER` para endpoints destas áreas restritas deve ser rejeitada pela API com status `403 Forbidden`. No Manager, as abas de navegação devem ser ocultadas da interface e o acesso direto via URL deve exibir uma tela de "Acesso Proibido".
+
+---
+
+## 2. Auditoria e Rastreabilidade (AUDIT)
+
+### `RULE-AUDIT-001` - Registro Automático de Alterações
+- **Escopo**: Toda a plataforma.
+- **Regra**: Toda alteração crítica realizada no sistema (incluindo criação, edição e exclusão de escolas, turmas, alunos, materiais recicláveis, prêmios, resgates, pontuações, convites e controle de membros, além de tentativas de login inválidas ou violações de acesso) deve gerar obrigatoriamente um log de auditoria associado.
+
+### `RULE-AUDIT-002` - Imutabilidade e Permanência
+- **Escopo**: Banco de dados e API.
+- **Regra**: Os logs do sistema de auditoria são permanentes e imutáveis. Não deve existir nenhum endpoint na API ou lógica no banco de dados para alterar (`UPDATE`) ou deletar (`DELETE`) registros de auditoria.
+
+### `RULE-AUDIT-003` - Acesso Exclusivo a Administradores
+- **Escopo**: Frontend (Manager) e API.
+- **Regra**: Somente usuários com a permissão/papel `ADMIN` podem visualizar a tela de auditoria ou realizar requisições para listar os logs na API. Usuários com papel `MEMBER` são totalmente bloqueados tanto na interface do usuário quanto a nível de backend (retornando `403 Forbidden`).
+

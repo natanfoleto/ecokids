@@ -7,6 +7,7 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
+import { recordAuditLog } from '@/lib/audit-service'
 import { prisma } from '@/lib/prisma'
 
 export async function authenticateUserWithPassword(app: FastifyInstance) {
@@ -30,10 +31,26 @@ export async function authenticateUserWithPassword(app: FastifyInstance) {
       })
 
       if (!userFromEmail) {
+        await recordAuditLog({
+          actorType: 'USER',
+          entityType: 'User',
+          action: 'AUTH_FAILURE',
+          description: `Tentativa inválida de login com o e-mail: ${email}`,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || null,
+        })
         throw new BadRequestError('Credenciais inválidas.')
       }
 
       if (userFromEmail.passwordHash === null) {
+        await recordAuditLog({
+          actorType: 'USER',
+          entityType: 'User',
+          action: 'AUTH_FAILURE',
+          description: `Tentativa inválida de login (usuário sem senha cadastrada) com o e-mail: ${email}`,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || null,
+        })
         throw new BadRequestError('Usuário não contém uma senha.')
       }
 
@@ -43,6 +60,14 @@ export async function authenticateUserWithPassword(app: FastifyInstance) {
       )
 
       if (!isPasswordValid) {
+        await recordAuditLog({
+          actorType: 'USER',
+          entityType: 'User',
+          action: 'AUTH_FAILURE',
+          description: `Tentativa inválida de login com o e-mail: ${email}`,
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || null,
+        })
         throw new BadRequestError('Credenciais inválidas.')
       }
 
@@ -65,6 +90,17 @@ export async function authenticateUserWithPassword(app: FastifyInstance) {
         sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7, // 7 dias
         ...(cookieDomain && { domain: cookieDomain }),
+      })
+
+      await recordAuditLog({
+        actorId: userFromEmail.id,
+        actorType: 'USER',
+        entityType: 'User',
+        entityId: userFromEmail.id,
+        action: 'LOGIN',
+        description: `Usuário ${userFromEmail.email} realizou login no Manager.`,
+        ipAddress: request.ip,
+        userAgent: request.headers['user-agent'] || null,
       })
 
       return reply.status(201).send()

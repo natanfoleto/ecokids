@@ -6,8 +6,8 @@ import {
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
-import { UnauthorizedError } from '@//http/routes/_errors/unauthorized-error'
 import { auth } from '@/http/middlewares/auth'
+import { ForbiddenError } from '@/http/routes/_errors/forbidden-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 

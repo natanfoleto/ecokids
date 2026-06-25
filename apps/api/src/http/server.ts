@@ -16,12 +16,23 @@ import { errorHandler } from '@/http/error-handler'
 import routes from '@/http/routes'
 import { healthCheck } from '@/http/routes/health-check'
 import S3ClientWrapper from '@/lib/aws'
+import { requestContextStorage } from '@/lib/request-context'
 
 config()
 
 const app = fastify({
   logger: true,
 }).withTypeProvider<ZodTypeProvider>()
+
+app.addHook('onRequest', (request, reply, done) => {
+  requestContextStorage.run(
+    {
+      ipAddress: request.ip,
+      userAgent: request.headers['user-agent'] || null,
+    },
+    done,
+  )
+})
 
 const s3Client = new S3ClientWrapper()
 
