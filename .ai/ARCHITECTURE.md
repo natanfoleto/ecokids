@@ -303,6 +303,132 @@ The authorization check happens at two levels:
 - **Audit Logging**: Implemented via Prisma Query Extension. Database mutation queries on audited models are automatically logged to `audit_logs` using a separate `basePrisma` connection to prevent recursive loops. IP, User Agent, active User/Student, and active School are passed from Fastify request context using `AsyncLocalStorage`.
 - **Docker**: `bitnami/postgresql:latest` on port 5432
 
+#### Entity Relationship Diagram (ERD)
+
+```mermaid
+erDiagram
+    User ||--o{ Member : "member_on"
+    User ||--o{ School : "owns"
+    User ||--o{ Invite : "authored"
+    User ||--o{ UserToken : "tokens"
+
+    School ||--o{ Member : "members"
+    School ||--o{ Class : "classes"
+    School ||--o{ Student : "students"
+    School ||--o{ Award : "awards"
+    School ||--o{ Item : "items"
+    School ||--o{ Invite : "invites"
+    School ||--|| SchoolSettings : "settings"
+
+    Class ||--o{ Student : "students"
+
+    Student ||--o{ Point : "points"
+    Student ||--o{ StudentToken : "tokens"
+
+    Point ||--o{ ScoreItems : "score_items"
+
+    Item ||--o{ ScoreItems : "score_items"
+```
+
+#### Detailed Entity Reference
+
+##### User (Admin / Teacher)
+- `id`: UUID (PK, auto)
+- `name`: string (Required)
+- `email`: string (Unique, Required)
+- `cpf`: string (Required Brazilian tax ID)
+- `avatarUrl`: string (Optional S3/R2 URL)
+- `passwordHash`: string (bcrypt hashed)
+- `createdAt` / `updatedAt`: DateTime
+
+##### School (Tenant Root)
+- `id`: UUID (PK)
+- `name`: string (Required)
+- `slug`: string (Unique, auto-generated from name)
+- `city` / `state` / `domain`: string (Optional)
+- `shouldAttachUsersByDomain`: boolean (Default: false)
+- `logoUrl`: string (Optional S3/R2 URL)
+- `ownerId`: UUID (FK -> User)
+- `createdAt` / `updatedAt`: DateTime
+
+##### SchoolSettings (School Configurations)
+- `id`: UUID (PK)
+- `lastStudentCode`: int (Default: 0, used to auto-increment student code logins)
+- `schoolId`: UUID (FK -> School, Unique)
+
+##### Member (User-School Junction with role)
+- `id`: UUID (PK)
+- `role`: Role (Enum: `ADMIN` | `MEMBER`)
+- `schoolId`: UUID (FK -> School)
+- `userId`: UUID (FK -> User)
+- *Constraint*: Unique `[schoolId, userId]`
+
+##### Invite (School Invitation)
+- `id`: UUID (PK)
+- `email`: string (Required, Indexed)
+- `role`: Role (Enum: `ADMIN` | `MEMBER`)
+- `authorId`: UUID (FK -> User, Nullable)
+- `schoolId`: UUID (FK -> School)
+- *Constraint*: Unique `[email, schoolId]`
+
+##### Class (School Grade/Section)
+- `id`: UUID (PK)
+- `name`: string (Required)
+- `year`: string (Required, e.g. "2026")
+- `schoolId`: UUID (FK -> School)
+- *Constraint*: Unique `[name, year, schoolId]`
+
+##### Student (Kiosk User)
+- `id`: UUID (PK)
+- `code`: int (Required student card number)
+- `name`: string (Required)
+- `cpf` / `email`: string (Unique, Optional)
+- `passwordHash`: string (bcrypt hashed)
+- `active`: boolean (Default: true)
+- `schoolId`: UUID (FK -> School)
+- `classId`: UUID (FK -> Class)
+- *Constraint*: Unique `[code, schoolId]`
+
+##### Point (Scoring Event Envelope)
+- `id`: UUID (PK)
+- `amount`: int (Total points earned, Σ scoreItem.amount × scoreItem.value)
+- `studentId`: UUID (FK -> Student)
+- `createdAt`: DateTime (Auto)
+- *Constraint*: Immutable records. No UPDATE/DELETE allowed.
+
+##### ScoreItems (Scoring Line Items)
+- `id`: UUID (PK)
+- `amount`: int (Quantity recycled)
+- `value`: int (Point value per unit snapped at scoring time)
+- `pointId`: UUID (FK -> Point)
+- `itemId`: UUID (FK -> Item)
+
+##### Item (Recyclable Material Type)
+- `id`: UUID (PK)
+- `name`: string (Required, e.g. "Garrafa PET")
+- `description`: string (Optional)
+- `value`: int (Point value per unit)
+- `photoUrl`: string (Optional S3/R2 URL)
+- `schoolId`: UUID (FK -> School)
+- `createdAt` / `updatedAt`: DateTime
+
+##### Award (Redeemable Prize)
+- `id`: UUID (PK)
+- `name`: string (Required, e.g. "Lápis de Cor")
+- `description`: string (Optional)
+- `value`: int (Points cost)
+- `photoUrl`: string (Optional S3/R2 URL)
+- `schoolId`: UUID (FK -> School)
+- `createdAt` / `updatedAt`: DateTime
+
+#### Multi-Tenancy Model
+
+The system enforces a **school-scoped tenant isolation** model:
+- **Tenant Scope**: Every primary resource (Class, Student, Item, Award, Point) belongs directly to a single `School` tenant via a foreign key `schoolId`.
+- **API Resolution**: Route handlers use `:schoolSlug` as a prefix parameter. Fastify requests run `request.getUserMembership(schoolSlug)` via validation hooks to verify membership roles (`ADMIN` or `MEMBER`) and bind the active school context.
+- **Frontend Context**: The client persists the active school slug in a `school` browser cookie and passes it to subsequent request configurations. Users who belong to multiple schools can swap school context dynamically in the dashboard navigation.
+
+
 ### File Storage (Cloudflare R2)
 
 - **Client**: `S3ClientWrapper` class wrapping `@aws-sdk/client-s3`

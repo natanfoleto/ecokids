@@ -1,6 +1,6 @@
 # BUSINESS_RULES.md
 
-> Regras de negócio associadas ao comportamento, processos e autorizações do sistema Ecokids.
+This manual defines the business logic, workflow rules, role matrix constraints, and entity integrity rules for the Ecokids platform.
 
 ---
 
@@ -25,7 +25,20 @@
 
 ---
 
-## 2. Auditoria e Rastreabilidade (AUDIT)
+## 2. Autorização de Estudantes (STUDENT-AUTH)
+
+### `RULE-STUDENT-001` - Login no Terminal de Pesagem (Scorer)
+- **Escopo**: Aplicativo Scorer.
+- **Regra**: O estudante autentica-se fornecendo o seu código numérico de identificação escolar (`code`) e sua senha cadastrada.
+- **Enforcement**: A busca do aluno deve validar se o cadastro está ativo (`active: true`). Caso o aluno não seja encontrado ou sua senha não bata, a API deve retornar erro apropriado sem invalidar o token de sessão do operador da pesagem.
+
+### `RULE-STUDENT-002` - Autenticação Isolada
+- **Escopo**: Aplicativo Viewer.
+- **Regra**: Estudantes possuem fluxo de autenticação e tokens (via `StudentToken`) separados de usuários comuns (`User`). As sessões e escopos de navegação são totalmente isolados.
+
+---
+
+## 3. Auditoria e Rastreabilidade (AUDIT)
 
 ### `RULE-AUDIT-001` - Registro Automático de Alterações
 - **Escopo**: Toda a plataforma.
@@ -39,3 +52,46 @@
 - **Escopo**: Frontend (Manager) e API.
 - **Regra**: Somente usuários com a permissão/papel `ADMIN` podem visualizar a tela de auditoria ou realizar requisições para listar os logs na API. Usuários com papel `MEMBER` são totalmente bloqueados tanto na interface do usuário quanto a nível de backend (retornando `403 Forbidden`).
 
+---
+
+## 4. Fluxos de Trabalho do Sistema (FLOWS)
+
+### `FLOW-001` - Fluxo de Integração de Escola (Onboarding)
+1. O usuário se cadastra na plataforma.
+2. Cria uma escola especificando nome, cidade, estado, e opcionalmente um domínio de e-mail.
+3. Ao cadastrar, o usuário se torna proprietário (`ownerId` na tabela `School`) e é vinculado automaticamente como membro com papel `ADMIN`.
+4. Um registro de configurações padrão (`SchoolSettings`) é criado na mesma transação bancária.
+
+### `FLOW-002` - Fluxo de Cadastro e Matrícula de Estudante
+1. O administrador (`ADMIN`) cria uma turma (`Class`) definindo nome e ano letivo.
+2. O administrador cria o perfil do estudante (`Student`) associado à turma.
+3. Se um código de aluno (`code`) não for fornecido manualmente, o sistema incrementa o campo `lastStudentCode` em `SchoolSettings` e o atribui ao estudante.
+4. O código numérico final deve ser único por escola.
+
+### `FLOW-003` - Fluxo de Pontuação por Reciclagem (Scoring)
+1. O operador da pesagem identifica o estudante no Scorer informando o código escolar.
+2. O operador seleciona os materiais reciclados e informa as quantidades coletadas.
+3. Ao submeter a pesagem, o backend resolve os valores vigentes de cada item (`value`).
+4. Calcula o total de pontos acumulado (`Σ quantidade × valor unitário`).
+5. Cria um registro de pontuação (`Point`) e os respectivos itens de histórico (`ScoreItems`).
+6. Os pontos são creditados na conta virtual do estudante.
+
+### `FLOW-004` - Fluxo de Resgate de Prêmios (Draft / Incompleto)
+- Atualmente, o aplicativo Viewer exibe uma aba de loja (`/shop`) contendo prêmios listados, mas a operação final de resgate de prêmios (`POST` de resgate ou dedução automática de saldo no banco) não está implementada nas rotas da API.
+
+---
+
+## 5. Regras de Integridade de Entidades (ENTITY)
+
+### `RULE-ENTITY-001` - Geração de Slugs Únicos
+- A escola possui um slug gerado a partir do seu nome. Caso o slug resultante já exista no banco de dados, o sistema deve acrescentar um hash aleatório de 4 caracteres para garantir a unicidade global.
+
+### `RULE-ENTITY-002` - Imutabilidade das Pontuações
+- Registros de pontuação (`Point`) e itens de pontuação (`ScoreItems`) são **estritamente imutáveis**. Uma vez registrados no banco de dados, não é permitido atualizar ou deletar estes dados.
+
+### `RULE-ENTITY-003` - Histórico de Valor de Reciclagem
+- A tabela `ScoreItems` salva uma cópia/snapshot do valor por unidade (`value`) do item reciclável no momento em que a pesagem foi concluída. Mudanças posteriores no valor do material reciclável na tabela `Item` **não devem** alterar as pontuações e históricos salvos no passado.
+
+### `RULE-ENTITY-004` - Cascade Deletes
+- A exclusão de uma turma (`Class`) remove em cascata todos os alunos vinculados a ela.
+- A exclusão de uma escola (`School`) deleta em cascata todas as turmas, alunos, materiais, pontuações e configurações configurados sob seu escopo.
