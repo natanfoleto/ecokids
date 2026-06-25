@@ -20,7 +20,6 @@ export function Students() {
     setCreateStudent(!createStudent)
   }
 
-  const canGetStudent = permissions?.can('get', 'Student')
   const canCreateStudent = permissions?.can('create', 'Student')
 
   return (
@@ -46,7 +45,7 @@ export function Students() {
         )}
       </div>
 
-      {canGetStudent ? (
+      {canCreateStudent ? (
         <StudentList />
       ) : (
         <p className="text-muted-foreground text-sm">

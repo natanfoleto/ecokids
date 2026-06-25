@@ -22,8 +22,8 @@ export function Tabs() {
   const { permissions, isLoading } = usePermissions()
 
   const canGetClasses = permissions?.can('get', 'Class')
-  const canGetStudents = permissions?.can('get', 'Student')
-  const canGetItems = permissions?.can('get', 'Item')
+  const canGetStudents = permissions?.can('create', 'Student')
+  const canGetItems = permissions?.can('create', 'Item')
   const canGetAwards = permissions?.can('get', 'Award')
   const canGetRedemptions = permissions?.can('get', 'RewardRedemption')
   const canGetMembers = permissions?.can('get', 'Member')

@@ -21,7 +21,6 @@ export function Items() {
   }
 
   const canCreateItem = permissions?.can('create', 'Item')
-  const canGetItem = permissions?.can('get', 'Item')
 
   return (
     <div className="w-full space-y-6">
@@ -47,7 +46,7 @@ export function Items() {
         )}
       </div>
 
-      {canGetItem ? (
+      {canCreateItem ? (
         <ItemList />
       ) : (
         <p className="text-muted-foreground text-sm">
