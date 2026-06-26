@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 import { isAuthenticated } from '@/auth'
+import { AudioControls } from '@/components/audio-controls'
 
 export function AppLayout() {
   const navigate = useNavigate()
@@ -29,6 +30,7 @@ export function AppLayout() {
   return (
     <main className="min-h-screen">
       <Outlet />
+      <AudioControls />
     </main>
   )
 }

@@ -1,3 +1,4 @@
+import { useClickSound } from '@ecokids/ui'
 import { useQuery } from '@tanstack/react-query'
 import { Search, UserRound, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -19,6 +20,12 @@ export function StudentSearchModal({
   onSelectStudent,
 }: StudentSearchModalProps) {
   const currentSchool = useCurrentSchoolSlug()
+  const { onClick: playClick } = useClickSound()
+
+  function handleClose() {
+    playClick()
+    onClose()
+  }
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -80,7 +87,7 @@ export function StudentSearchModal({
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* Modal panel */}
@@ -98,7 +105,7 @@ export function StudentSearchModal({
 
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="flex size-8 items-center justify-center rounded-xl text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
             aria-label="Fechar modal"
           >
@@ -157,6 +164,7 @@ export function StudentSearchModal({
                 key={student.id}
                 type="button"
                 onClick={() => {
+                  playClick()
                   onSelectStudent(student.code)
                   onClose()
                 }}

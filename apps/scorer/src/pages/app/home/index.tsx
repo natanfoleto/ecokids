@@ -1,4 +1,6 @@
+import { useAudio } from '@ecokids/ui'
 import { Leaf } from 'lucide-react'
+import { useEffect } from 'react'
 
 import { useMetadata } from '@/hooks/use-metadata'
 
@@ -7,6 +9,12 @@ import { SchoolList } from './school-list'
 
 export function Home() {
   useMetadata('Escolas - Ecokids')
+
+  const { playMusic } = useAudio()
+
+  useEffect(() => {
+    playMusic('background')
+  }, [playMusic])
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 p-8">

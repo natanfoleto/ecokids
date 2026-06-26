@@ -1,3 +1,4 @@
+import { useAudio, useClickSound } from '@ecokids/ui'
 import { useQuery } from '@tanstack/react-query'
 import {
   AlertTriangle,
@@ -9,7 +10,7 @@ import {
   RefreshCw,
   X,
 } from 'lucide-react'
-import { type JSX } from 'react'
+import { type JSX, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
@@ -35,6 +36,20 @@ export function Stepper() {
     nextStep,
     student,
   } = useStepper()
+
+  const { playMusic, pauseMusic } = useAudio()
+  const { onClick: playClick } = useClickSound()
+
+  // Control music based on current step:
+  // Steps 1 & 2 → background music plays (without restarting on step switch)
+  // Step 3 (success) → pause music (success.tsx handles the success sound)
+  useEffect(() => {
+    if (step < totalSteps) {
+      playMusic('background')
+    } else {
+      pauseMusic('background')
+    }
+  }, [step, totalSteps, playMusic, pauseMusic])
 
   const steps: Record<number, JSX.Element> = {
     1: <CodeEntry />,
@@ -119,7 +134,7 @@ export function Stepper() {
         <header className="flex-shrink-0 bg-gradient-to-r from-emerald-600 to-teal-500 px-6 py-4 shadow-md">
           <div className="flex items-center justify-between">
             {/* Left — back to home */}
-            <Link to="/">
+            <Link to="/" onClick={playClick}>
               <button className="flex items-center gap-2 rounded-xl bg-white/20 px-3 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/30">
                 <ChevronLeft className="size-4" />
                 Início
@@ -140,7 +155,7 @@ export function Stepper() {
             </div>
 
             {/* Right — reset button */}
-            <Link to="/">
+            <Link to="/" onClick={playClick}>
               <button className="flex items-center gap-2 rounded-xl bg-white/20 px-3 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/30">
                 <RefreshCw className="size-4" />
                 Resetar
@@ -152,8 +167,7 @@ export function Stepper() {
           <div className="mt-4 flex items-center gap-2">
             {STEP_LABELS.map((label, idx) => {
               const stepNum = idx + 1
-              const isActive = step === stepNum
-              const isDone = step > stepNum
+              const isVisited = step >= stepNum
 
               return (
                 <div
@@ -162,20 +176,12 @@ export function Stepper() {
                 >
                   <div
                     className={`h-1 w-full transition-all duration-300 ${
-                      isDone
-                        ? 'bg-white'
-                        : isActive
-                          ? 'bg-yellow-300'
-                          : 'bg-white/30'
+                      isVisited ? 'bg-yellow-300' : 'bg-white/30'
                     }`}
                   />
                   <span
                     className={`text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'text-yellow-300'
-                        : isDone
-                          ? 'text-white'
-                          : 'text-white/50'
+                      isVisited ? 'text-yellow-300' : 'text-white/50'
                     }`}
                   >
                     {label}
@@ -192,7 +198,10 @@ export function Stepper() {
         {/* Navigation prev */}
         {canPrevStep && !isLastStep && (
           <button
-            onClick={prevStep}
+            onClick={() => {
+              playClick()
+              prevStep()
+            }}
             className="absolute left-4 top-4 flex size-12 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg transition-all hover:scale-110 hover:bg-emerald-600 active:scale-95"
           >
             <ArrowLeft className="size-5" />
@@ -202,7 +211,10 @@ export function Stepper() {
         {/* Navigation next */}
         {canNextStep && student && step !== totalSteps - 1 && (
           <button
-            onClick={nextStep}
+            onClick={() => {
+              playClick()
+              nextStep()
+            }}
             className="absolute right-4 top-4 flex size-12 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg transition-all hover:scale-110 hover:bg-emerald-600 active:scale-95"
           >
             <ArrowRight className="size-5" />

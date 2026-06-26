@@ -2,6 +2,7 @@ import {
   type UpdateStudentPasswordBody,
   updateStudentPasswordBodySchema,
 } from '@ecokids/types'
+import { useClickSound } from '@ecokids/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, Loader2, Power } from 'lucide-react'
 import { useState } from 'react'
@@ -26,6 +27,7 @@ interface PasswordInputProps extends React.ComponentProps<'input'> {
 
 function PasswordInput({ error, className, ...rest }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false)
+  const { onClick: playClick } = useClickSound()
 
   return (
     <div className="flex-1 space-y-1">
@@ -44,7 +46,10 @@ function PasswordInput({ error, className, ...rest }: PasswordInputProps) {
         />
         <button
           type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
+          onClick={() => {
+            playClick()
+            setShowPassword((prev) => !prev)
+          }}
           className="absolute right-4 top-1/2 flex h-8 -translate-y-1/2 cursor-pointer items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none"
         >
           {showPassword ? (

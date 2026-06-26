@@ -1,4 +1,5 @@
 import type { CreatePointBody } from '@ecokids/types'
+import { useClickSound } from '@ecokids/ui'
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, Loader2, Minus, Plus, Recycle } from 'lucide-react'
 import { useEffect } from 'react'
@@ -21,18 +22,27 @@ interface ItemCounterProps {
 
 function ItemCounter({ itemId, value, amount }: ItemCounterProps) {
   const { manual, increment, decrement } = useStepper()
+  const { onClick: playClick } = useClickSound()
   const isSelected = amount > 0
 
   const decrementHold = useHoldButton({
-    onSingleClick: () => decrement(itemId),
+    onSingleClick: () => {
+      playClick()
+      decrement(itemId)
+    },
     onHoldTick: () => {
+      playClick()
       for (let i = 0; i < 5; i++) decrement(itemId)
     },
   })
 
   const incrementHold = useHoldButton({
-    onSingleClick: () => increment(itemId, value),
+    onSingleClick: () => {
+      playClick()
+      increment(itemId, value)
+    },
     onHoldTick: () => {
+      playClick()
       for (let i = 0; i < 5; i++) increment(itemId, value)
     },
   })

@@ -1,3 +1,4 @@
+import { useClickSound } from '@ecokids/ui'
 import { useQuery } from '@tanstack/react-query'
 import { Leaf } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -7,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { getSchools } from '@/http/schools/get-schools'
 
 export function SchoolList() {
+  const { onClick: playClick } = useClickSound()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['schools'],
     queryFn: () => getSchools(),
@@ -36,6 +38,7 @@ export function SchoolList() {
               key={school.id}
               to={`/school/${school.slug}`}
               className="group"
+              onClick={playClick}
             >
               <div className="flex w-72 flex-col items-center gap-4 rounded-2xl border border-white/30 bg-white/20 p-6 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-white/30 hover:shadow-xl active:scale-95">
                 <Avatar className="size-20 ring-4 ring-white/40">

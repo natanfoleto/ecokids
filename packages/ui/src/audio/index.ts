@@ -1,0 +1,6 @@
+export { AudioProvider } from './audio-provider'
+export { audioStore } from './audio-store'
+export { useAudio } from './use-audio'
+export { useClickSound } from './use-click-sound'
+export type { AudioPreferences } from './audio-store'
+export type { SoundDefinition, AudioCategory } from './audio-manager'

@@ -2,6 +2,7 @@ import {
   type AuthenticateUserWithPasswordBody,
   authenticateUserWithPasswordBodySchema,
 } from '@ecokids/types'
+import { useAudio } from '@ecokids/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Leaf, Loader2, UserRoundX } from 'lucide-react'
 import { useEffect } from 'react'
@@ -21,6 +22,11 @@ export function SignIn() {
 
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { pauseMusic } = useAudio()
+
+  useEffect(() => {
+    pauseMusic('background')
+  }, [pauseMusic])
 
   const {
     register,

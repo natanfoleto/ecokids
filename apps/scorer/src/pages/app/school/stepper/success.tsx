@@ -1,4 +1,6 @@
+import { useAudio, useClickSound } from '@ecokids/ui'
 import { Leaf, RefreshCw, Trophy, UserRound } from 'lucide-react'
+import { useEffect } from 'react'
 import Confetti from 'react-confetti'
 import { useWindowSize } from 'react-use'
 
@@ -11,6 +13,15 @@ export function Success() {
   const { width, height } = useWindowSize()
 
   const { goToStep, student, setStudent, items, setItems } = useStepper()
+  const { playSound, playMusic } = useAudio()
+  const { onClick: playClick } = useClickSound()
+
+  // Play success sound on mount, resume music when it finishes
+  useEffect(() => {
+    playSound('success', () => {
+      playMusic('background')
+    })
+  }, [playSound, playMusic])
 
   if (!student) {
     goToStep(1)
@@ -20,12 +31,14 @@ export function Success() {
 
   function handleScoreSameStudent() {
     setItems([])
+    playMusic('background')
     goToStep(2)
   }
 
   function handleScoreAnotherStudent() {
     setStudent(null)
     setItems([])
+    playMusic('background')
     goToStep(1)
   }
 
@@ -81,7 +94,10 @@ export function Success() {
         <div className="flex w-full flex-col gap-4">
           <button
             type="button"
-            onClick={handleScoreSameStudent}
+            onClick={() => {
+              playClick()
+              handleScoreSameStudent()
+            }}
             className="flex min-h-[4rem] w-full items-center justify-center gap-1.5 whitespace-normal rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-4 text-xl font-semibold text-white shadow-lg shadow-emerald-200 transition-all hover:from-emerald-600 hover:to-teal-600 active:scale-95"
           >
             <RefreshCw className="size-5 shrink-0" />
@@ -91,7 +107,10 @@ export function Success() {
 
           <button
             type="button"
-            onClick={handleScoreAnotherStudent}
+            onClick={() => {
+              playClick()
+              handleScoreAnotherStudent()
+            }}
             className="flex h-16 w-full items-center justify-center gap-1.5 rounded-2xl border-2 border-emerald-300 bg-white text-xl font-semibold text-emerald-700 shadow-sm transition-all hover:border-emerald-500 hover:bg-emerald-50 active:scale-95"
           >
             <UserRound className="size-5" />

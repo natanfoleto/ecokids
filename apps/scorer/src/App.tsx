@@ -1,7 +1,8 @@
-import { Toaster } from '@ecokids/ui'
+import { AudioProvider, Toaster } from '@ecokids/ui'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 
+import { scorerSounds } from '@/audio'
 import { queryClient } from '@/lib/react-query'
 
 import { router } from './routes'
@@ -9,8 +10,10 @@ import { router } from './routes'
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <Toaster position="bottom-right" theme="light" richColors />
+      <AudioProvider sounds={scorerSounds}>
+        <RouterProvider router={router} />
+        <Toaster position="bottom-right" theme="light" richColors />
+      </AudioProvider>
     </QueryClientProvider>
   )
 }

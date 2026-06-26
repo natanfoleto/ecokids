@@ -1,4 +1,4 @@
-import { toast } from '@ecokids/ui'
+import { toast, useClickSound } from '@ecokids/ui'
 import { useMutation } from '@tanstack/react-query'
 import { Loader2, Search, UserRound } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -18,6 +18,7 @@ export function CodeEntry() {
   const currentSchool = useCurrentSchoolSlug()
 
   const { nextStep, setStudent } = useStepper()
+  const { onClick: playClick } = useClickSound()
 
   const [code, setCode] = useState('')
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
@@ -57,6 +58,7 @@ export function CodeEntry() {
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && code && !isPending) {
+      playClick()
       handleSearch()
     }
   }
@@ -115,7 +117,10 @@ export function CodeEntry() {
 
           <button
             type="button"
-            onClick={() => setIsSearchModalOpen(true)}
+            onClick={() => {
+              playClick()
+              setIsSearchModalOpen(true)
+            }}
             className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-emerald-600 transition-colors hover:bg-emerald-50 hover:text-emerald-700"
           >
             <Search className="size-4" />
