@@ -30,6 +30,15 @@ export async function getSeasons(app: FastifyInstance) {
 
         const { school } = await request.getUserMembership(schoolSlug)
 
+        const schoolSettings = await prisma.schoolSettings.findUnique({
+          where: {
+            schoolId: school.id,
+          },
+          select: {
+            nextSeasonMessage: true,
+          },
+        })
+
         const seasons = await prisma.exchangeSeason.findMany({
           where: {
             schoolId: school.id,
@@ -94,7 +103,10 @@ export async function getSeasons(app: FastifyInstance) {
           }
         })
 
-        return reply.send({ seasons: seasonsWithStats })
+        return reply.send({
+          seasons: seasonsWithStats,
+          nextSeasonMessage: schoolSettings?.nextSeasonMessage,
+        })
       },
     )
 }

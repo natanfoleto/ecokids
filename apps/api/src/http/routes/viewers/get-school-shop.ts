@@ -52,7 +52,20 @@ export async function getSchoolShop(app: FastifyInstance) {
           },
         })
 
-        return reply.status(200).send({ itens, activeSeason })
+        const schoolSettings = await prisma.schoolSettings.findUnique({
+          where: {
+            schoolId,
+          },
+          select: {
+            nextSeasonMessage: true,
+          },
+        })
+
+        return reply.status(200).send({
+          itens,
+          activeSeason,
+          nextSeasonMessage: schoolSettings?.nextSeasonMessage,
+        })
       },
     )
 }

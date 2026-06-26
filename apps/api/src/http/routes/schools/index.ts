@@ -8,6 +8,7 @@ import { getSchools } from './get-schools'
 import { shutdownSchool } from './shutdown-school'
 import { updateSchool } from './update-school'
 import { updateSchoolLogo } from './update-school-logo'
+import { updateSettings } from './update-settings'
 
 export async function registerSchoolRoutes(app: FastifyInstance) {
   app.register(createSchool)
@@ -18,4 +19,5 @@ export async function registerSchoolRoutes(app: FastifyInstance) {
   app.register(shutdownSchool)
   app.register(updateSchoolLogo)
   app.register(getSchoolMetrics)
+  app.register(updateSettings)
 }

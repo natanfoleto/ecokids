@@ -2,6 +2,7 @@ import { type CreateSeasonBody } from '@ecokids/types'
 import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
 
+import { updateSchoolSettings } from '@/http/schools/update-school-settings'
 import { closeSeason } from '@/http/seasons/close-season'
 import { createSeason } from '@/http/seasons/create-season'
 import { deleteSeason } from '@/http/seasons/delete-season'
@@ -122,6 +123,40 @@ export async function deleteSeasonAction({
     return {
       success: true,
       message: 'Temporada de trocas excluída com sucesso!',
+    }
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      const { message } = await error.response.json()
+      toast.error(message)
+      return { success: false, message }
+    }
+
+    toast.error('Erro inesperado, tente novamente em alguns minutos.')
+    return {
+      success: false,
+      message: 'Erro inesperado, tente novamente em alguns minutos.',
+    }
+  }
+}
+
+export async function updateSchoolSettingsAction({
+  schoolSlug,
+  body,
+}: {
+  schoolSlug: string
+  body: { nextSeasonMessage: string | null }
+}) {
+  try {
+    await updateSchoolSettings({
+      params: { schoolSlug },
+      body,
+    })
+
+    toast.success('Previsão de abertura atualizada com sucesso!')
+
+    return {
+      success: true,
+      message: 'Previsão de abertura atualizada com sucesso!',
     }
   } catch (error) {
     if (error instanceof HTTPError) {

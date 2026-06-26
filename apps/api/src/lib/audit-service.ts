@@ -152,6 +152,8 @@ function translateModel(model: string): string {
       return 'resgate de prêmio'
     case 'SchoolSeason':
       return 'ciclo de pontuação'
+    case 'SchoolSettings':
+      return 'configuração da escola'
     default:
       return model.toLowerCase()
   }

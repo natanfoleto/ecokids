@@ -41,9 +41,8 @@ export function Shop() {
           <div className="text-sm">
             <h4 className="font-semibold">Temporada de trocas fechada</h4>
             <p className="opacity-90">
-              A administração da escola fechou a temporada de trocas. Você pode
-              visualizar os prêmios, mas não pode solicitar novos resgates no
-              momento.
+              {data?.nextSeasonMessage ||
+                'A administração da escola fechou a temporada de trocas. Você pode visualizar os prêmios, mas não pode solicitar novos resgates no momento.'}
             </p>
           </div>
         </div>

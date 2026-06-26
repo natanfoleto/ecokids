@@ -20,6 +20,7 @@ const AUDITED_MODELS = [
   'ExchangeSeason',
   'RewardRedemption',
   'SchoolSeason',
+  'SchoolSettings',
 ]
 
 export const prisma = basePrisma.$extends({

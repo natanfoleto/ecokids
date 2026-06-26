@@ -119,8 +119,9 @@ model School {
 }
 
 model SchoolSettings {
-  id              String @id @default(uuid())
-  lastStudentCode Int    @default(0) @map("last_student_code")
+  id                String  @id @default(uuid())
+  lastStudentCode   Int     @default(0) @map("last_student_code")
+  nextSeasonMessage String? @map("next_season_message")
 
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   schoolId String @unique @map("school_id")

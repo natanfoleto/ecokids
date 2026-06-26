@@ -2,7 +2,7 @@ import { type CreateSeasonBody, createSeasonBodySchema } from '@ecokids/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { Calendar, Loader2, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { FormError } from '@/components/form/form-error'
@@ -28,6 +28,7 @@ import {
   deleteSeasonAction,
   openSeasonAction,
   reopenSeasonAction,
+  updateSchoolSettingsAction,
 } from './season-actions'
 
 export function SeasonForm() {
@@ -125,6 +126,44 @@ export function SeasonForm() {
       (data) => {
         if (data.success) {
           setSelectedSeasonToDelete(null)
+          queryClient.invalidateQueries({ queryKey: ['seasons', schoolSlug] })
+        }
+      },
+    )
+  }
+
+  const {
+    register: registerSettings,
+    handleSubmit: handleSubmitSettings,
+    setValue: setSettingsValue,
+    formState: { errors: settingsErrors, isDirty: isSettingsDirty },
+  } = useForm<{ nextSeasonMessage: string }>({
+    defaultValues: {
+      nextSeasonMessage: '',
+    },
+  })
+
+  useEffect(() => {
+    if (seasonsData?.nextSeasonMessage !== undefined) {
+      setSettingsValue('nextSeasonMessage', seasonsData.nextSeasonMessage || '')
+    }
+  }, [seasonsData?.nextSeasonMessage, setSettingsValue])
+
+  const [, handleUpdateSettingsAction, isUpdateSettingsPending] = useAction()
+
+  async function handleUpdateSettings(data: { nextSeasonMessage: string }) {
+    if (!schoolSlug) return
+
+    handleUpdateSettingsAction(
+      () =>
+        updateSchoolSettingsAction({
+          schoolSlug,
+          body: {
+            nextSeasonMessage: data.nextSeasonMessage.trim() || null,
+          },
+        }),
+      (response) => {
+        if (response.success) {
           queryClient.invalidateQueries({ queryKey: ['seasons', schoolSlug] })
         }
       },
@@ -298,6 +337,50 @@ export function SeasonForm() {
           </form>
         </div>
       )}
+
+      {/* Previsão de Abertura */}
+      <div className="border-border space-y-6 rounded-lg border p-6">
+        <div className="space-y-1">
+          <h3 className="text-foreground text-lg font-semibold">
+            Previsão de Abertura no Aplicativo do Aluno
+          </h3>
+          <p className="text-muted-foreground text-sm font-light">
+            Defina a mensagem de aviso que será exibida no aplicativo do aluno
+            (viewer) quando a temporada de trocas estiver fechada. Use esta
+            instrução para avisar aos alunos quando a direção pretende abrir a
+            temporada.
+          </p>
+        </div>
+
+        <form
+          onSubmit={handleSubmitSettings(handleUpdateSettings)}
+          className="max-w-xl space-y-4"
+        >
+          <div className="space-y-2">
+            <Label htmlFor="nextSeasonMessage">Instrução de abertura</Label>
+            <textarea
+              id="nextSeasonMessage"
+              placeholder="Ex: Pretendemos abrir a temporada de trocas no início de agosto de 2026."
+              rows={3}
+              className="border-input placeholder:text-muted-foreground focus-visible:ring-ring flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50"
+              {...registerSettings('nextSeasonMessage')}
+            />
+            <FormError error={settingsErrors.nextSeasonMessage?.message} />
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isUpdateSettingsPending || !isSettingsDirty}
+            className="cursor-pointer bg-emerald-500 hover:bg-emerald-600"
+          >
+            {isUpdateSettingsPending ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              'Salvar'
+            )}
+          </Button>
+        </form>
+      </div>
 
       {/* Histórico de Temporadas */}
       <div className="space-y-4">

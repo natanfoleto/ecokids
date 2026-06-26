@@ -31,6 +31,7 @@ export const getSeasonsResponseSchema = z.object({
       }),
     }),
   ),
+  nextSeasonMessage: z.string().nullable().optional(),
 })
 
 export type GetSeasonsResponse = z.infer<typeof getSeasonsResponseSchema>
