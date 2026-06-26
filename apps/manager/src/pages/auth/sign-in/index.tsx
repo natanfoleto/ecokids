@@ -2,7 +2,6 @@ import {
   type AuthenticateUserWithPasswordBody,
   authenticateUserWithPasswordBodySchema,
 } from '@ecokids/types'
-import { toast } from '@ecokids/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Building, Loader2, UserRoundX } from 'lucide-react'
 import { useEffect } from 'react'
@@ -53,10 +52,7 @@ export function SignIn() {
   async function onSubmit(data: AuthenticateUserWithPasswordBody) {
     await handleAction(
       () => authenticateUserWithPasswordAction({ body: data }),
-      () => {
-        toast(message)
-        navigate('/')
-      },
+      () => navigate('/'),
     )
   }
 

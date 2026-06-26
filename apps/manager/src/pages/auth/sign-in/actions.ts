@@ -1,4 +1,5 @@
 import type { AuthenticateUserWithPasswordBody } from '@ecokids/types'
+import { toast } from '@ecokids/ui'
 import { HTTPError } from 'ky'
 
 import { authenticateUserWithPassword } from '@/http/auth/authenticate-user-with-password'
@@ -18,10 +19,9 @@ export async function authenticateUserWithPasswordAction({
       },
     })
 
-    return {
-      success: true,
-      message: 'Logado com sucesso!',
-    }
+    toast.success('Logado com sucesso!')
+
+    return { success: true, message: 'Logado com sucesso!' }
   } catch (error) {
     if (error instanceof HTTPError) {
       const { message } = await error.response.json()
