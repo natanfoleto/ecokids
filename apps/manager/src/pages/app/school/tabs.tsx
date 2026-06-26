@@ -147,25 +147,6 @@ export function Tabs() {
       {isLoading ? (
         <Skeleton className="h-8 w-28 rounded-sm" />
       ) : (
-        canGetMembers && (
-          <NavLink to={`/school/${schoolSlug}/members`} end>
-            {({ isActive }) => (
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
-              >
-                <Users className="size-4" />
-                Membros
-              </Button>
-            )}
-          </NavLink>
-        )
-      )}
-
-      {isLoading ? (
-        <Skeleton className="h-8 w-28 rounded-sm" />
-      ) : (
         canGetAuditLogs && (
           <NavLink to={`/school/${schoolSlug}/audit-logs`} end>
             {({ isActive }) => (
@@ -176,6 +157,25 @@ export function Tabs() {
               >
                 <ShieldAlert className="size-4" />
                 Auditoria
+              </Button>
+            )}
+          </NavLink>
+        )
+      )}
+
+      {isLoading ? (
+        <Skeleton className="h-8 w-28 rounded-sm" />
+      ) : (
+        canGetMembers && (
+          <NavLink to={`/school/${schoolSlug}/members`} end>
+            {({ isActive }) => (
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`cursor-pointer border border-transparent ${isActive ? 'border-border bg-muted' : 'text-muted-foreground'}`}
+              >
+                <Users className="size-4" />
+                Membros
               </Button>
             )}
           </NavLink>

@@ -7,26 +7,40 @@ import { Home } from './pages/app/home'
 import { School } from './pages/app/school'
 import { SignIn } from './pages/auth/sign-in'
 import { NotFound } from './pages/not-found'
+import { RouteError } from './pages/route-error'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <GlobalLayout />,
+    errorElement: <RouteError />,
     children: [
       {
         path: '/',
         element: <AppLayout />,
+        errorElement: <RouteError />,
         children: [
-          { path: '/', element: <Home /> },
-          { path: '/school/:slug', element: <School /> },
+          { path: '/', element: <Home />, errorElement: <RouteError /> },
+          {
+            path: '/school/:slug',
+            element: <School />,
+            errorElement: <RouteError />,
+          },
         ],
       },
       {
         path: '/',
         element: <AuthLayout />,
-        children: [{ path: '/sign-in', element: <SignIn /> }],
+        errorElement: <RouteError />,
+        children: [
+          {
+            path: '/sign-in',
+            element: <SignIn />,
+            errorElement: <RouteError />,
+          },
+        ],
       },
     ],
   },
-  { path: '*', element: <NotFound /> },
+  { path: '*', element: <NotFound />, errorElement: <RouteError /> },
 ])

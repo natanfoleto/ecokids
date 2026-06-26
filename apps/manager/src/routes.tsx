@@ -20,20 +20,28 @@ import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'
 import { Invite } from './pages/invite'
 import { NotFound } from './pages/not-found'
+import { RouteError } from './pages/route-error'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <GlobalLayout />,
+    errorElement: <RouteError />,
     children: [
       {
         path: '/',
         element: <AppLayout />,
+        errorElement: <RouteError />,
         children: [
-          { path: '/', element: <Home /> },
-          { path: '/school/:slug', element: <School /> },
+          { path: '/', element: <Home />, errorElement: <RouteError /> },
+          {
+            path: '/school/:slug',
+            element: <School />,
+            errorElement: <RouteError />,
+          },
           {
             path: '/school/:slug/members',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="Member">
                 <Members />
@@ -42,6 +50,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/classes',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="Class">
                 <Classes />
@@ -50,6 +59,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/students',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="Student">
                 <Students />
@@ -58,6 +68,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/items',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="Item">
                 <Items />
@@ -66,6 +77,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/awards',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="Award">
                 <Awards />
@@ -74,6 +86,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/redemptions',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="RewardRedemption">
                 <Redemptions />
@@ -82,6 +95,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/settings',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="update" subject="School">
                 <Settings />
@@ -90,25 +104,43 @@ export const router = createBrowserRouter([
           },
           {
             path: '/school/:slug/audit-logs',
+            errorElement: <RouteError />,
             element: (
               <PermissionGuard action="get" subject="AuditLog">
                 <AuditLogs />
               </PermissionGuard>
             ),
           },
-          { path: '/profile', element: <Profile /> },
+          {
+            path: '/profile',
+            element: <Profile />,
+            errorElement: <RouteError />,
+          },
         ],
       },
       {
         path: '/',
         element: <AuthLayout />,
+        errorElement: <RouteError />,
         children: [
-          { path: '/sign-in', element: <SignIn /> },
-          { path: '/sign-up', element: <SignUp /> },
+          {
+            path: '/sign-in',
+            element: <SignIn />,
+            errorElement: <RouteError />,
+          },
+          {
+            path: '/sign-up',
+            element: <SignUp />,
+            errorElement: <RouteError />,
+          },
         ],
       },
-      { path: '/invite/:id', element: <Invite /> },
+      {
+        path: '/invite/:id',
+        element: <Invite />,
+        errorElement: <RouteError />,
+      },
     ],
   },
-  { path: '*', element: <NotFound /> },
+  { path: '*', element: <NotFound />, errorElement: <RouteError /> },
 ])
